@@ -181,5 +181,18 @@
   "save_close": "خوندي او بند کړئ",
   "application": "application",
   "zone": "زون",
-  "registration_number": "د نوم لیکنې شمیره"
+  "registration_number": "د نوم لیکنې شمیره",
+  "ministry_emp_portal":"د وزارت د کارمندانو پورټل",
+  "are_a_finance":"مالي سیستم ته د ننوتلو لپاره",
+  "click_here":"دلته کلیک وکړئ",
+  "are_a_epi":"مافیت کتلوی سیستم ننوتل لپاره ",
+  "welcome":"ښه راغلاست ",
+  "finance_login":"مالي سیسټم ته  ننوتل ",
+    "epi_login":" مافیت کتلوي سیسټم ته ننوتل "
+
+  
+
+
+
+
 }
