@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
-import { useUserAuthState } from "@/context/AuthContextProvider";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import { User, UserPermission } from "@/database/tables";
 import { CACHE, PermissionEnum } from "@/lib/constants";
@@ -34,7 +34,7 @@ import CachedImage from "@/components/custom-ui/image/CachedImage";
 import FilterDialog from "@/components/custom-ui/dialog/filter-dialog";
 
 export function UserTable() {
-  const { user } = useUserAuthState();
+  const { user } = useGeneralAuthState();
   const navigate = useNavigate();
   const searchRef = useRef<HTMLInputElement>(null);
   const { updateComponentCache, getComponentCache } = useCacheDB();
@@ -79,21 +79,24 @@ export function UserTable() {
         endDate: endDate,
       };
       // 2. Send data
-      const response = await axiosClient.get(`finance/users`, {
-        params: {
-          page: page,
-          per_page: count,
-          filters: {
-            sort: filters.sort,
-            order: filters.order,
-            search: {
-              column: filters.search.column,
-              value: searchInput,
+      const response = await axiosClient.get(
+        user.role.name.startsWith("finance") ? "finance/users" : "epi/users",
+        {
+          params: {
+            page: page,
+            per_page: count,
+            filters: {
+              sort: filters.sort,
+              order: filters.order,
+              search: {
+                column: filters.search.column,
+                value: searchInput,
+              },
+              date: dates,
             },
-            date: dates,
           },
-        },
-      });
+        }
+      );
       const fetch = response.data.users.data as User[];
       const lastPage = response.data.users.last_page;
       const totalItems = response.data.users.total;
@@ -183,36 +186,6 @@ export function UserTable() {
     }));
   };
 
-  const deleteOnClick = async (user: User) => {
-    try {
-      const userId = user.id;
-      const response = await axiosClient.delete("user/" + userId);
-      if (response.status == 200) {
-        const filtered = users.unFilterList.data.filter(
-          (item: User) => userId != item?.id
-        );
-        const item = {
-          data: filtered,
-          lastPage: users.unFilterList.lastPage,
-          totalItems: users.unFilterList.totalItems,
-          perPage: users.unFilterList.perPage,
-          currentPage: users.unFilterList.currentPage,
-        };
-        setUsers({ ...users, filterList: item, unFilterList: item });
-      }
-      toast({
-        toastType: "SUCCESS",
-        title: t("success"),
-        description: response.data.message,
-      });
-    } catch (error: any) {
-      toast({
-        toastType: "ERROR",
-        title: t("error"),
-        description: error.response.data.message,
-      });
-    }
-  };
   const skeleton = (
     <TableRow>
       <TableCell>
@@ -243,7 +216,6 @@ export function UserTable() {
   ) as UserPermission;
   const hasView = per?.view;
   const hasAdd = per?.add;
-  const hasDelete = per?.delete;
 
   const watchOnClick = async (user: User) => {
     const userId = user.id;
@@ -467,12 +439,12 @@ export function UserTable() {
             users.filterList.data.map((item: User) => (
               <TableRowIcon
                 read={hasView}
-                remove={hasDelete}
+                remove={false}
                 edit={false}
                 onEdit={async () => {}}
                 key={item.email}
                 item={item}
-                onRemove={deleteOnClick}
+                onRemove={async () => {}}
                 onRead={watchOnClick}
               >
                 <TableCell className="px-1 py-0">

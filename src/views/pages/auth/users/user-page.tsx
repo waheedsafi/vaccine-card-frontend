@@ -8,6 +8,7 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "@/components/custom-ui/Breadcrumb/Breadcrumb";
+export interface UserPageProps {}
 export default function UserPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();

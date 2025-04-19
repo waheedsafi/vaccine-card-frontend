@@ -13,12 +13,14 @@ import { setServerError } from "@/validation/validation";
 import { User } from "@/database/tables";
 import { Check, Database, ShieldBan, User as UserIcon } from "lucide-react";
 import { checkStrength, passwordStrengthScore } from "@/validation/utils";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
 
 export interface AddUserProps {
   onComplete: (user: User) => void;
 }
 export default function AddUser(props: AddUserProps) {
   const { onComplete } = props;
+  const { user } = useGeneralAuthState();
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -156,6 +158,8 @@ export default function AddUser(props: AddUserProps) {
               { name: "email", rules: ["required"] },
               { name: "destination", rules: ["required"] },
               { name: "job", rules: ["required"] },
+              { name: "province", rules: ["required"] },
+              { name: "gender", rules: ["required"] },
             ],
           },
           {
@@ -173,6 +177,22 @@ export default function AddUser(props: AddUserProps) {
                 ],
               },
               { name: "role", rules: ["required"] },
+              {
+                name: "zone",
+                rules: [
+                  (value: any) => {
+                    if (
+                      user.role.name.startsWith("finance") ||
+                      user.role.name.startsWith("epi")
+                    ) {
+                      return true;
+                    } else {
+                      if (value) return true;
+                      else return false;
+                    }
+                  },
+                ],
+              },
             ],
           },
           {

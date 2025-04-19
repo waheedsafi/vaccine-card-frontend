@@ -6,11 +6,14 @@ import { useTranslation } from "react-i18next";
 import APICombobox from "@/components/custom-ui/combobox/APICombobox";
 import PasswordInput from "@/components/custom-ui/input/PasswordInput";
 import { generatePassword } from "@/validation/utils";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
+import { RoleEnum } from "@/lib/constants";
 
 export default function AddUserAccount() {
   const { userData, setUserData, error } = useContext(StepperContext);
   const [isVisible, setIsVisible] = useState(false);
   const { t } = useTranslation();
+  const { user } = useGeneralAuthState();
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -75,6 +78,23 @@ export default function AddUserAccount() {
         errorMessage={error.get("role")}
         apiUrl={"roles"}
         translate={true}
+        mode="single"
+      />
+      {user.role.role != RoleEnum.epi_super ||
+        user.role.role != RoleEnum.finance_super}
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["zone"]: selection })
+        }
+        lable={t("zone")}
+        selectedItem={userData["zone"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("zone")}
+        apiUrl={"zones"}
         mode="single"
       />
 

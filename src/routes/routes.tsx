@@ -14,7 +14,6 @@ import FinanceSuperDashboardPage from "@/views/pages/auth/dashboard/finance/supe
 import FinanceSuperReportPage from "@/views/pages/auth/report/finance/super/finance-super-report-page";
 import FinanceProfilePage from "@/views/pages/auth/profile/finance/finance-profile-page";
 import EpiAdminDashboardPage from "@/views/pages/auth/dashboard/epi/admin/epi-admin-dashboard-page";
-import UserPage from "@/views/pages/auth/users/user-page";
 import UserEditPage from "@/views/pages/auth/users/edit/user-edit-page";
 import SettingsPage from "@/views/pages/auth/settings/settings-page";
 import ActivityPage from "@/views/pages/auth/activity/activity-page";
@@ -30,6 +29,7 @@ import EpiLoginPage from "@/views/pages/guest/epi/epi-login-page";
 import FinanceLoginPage from "@/views/pages/guest/finance/finance-login-page";
 import DebuggerAuditPage from "@/views/pages/auth/audit/debugger-audit-page";
 import DebuggerLogsPage from "@/views/pages/auth/logs/debugger-logs-page";
+import UserPage from "@/views/pages/auth/users/user-page";
 
 export const getEpiSuperRouter = (
   user: User | Epi | Finance,
