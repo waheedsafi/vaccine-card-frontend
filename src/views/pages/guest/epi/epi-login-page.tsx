@@ -80,7 +80,7 @@ export default function EpiLoginPage() {
         <AnimUserIcon />
       </div>
       <h1 className="drop-shadow-lg my-3 text-center relative text-tertiary uppercase text-[34px] mb-8 font-bold">
-        {t("donor_login")}
+        {t("epi_login")}
       </h1>
       <form
         className="flex flex-col space-y-3 w-full sm:w-[400px]"

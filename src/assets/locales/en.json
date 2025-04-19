@@ -182,5 +182,9 @@
   "application": "application",
   "zone": "Zone",
   "registration_number": "Registration Number",
+  "are_a_finance":"Are you Finance?",
+  "are_a_epi":"Are you EPI?",
+  "finance_login":"Finance login",
+   "epi_login":"EPI login",
   "gender": "Gender"
 }

@@ -17,21 +17,21 @@ export default function LoginPage() {
         onClick={() => navigate("/auth/finance/login")}
         className="border py-4 px-5 rounded-md bg-primary/5 shadow hover:shadow-sm rtl:text-xl-rtl"
       >
-        {t("are_a_donor")}
-        <span className="text-fourth cursor-pointer hover:opacity-70 rtl:text-xl-rtl font-bold">
+        {t("are_a_finance")}
+
+        <span className="text-fourth cursor-pointer hover:opacity-70 rtl:text-xl-rtl font-bold ">
           {t("click_here")}
         </span>
-        {t("to_login")}
       </h1>
       <h1
         onClick={() => navigate("/auth/epi/login")}
         className="border py-4 px-5 rounded-md bg-primary/5 mt-4 shadow hover:shadow-sm rtl:text-xl-rtl"
       >
-        {t("are_a_ngo")}
+        {t("are_a_epi")}
+
         <span className="text-fourth cursor-pointer hover:opacity-70 rtl:text-xl-rtl font-bold">
           {t("click_here")}
         </span>
-        {t("to_login")}
       </h1>
     </div>
   );
