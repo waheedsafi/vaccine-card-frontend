@@ -45,7 +45,7 @@ export default function NgoProfilePage() {
 
   const loadInformation = async () => {
     try {
-      const response = await axiosClient.get(`ngo/profile/info/${user.id}`);
+      const response = await axiosClient.get(`finance/profile/info/${user.id}`);
       if (response.status == 200) {
         const ngo = response.data.ngo;
         if (ngo) setNgoData(ngo);
@@ -111,7 +111,7 @@ export default function NgoProfilePage() {
           />
         </TabsContent>
         <TabsContent className="flex-1 m-0" value="password">
-          <EditProfilePassword url="ngo/profile/change-password" />
+          <EditProfilePassword url="finance/profile/change-password" />
         </TabsContent>
       </Tabs>
     </div>

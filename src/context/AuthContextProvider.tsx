@@ -186,7 +186,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (rememberMe) {
           setToken({
             token: response.data.token,
-            type: "epi",
+            type: "epiuser",
           });
         }
         const user = response.data.user as Epi;
@@ -215,7 +215,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (rememberMe) {
           setToken({
             token: response.data.token,
-            type: "finance",
+            type: "financeuser",
           });
         }
         const user = response.data.user as User;

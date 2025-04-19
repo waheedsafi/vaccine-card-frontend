@@ -42,7 +42,7 @@ axiosClient.interceptors.response.use(
       } catch (refreshError) {
         refreshTokenPromise = null; // Reset promise on failure
         removeToken();
-        window.location.href = `/auth/${conf?.type}/login`; // Redirect to login
+        window.location.href = `/login`; // Redirect to login
         return Promise.reject(refreshError);
       }
     }
@@ -60,8 +60,6 @@ export async function refreshAccessToken(conf: Configuration | null) {
         withCredentials: true, // Ensure credentials (cookies) are included
         headers: {
           Authorization: `Bearer ${conf?.token}`, // Add Authorization header if required
-          "X-API-KEY": import.meta.env.VITE_BACK_END_API_TOKEN, // Add custom headers if needed
-          "X-SERVER-ADDR": import.meta.env.VITE_BACK_END_API_IP, // Custom server address header
           "X-LOCALE": conf?.language || "en", // Set the locale
         },
       }

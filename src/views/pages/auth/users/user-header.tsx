@@ -22,7 +22,7 @@ export default function UserHeader() {
   const [loading, setLoading] = useState(true);
   const fetchCount = async () => {
     try {
-      const response = await axiosClient.get(`users/record/count`);
+      const response = await axiosClient.get(`finance/record/count`);
       if (response.status == 200) {
         setRecordCount({
           activeUserCount: response.data.counts.activeUserCount,

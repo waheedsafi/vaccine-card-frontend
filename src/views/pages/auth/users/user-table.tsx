@@ -79,7 +79,7 @@ export function UserTable() {
         endDate: endDate,
       };
       // 2. Send data
-      const response = await axiosClient.get(`users`, {
+      const response = await axiosClient.get(`finance/users`, {
         params: {
           page: page,
           per_page: count,
@@ -395,6 +395,11 @@ export function UserTable() {
                 ],
                 search: [
                   {
+                    name: "registeration_number",
+                    translate: t("registeration_number"),
+                    onClick: () => {},
+                  },
+                  {
                     name: "username",
                     translate: t("username"),
                     onClick: () => {},
@@ -403,6 +408,11 @@ export function UserTable() {
                   {
                     name: "contact",
                     translate: t("contact"),
+                    onClick: () => {},
+                  },
+                  {
+                    name: "zone",
+                    translate: t("zone"),
                     onClick: () => {},
                   },
                 ],
