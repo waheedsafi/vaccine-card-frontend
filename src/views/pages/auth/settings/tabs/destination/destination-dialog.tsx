@@ -253,7 +253,7 @@ export default function DestinationDialog(props: DestinationDialogProps) {
           required={true}
           requiredHint={`* ${t("required")}`}
           selectedItem={userData.type?.name}
-          placeHolder={t("select_a_type")}
+          placeHolder={t("select_type")}
           errorMessage={error.get("type")}
           apiUrl={"destination-types"}
           mode="single"
