@@ -181,5 +181,6 @@
   "save_close": "ذخیره و بستن",
   "application": "application",
   "zone": "زون",
-  "registration_number": "شماره ثبت"
+  "registration_number": "شماره ثبت",
+  "gender": "جنسیت"
 }

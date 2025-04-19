@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 
 export default function AddUserInformation() {
   const { t } = useTranslation();
+
   const { userData, setUserData, error } = useContext(StepperContext);
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -104,6 +105,36 @@ export default function AddUserInformation() {
         placeHolder={t("select_a_job")}
         errorMessage={error.get("job")}
         apiUrl={"jobs"}
+        mode="single"
+      />
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["province"]: selection })
+        }
+        lable={t("province")}
+        selectedItem={userData["province"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("province")}
+        apiUrl={"provinces/" + 1}
+        mode="single"
+      />
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["gender"]: selection })
+        }
+        lable={t("gender")}
+        selectedItem={userData["gender"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("gender")}
+        apiUrl={"genders"}
         mode="single"
       />
     </div>

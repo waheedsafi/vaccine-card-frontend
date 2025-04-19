@@ -181,5 +181,6 @@
   "save_close": "خوندي او بند کړئ",
   "application": "application",
   "zone": "زون",
-  "registration_number": "د نوم لیکنې شمیره"
+  "registration_number": "د نوم لیکنې شمیره",
+  "gender": "جنسیت"
 }

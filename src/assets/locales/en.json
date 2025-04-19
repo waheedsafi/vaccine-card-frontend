@@ -181,5 +181,6 @@
   "save_close": "Save & Close",
   "application": "application",
   "zone": "Zone",
-  "registration_number": "Registration Number"
+  "registration_number": "Registration Number",
+  "gender": "Gender"
 }
