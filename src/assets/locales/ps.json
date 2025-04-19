@@ -179,5 +179,7 @@
   "unauthorized_desc": "د کور پاڼې لیدلو لپاره",
   "select_type": "یو ډول غوره کړئ",
   "save_close": "خوندي او بند کړئ",
-  "application": "application"
+  "application": "application",
+  "zone": "زون",
+  "registration_number": "د نوم لیکنې شمیره"
 }

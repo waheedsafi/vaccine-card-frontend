@@ -395,8 +395,8 @@ export function UserTable() {
                 ],
                 search: [
                   {
-                    name: "registeration_number",
-                    translate: t("registeration_number"),
+                    name: "registration_number",
+                    translate: t("registration_number"),
                     onClick: () => {},
                   },
                   {

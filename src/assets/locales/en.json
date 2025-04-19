@@ -179,5 +179,7 @@
   "unauthorized": "Unauthorized",
   "unauthorized_desc": "To vist home page ",
   "save_close": "Save & Close",
-  "application": "application"
+  "application": "application",
+  "zone": "Zone",
+  "registration_number": "Registration Number"
 }

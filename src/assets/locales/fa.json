@@ -179,5 +179,7 @@
   "unauthorized": "غیر مجاز",
   "unauthorized_desc": "برای بازدید از صفحه اصلی ",
   "save_close": "ذخیره و بستن",
-  "application": "application"
+  "application": "application",
+  "zone": "زون",
+  "registration_number": "شماره ثبت"
 }
