@@ -10,17 +10,15 @@ import axiosClient from "@/lib/axois-client";
 import { toast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import { setServerError } from "@/validation/validation";
-import { User } from "@/database/tables";
 import { Check, Database, ShieldBan, User as UserIcon } from "lucide-react";
 import { checkStrength, passwordStrengthScore } from "@/validation/utils";
-import { useGeneralAuthState } from "@/context/AuthContextProvider";
+import { EpiFinanceUser } from "@/lib/types";
 
 export interface AddUserProps {
-  onComplete: (user: User) => void;
+  onComplete: (user: EpiFinanceUser) => void;
 }
 export default function AddUser(props: AddUserProps) {
   const { onComplete } = props;
-  const { user } = useGeneralAuthState();
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -72,20 +70,20 @@ export default function AddUser(props: AddUserProps) {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      const response = await axiosClient.post("user/store", {
+      const response = await axiosClient.post("epi/user/store", {
         permissions: userData?.permissions,
-        grant: userData.grant == true,
         status: userData.status == true,
-        role: userData.role.id,
-        job: userData.job.name,
+        role_id: userData?.role?.id,
+        zone_id: userData?.zone?.id,
         job_id: userData.job.id,
-        destination: userData.destination.name,
         destination_id: userData.destination.id,
         contact: userData.contact,
         password: userData.password,
         email: userData.email,
         username: userData.username,
         full_name: userData.full_name,
+        gender_id: userData.gender.id,
+        province_id: userData.province.id,
       });
       if (response.status == 200) {
         onComplete(response.data.user);
@@ -176,23 +174,41 @@ export default function AddUser(props: AddUserProps) {
                   },
                 ],
               },
+              { name: "user_letter_of_introduction", rules: ["required"] },
               { name: "role", rules: ["required"] },
-              {
-                name: "zone",
-                rules: [
-                  (value: any) => {
-                    if (
-                      user.role.name.startsWith("finance") ||
-                      user.role.name.startsWith("epi")
-                    ) {
-                      return true;
-                    } else {
-                      if (value) return true;
-                      else return false;
-                    }
-                  },
-                ],
-              },
+              { name: "zone", rules: ["required"] },
+              // {
+              //   name: "role",
+              //   rules: [
+              //     (value: any) => {
+              //       if (
+              //         user.role.role == RoleEnum.epi_super ||
+              //         user.role.role == RoleEnum.finance_super
+              //       ) {
+              //         return false;
+              //       } else {
+              //         if (value) return false;
+              //         else return true;
+              //       }
+              //     },
+              //   ],
+              // },
+              // {
+              //   name: "zone",
+              //   rules: [
+              //     (value: any) => {
+              //       if (
+              //         user.role.role == RoleEnum.epi_super ||
+              //         user.role.role == RoleEnum.finance_super
+              //       ) {
+              //         return false;
+              //       } else {
+              //         if (value) return false;
+              //         else return true;
+              //       }
+              //     },
+              //   ],
+              // },
             ],
           },
           {

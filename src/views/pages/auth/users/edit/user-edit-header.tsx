@@ -172,6 +172,12 @@ export default function UserEditHeader(props: UserEditHeaderProps) {
       <h1 className="text-primary font-semibold rtl:text-2xl-rtl ltr:text-4xl-ltr">
         {userData?.username}
       </h1>
+      <h1
+        dir="ltr"
+        className="text-primary rtl:text-md-rtl ltr:text-xl-ltr font-bold"
+      >
+        {userData?.registration_number}
+      </h1>
       <h1 className="leading-6 rtl:text-sm-rtl ltr:text-2xl-ltr">
         {userData?.email}
       </h1>

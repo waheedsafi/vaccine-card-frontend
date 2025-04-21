@@ -1,6 +1,6 @@
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import {
@@ -14,13 +14,15 @@ import {
 import { useTranslation } from "react-i18next";
 import { UserInformation, UserPassword } from "@/lib/types";
 import axiosClient from "@/lib/axois-client";
-import { useUserAuthState } from "@/context/AuthContextProvider";
-import { PermissionEnum } from "@/lib/constants";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
+import { ChecklistEnum, PermissionEnum, TaskTypeEnum } from "@/lib/constants";
 import { setServerError, validate } from "@/validation/validation";
 import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import ButtonSpinner from "@/components/custom-ui/spinner/ButtonSpinner";
 import { UserPermission } from "@/database/tables";
 import { ValidateItem } from "@/validation/types";
+import CheckListChooser from "@/components/custom-ui/chooser/CheckListChooser";
+import { getConfiguration, validateFile } from "@/lib/utils";
 export interface EditUserPasswordProps {
   id: string | undefined;
   refreshPage: () => Promise<void>;
@@ -31,7 +33,7 @@ export interface EditUserPasswordProps {
 
 export function EditUserPassword(props: EditUserPasswordProps) {
   const { id, userData, failed, refreshPage, permissions } = props;
-  const { user, logoutUser } = useUserAuthState();
+  const { user } = useGeneralAuthState();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   // const [isVisible, setIsVisible] = useState(false);
@@ -40,6 +42,7 @@ export function EditUserPassword(props: EditUserPasswordProps) {
     new_password: "",
     confirm_password: "",
     old_password: "",
+    letter_of_pass_change: undefined,
   });
   const [error, setError] = useState<Map<string, string>>(new Map());
 
@@ -60,6 +63,10 @@ export function EditUserPassword(props: EditUserPasswordProps) {
           name: "confirm_password",
           rules: ["required", "min:8", "max:45"],
         },
+        {
+          name: "letter_of_pass_change",
+          rules: ["required"],
+        },
       ];
       // if (user.role.role != RoleEnum.super) {
       //   rules.push({
@@ -79,23 +86,13 @@ export function EditUserPassword(props: EditUserPasswordProps) {
       //   formData.append("old_password", passwordData.old_password);
       formData.append("confirm_password", passwordData.confirm_password);
       try {
-        const response = await axiosClient.post(
-          "user/accpunt/change-password",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axiosClient.post(authData.submitUrl, formData);
         if (response.status == 200) {
           toast({
             toastType: "SUCCESS",
             title: t("success"),
             description: t(response.data.message),
           });
-          // If user changed his password he must login again
-          if (user?.id == id) await logoutUser();
         }
       } catch (error: any) {
         toast({
@@ -114,6 +111,22 @@ export function EditUserPassword(props: EditUserPasswordProps) {
   const hasEdit = permissions.sub.get(
     PermissionEnum.users.sub.user_information
   )?.edit;
+  const authData = useMemo(() => {
+    const isFinance = user.role.name.startsWith("finance");
+
+    return {
+      checklist_id: isFinance
+        ? ChecklistEnum.finance_letter_of_password_change
+        : ChecklistEnum.epi_letter_of_password_change,
+      task_type: isFinance ? TaskTypeEnum.finance : TaskTypeEnum.epi,
+      unique_identifier: isFinance
+        ? ChecklistEnum.finance_letter_of_password_change
+        : ChecklistEnum.epi_letter_of_password_change,
+      submitUrl: isFinance
+        ? "finance/user/change/account/password"
+        : "epi/user/change/account/password",
+    };
+  }, [user.role.name]);
   return (
     <Card>
       <CardHeader className="space-y-0">
@@ -124,40 +137,13 @@ export function EditUserPassword(props: EditUserPasswordProps) {
           {t("update_pass_descrip")}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="grid gap-4 w-full lg:w-[70%] 2xl:w-1/2">
         {failed ? (
           <h1>{t("u_are_not_authzed!")}</h1>
         ) : !userData ? (
           <NastranSpinner />
         ) : (
-          <div className="grid gap-4 w-full sm:w-[70%] md:w-1/2">
-            {/* {user.role.role != RoleEnum.super && (
-              <CustomInput
-                size_="sm"
-                name="old_password"
-                lable={t("old_password")}
-                required={true}
-                requiredHint={`* ${t("required")}`}
-                defaultValue={passwordData["old_password"]}
-                onChange={handleChange}
-                placeholder={t("enter_password")}
-                errorMessage={error.get("old_password")}
-                startContent={
-                  <button
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={() => setIsVisible(!isVisible)}
-                  >
-                    {isVisible ? (
-                      <Eye className="size-[20px] text-primary-icon pointer-events-none" />
-                    ) : (
-                      <EyeOff className="size-[20px] text-primary-icon pointer-events-none" />
-                    )}
-                  </button>
-                }
-                type={isVisible ? "text" : "password"}
-              />
-            )} */}
+          <>
             <CustomInput
               size_="sm"
               name="new_password"
@@ -182,7 +168,67 @@ export function EditUserPassword(props: EditUserPasswordProps) {
               errorMessage={error.get("confirm_password")}
               type={"password"}
             />
-          </div>
+            <div>
+              <CheckListChooser
+                className=" border rounded-md p-2"
+                number={undefined}
+                hasEdit={true}
+                url={`${
+                  import.meta.env.VITE_API_BASE_URL
+                }/api/v1/epi/file/upload`}
+                headers={{
+                  Authorization: "Bearer " + getConfiguration()?.token,
+                }}
+                name={t("letter_of_pass_change")}
+                defaultFile={passwordData?.letter_of_pass_change}
+                uploadParam={{
+                  checklist_id: authData.checklist_id,
+                  task_type: authData.task_type,
+                  unique_identifier: authData.unique_identifier,
+                }}
+                accept={"application/pdf,image/jpeg,image/png,image/jpg"}
+                onComplete={async (record: any) => {
+                  for (const element of record) {
+                    const checklist = element[element.length - 1];
+                    setPasswordData({
+                      ...passwordData,
+                      letter_of_pass_change: checklist,
+                    });
+                  }
+                }}
+                onFailed={async (failed: boolean, response: any) => {
+                  if (failed) {
+                    if (response) {
+                      toast({
+                        toastType: "ERROR",
+                        description: response.data.message,
+                      });
+                      setPasswordData({
+                        ...passwordData,
+                        letter_of_pass_change: undefined,
+                      });
+                    }
+                  }
+                }}
+                onStart={async (_file: File) => {}}
+                validateBeforeUpload={function (file: File): boolean {
+                  const maxFileSize = 3 * 1024 * 1024; // 3MB
+                  const resultFile = validateFile(
+                    file,
+                    Math.round(maxFileSize),
+                    ["application/pdf", "image/jpeg", "image/png", "image/jpg"],
+                    t
+                  );
+                  return resultFile ? true : false;
+                }}
+              />
+              {error.get("letter_of_pass_change") && (
+                <h1 className="rtl:text-md-rtl ltr:text-sm-ltr px-2 capitalize text-start text-red-400">
+                  {error.get("letter_of_pass_change")}
+                </h1>
+              )}
+            </div>
+          </>
         )}
       </CardContent>
       <CardFooter>

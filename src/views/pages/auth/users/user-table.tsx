@@ -10,7 +10,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { useGlobalState } from "@/context/GlobalStateContext";
-import { User, UserPermission } from "@/database/tables";
+import { Epi, User, UserPermission } from "@/database/tables";
 import { CACHE, PermissionEnum } from "@/lib/constants";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,10 +28,16 @@ import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import AddUser from "./add/add-user";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
 import { DateObject } from "react-multi-date-picker";
-import { Order, UserPaginationData, UserSearch, UserSort } from "@/lib/types";
 import useCacheDB from "@/lib/indexeddb/useCacheDB";
 import CachedImage from "@/components/custom-ui/image/CachedImage";
 import FilterDialog from "@/components/custom-ui/dialog/filter-dialog";
+import {
+  EpiFinanceUser,
+  Order,
+  UserPaginationData,
+  UserSearch,
+  UserSort,
+} from "@/lib/types";
 
 export function UserTable() {
   const { user } = useGeneralAuthState();
@@ -47,10 +53,10 @@ export function UserTable() {
   const startDate = searchParams.get("st_dt");
   const endDate = searchParams.get("en_dt");
   const filters = {
-    sort: sort == null ? "created_at" : (sort as UserSort),
-    order: order == null ? "desc" : (order as Order),
+    sort: sort == null ? "created_at" : sort,
+    order: order == null ? "desc" : order,
     search: {
-      column: searchColumn == null ? "username" : (searchColumn as UserSearch),
+      column: searchColumn == null ? "username" : searchColumn,
       value: searchValue == null ? "" : searchValue,
     },
     date:
@@ -97,7 +103,7 @@ export function UserTable() {
           },
         }
       );
-      const fetch = response.data.users.data as User[];
+      const fetch = response.data.users.data as Epi[];
       const lastPage = response.data.users.last_page;
       const totalItems = response.data.users.total;
       const perPage = response.data.users.per_page;
@@ -173,7 +179,7 @@ export function UserTable() {
   const { t } = useTranslation();
   const [state] = useGlobalState();
 
-  const addItem = (user: User) => {
+  const addItem = (user: EpiFinanceUser) => {
     setUsers((prevState) => ({
       filterList: {
         ...prevState.filterList,
@@ -188,6 +194,12 @@ export function UserTable() {
 
   const skeleton = (
     <TableRow>
+      <TableCell>
+        <Shimmer className="h-[24px] w-full rounded-sm" />
+      </TableCell>
+      <TableCell>
+        <Shimmer className="h-[24px] w-full rounded-sm" />
+      </TableCell>
       <TableCell>
         <Shimmer className="h-[24px] w-full rounded-sm" />
       </TableCell>
@@ -421,6 +433,9 @@ export function UserTable() {
       <Table className="bg-card rounded-md my-[2px] py-8">
         <TableHeader className="rtl:text-3xl-rtl ltr:text-xl-ltr">
           <TableRow className="hover:bg-transparent">
+            <TableHead className="text-start px-1">
+              {t("registration_number")}
+            </TableHead>
             <TableHead className="text-center px-1 w-[60px]">
               {t("profile")}
             </TableHead>
@@ -428,6 +443,7 @@ export function UserTable() {
             <TableHead className="text-start">{t("role")}</TableHead>
             <TableHead className="text-start">{t("email")}</TableHead>
             <TableHead className="text-start">{t("contact")}</TableHead>
+            <TableHead className="text-start">{t("zone")}</TableHead>
             <TableHead className="text-start">{t("join_date")}</TableHead>
             <TableHead className="text-start w-[60px]">{t("status")}</TableHead>
           </TableRow>
@@ -436,7 +452,7 @@ export function UserTable() {
           {loading ? (
             <>{skeleton}</>
           ) : (
-            users.filterList.data.map((item: User) => (
+            users.filterList.data.map((item: Epi) => (
               <TableRowIcon
                 read={hasView}
                 remove={false}
@@ -447,6 +463,9 @@ export function UserTable() {
                 onRemove={async () => {}}
                 onRead={watchOnClick}
               >
+                <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                  {item.registeration_number}
+                </TableCell>
                 <TableCell className="px-1 py-0">
                   <CachedImage
                     src={item?.profile}
@@ -476,11 +495,17 @@ export function UserTable() {
                 >
                   {item?.contact == "null" ? "" : item?.contact}
                 </TableCell>
+                <TableCell
+                  dir="ltr"
+                  className="rtl:text-end rtl:text-sm-rtl truncate"
+                >
+                  {item.zone}
+                </TableCell>
                 <TableCell className="truncate">
                   {toLocaleDate(new Date(item.created_at), state)}
                 </TableCell>
                 <TableCell>
-                  {item?.status ? (
+                  {item?.status == 1 ? (
                     <h1 className="truncate text-center rtl:text-md-rtl ltr:text-lg-ltr bg-green-500 px-1 py-[2px] shadow-md text-primary-foreground font-bold rounded-sm">
                       {t("active")}
                     </h1>

@@ -182,9 +182,13 @@
   "application": "application",
   "zone": "Zone",
   "registration_number": "Registration Number",
-  "are_a_finance":"Are you Finance?",
-  "are_a_epi":"Are you EPI?",
-  "finance_login":"Finance login",
-   "epi_login":"EPI login",
-  "gender": "Gender"
+  "are_a_finance": "Are you Finance?",
+  "are_a_epi": "Are you EPI?",
+  "finance_login": "Finance login",
+  "epi_login": "EPI login",
+  "gender": "Gender",
+  "user_letter_of_introduction": "Letter of introduction",
+  "issued_certificate": "Issued certificate",
+  "certificate_payment": "Certificate payment",
+  "letter_of_pass_change": "Letter of password change"
 }
