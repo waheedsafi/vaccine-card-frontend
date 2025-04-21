@@ -194,5 +194,9 @@
   "issued_certificate": "صادر سرتیفیکیت",
   "certificate_payment": "پرداخت سرتیفیکیت",
   "letter_of_pass_change": "نامه تغییر رمز عبور",
-  "vaccine_certificate": "واکسن سرتیفیکیت"
+  "vaccine_certificate": "واکسن سرتیفیکیت",
+  "enter_name": "نام را وارد کنید",
+  "date_of_birth": "تاریخ تولد",
+  "enter": "وارد کنید",
+  "passport_no": "پاسپورت نمبر"
 }

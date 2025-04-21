@@ -191,5 +191,9 @@
   "issued_certificate": "Issued certificate",
   "certificate_payment": "Certificate payment",
   "letter_of_pass_change": "Letter of password change",
-  "vaccine_certificate": "Vaccine certificate"
+  "vaccine_certificate": "Vaccine certificate",
+  "enter_name": "Enter name",
+  "date_of_birth": "Date of birth",
+  "enter": "Enter",
+  "passport_no": "Passport Number"
 }

@@ -193,5 +193,7 @@
   "user_letter_of_introduction": "د معرفي لیک",
   "issued_certificate": "Issued certificate",
   "certificate_payment": "Certificate payment",
-  "letter_of_pass_change": "Letter of password change"
+  "letter_of_pass_change": "Letter of password change",
+  "enter_name": "نام را وارد کنید",
+  "date_of_birth": "تاریخ تولد"
 }
