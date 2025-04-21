@@ -1,4 +1,5 @@
 import {
+  ActivityModel,
   Audit,
   Role,
   SelectUserPermission,
@@ -166,3 +167,11 @@ export interface FileType {
   extension: string;
   size: number;
 }
+export interface ActivityPaginationData {
+  data: ActivityModel[];
+  lastPage: number;
+  perPage: number;
+  currentPage: number;
+  totalItems: number;
+}
+export type ActivitySearch = "user" | "type";
