@@ -8,6 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { Briefcase } from "lucide-react";
+
+import { useUserAuthState } from "@/context/AuthContextProvider";
+import { UserPermission } from "@/database/tables";
+import { PermissionEnum } from "@/lib/constants";
+
 import { toast } from "@/components/ui/use-toast";
 import { CACHE } from "@/lib/constants";
 import { useEffect, useRef, useState } from "react";
@@ -19,7 +25,7 @@ import Pagination from "@/components/custom-ui/table/Pagination";
 
 import { setDateToURL, toLocaleDate } from "@/lib/utils";
 import NastranModel from "@/components/custom-ui/model/NastranModel";
-import { ListFilter, Search } from "lucide-react";
+import { Languages, ListFilter, MapPinHouse, Search } from "lucide-react";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
@@ -37,14 +43,22 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "@/components/custom-ui/Breadcrumb/Breadcrumb";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Activity() {
   const navigate = useNavigate();
   const searchRef = useRef<HTMLInputElement>(null);
   const { updateComponentCache, getComponentCache } = useCacheDB();
   const [state] = useGlobalState();
-
+  const [selectedTab, setSelectedTab] = useState("admin"); // default to "user"
+  const [isAdmin, setIsAdmin] = useState(true);
   const [searchParams] = useSearchParams();
+  const { user } = useUserAuthState();
+
+  const per: UserPermission = user?.permissions.get(
+    PermissionEnum.settings.name
+  ) as UserPermission;
+
   // Accessing individual search filters
   const searchValue = searchParams.get("sch_val");
   const searchColumn = searchParams.get("sch_col");
@@ -84,8 +98,10 @@ export default function Activity() {
         endDate: endDate,
       };
       // 2. Send data
-      const response = await axiosClient.get(`user-activities`, {
+
+      const response = await axiosClient.get(`epi/login/logs`, {
         params: {
+          admin: isAdmin,
           page: page,
           per_page: count,
           filters: {
@@ -150,7 +166,8 @@ export default function Activity() {
   };
   useEffect(() => {
     initialize(undefined, undefined, 1);
-  }, [startDate, endDate, order]);
+    setIsAdmin(selectedTab === "admin" ? false : true);
+  }, [selectedTab, startDate, endDate, order]);
   const [activities, setActivities] = useState<{
     filterList: ActivityPaginationData;
     unFilterList: ActivityPaginationData;
@@ -209,8 +226,17 @@ export default function Activity() {
         <BreadcrumbSeparator />
         <BreadcrumbItem>{t("activity")}</BreadcrumbItem>
       </Breadcrumb>
-
-      <div className="flex flex-col sm:items-baseline sm:flex-row rounded-md bg-card dark:!bg-black/30 gap-2  px-2 py-2 mt-4">
+      <Tabs
+        className="flex flex-col items-center pb-12"
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+      >
+        <TabsList>
+          <TabsTrigger value="admin">Admin</TabsTrigger>
+          <TabsTrigger value="user">User</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      <div className="flex flex-col sm:items-baseline sm:flex-row rounded-md bg-card dark:!bg-black/30 gap-2  px-2 py-2">
         <CustomInput
           size_="lg"
           placeholder={`${t(filters.search.column)}...`}
