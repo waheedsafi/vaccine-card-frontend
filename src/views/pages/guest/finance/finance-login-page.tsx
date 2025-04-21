@@ -46,7 +46,7 @@ export default function FinanceLoginPage() {
         true
       );
       if (response.status == 200) {
-        navigate("/dashboard", { replace: true });
+        navigate("/", { replace: true });
         toast({
           title: t("success"),
           toastType: "SUCCESS",

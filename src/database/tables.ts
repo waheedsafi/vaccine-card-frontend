@@ -149,7 +149,7 @@ export type Epi = {
   full_name: string;
   username: string;
   email: string;
-  status: Status;
+  status: number;
   grant: boolean;
   profile: any;
   role: Role;
@@ -168,7 +168,7 @@ export type Finance = {
   full_name: string;
   username: string;
   email: string;
-  status: Status;
+  status: number;
   profile: any;
   role: Role;
   contact: string;

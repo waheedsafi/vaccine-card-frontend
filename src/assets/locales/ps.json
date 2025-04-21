@@ -1,5 +1,5 @@
 {
-  "app_name": "د اپلیکیشن نوم",
+  "app_name": "د واکسین سند",
   "total": "ټول",
   "user_today": "نن ورځ کاروونکی",
   "total_active": "ټول فعال",
@@ -190,4 +190,18 @@
   "finance_login":"مالي سیسټم ته  ننوتل ",
   "epi_login":" مافیت کتلوي سیسټم ته ننوتل ",
   "gender": "جنسیت"
+  "ministry_emp_portal": "د وزارت د کارمندانو پورټل",
+  "are_a_finance": "مالي سیستم ته د ننوتلو لپاره",
+  "click_here": "دلته کلیک وکړئ",
+  "are_a_epi": "مافیت کتلوی سیستم ننوتل لپاره ",
+  "welcome": "ښه راغلاست ",
+  "finance_login": "مالي سیسټم ته  ننوتل ",
+  "epi_login": " مافیت کتلوي سیسټم ته ننوتل ",
+  "gender": "جنسیت",
+  "user_letter_of_introduction": "د معرفي لیک",
+  "issued_certificate": "Issued certificate",
+  "certificate_payment": "Certificate payment",
+  "letter_of_pass_change": "Letter of password change",
+  "enter_name": "نام را وارد کنید",
+  "date_of_birth": "تاریخ تولد"
 }

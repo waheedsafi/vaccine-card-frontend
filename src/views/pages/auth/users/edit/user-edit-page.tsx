@@ -11,7 +11,7 @@ import { Database, KeyRound, ShieldBan } from "lucide-react";
 import UserEditHeader from "./user-edit-header";
 import EditUserPermissions from "./steps/edit-user-permissions";
 import { UserPermission } from "@/database/tables";
-import { useUserAuthState } from "@/context/AuthContextProvider";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { PermissionEnum } from "@/lib/constants";
 import {
   Breadcrumb,
@@ -19,9 +19,12 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "@/components/custom-ui/Breadcrumb/Breadcrumb";
+import { EditUserActivity } from "./steps/edit-user-activity";
+import { EditUserIssuedCirtificate } from "./steps/edit-user-issued-certificate";
+import { EditUserCirtificatePayment } from "./steps/edit-user-certificate-payment";
 
 export default function UserEditPage() {
-  const { user } = useUserAuthState();
+  const { user } = useGeneralAuthState();
   const navigate = useNavigate();
   const handleGoBack = () => navigate(-1);
   const handleGoHome = () => navigate("/dashboard", { replace: true });
@@ -32,7 +35,9 @@ export default function UserEditPage() {
   const [userData, setUserData] = useState<UserInformation | undefined>();
   const loadInformation = async () => {
     try {
-      const response = await axiosClient.get(`user/${id}`);
+      const response = await axiosClient.get(
+        `${user.role.name.startsWith("finance") ? "finance" : "epi"}/user/${id}`
+      );
       if (response.status == 200) {
         const user = response.data.user as UserInformation;
         setUserData(user);
@@ -77,22 +82,47 @@ export default function UserEditPage() {
           <KeyRound className="size-[18px]" />
           {t("update_account_password")}
         </TabsTrigger>
-      ) : (
-        key == PermissionEnum.users.sub.user_permission && (
-          <TabsTrigger
-            key={index}
-            className={`${selectedTabStyle}`}
-            value={key.toString()}
-          >
-            <ShieldBan className="size-[18px]" />
-            {t("update_account_permissions")}
-          </TabsTrigger>
-        )
-      );
+      ) : key == PermissionEnum.users.sub.user_permission ? (
+        <TabsTrigger
+          key={index}
+          className={`${selectedTabStyle}`}
+          value={key.toString()}
+        >
+          <ShieldBan className="size-[18px]" />
+          {t("update_account_permissions")}
+        </TabsTrigger>
+      ) : key == PermissionEnum.users.sub.user_issued_certificate ? (
+        <TabsTrigger
+          key={index}
+          className={`${selectedTabStyle}`}
+          value={key.toString()}
+        >
+          <ShieldBan className="size-[18px]" />
+          {t("issued_certificate")}
+        </TabsTrigger>
+      ) : key == PermissionEnum.users.sub.user_issued_certificate_payment ? (
+        <TabsTrigger
+          key={index}
+          className={`${selectedTabStyle}`}
+          value={key.toString()}
+        >
+          <ShieldBan className="size-[18px]" />
+          {t("certificate_payment")}
+        </TabsTrigger>
+      ) : key == PermissionEnum.users.sub.user_profile_activity ? (
+        <TabsTrigger
+          key={index}
+          className={`${selectedTabStyle}`}
+          value={key.toString()}
+        >
+          <ShieldBan className="size-[18px]" />
+          {t("activity")}
+        </TabsTrigger>
+      ) : undefined;
     }
   );
   return (
-    <div className="flex flex-col gap-y-3 px-3 mt-2 overflow-x-auto pb-bottom">
+    <div className="flex flex-col gap-y-3 px-3 pt-2 overflow-x-auto pb-12">
       <Breadcrumb>
         <BreadcrumbHome onClick={handleGoHome} />
         <BreadcrumbSeparator />
@@ -148,6 +178,36 @@ export default function UserEditPage() {
           value={PermissionEnum.users.sub.user_permission.toString()}
         >
           <EditUserPermissions permissions={per} />
+        </TabsContent>
+        <TabsContent
+          className="flex-1 m-0"
+          value={PermissionEnum.users.sub.user_profile_activity.toString()}
+        >
+          <EditUserActivity
+            failed={failed}
+            refreshPage={loadInformation}
+            permissions={per}
+          />
+        </TabsContent>
+        <TabsContent
+          className="flex-1 m-0"
+          value={PermissionEnum.users.sub.user_issued_certificate.toString()}
+        >
+          <EditUserIssuedCirtificate
+            failed={failed}
+            refreshPage={loadInformation}
+            permissions={per}
+          />
+        </TabsContent>
+        <TabsContent
+          className="flex-1 m-0"
+          value={PermissionEnum.users.sub.user_issued_certificate_payment.toString()}
+        >
+          <EditUserCirtificatePayment
+            failed={failed}
+            refreshPage={loadInformation}
+            permissions={per}
+          />
         </TabsContent>
       </Tabs>
     </div>

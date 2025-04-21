@@ -25,7 +25,6 @@ import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import { ListFilter, Search } from "lucide-react";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
-import AddUser from "./add/add-user";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
 import { DateObject } from "react-multi-date-picker";
 import useCacheDB from "@/lib/indexeddb/useCacheDB";
@@ -38,8 +37,9 @@ import {
   UserSearch,
   UserSort,
 } from "@/lib/types";
+import AddCertificate from "./add/add-certificate";
 
-export function UserTable() {
+export function VaccineCertificateTable() {
   const { user } = useGeneralAuthState();
   const navigate = useNavigate();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -141,7 +141,7 @@ export function UserTable() {
   ) => {
     if (!count) {
       const countSore = await getComponentCache(
-        CACHE.USER_TABLE_PAGINATION_COUNT
+        CACHE.VACCINE_CERTIFICATE_TABLE_PAGINATION_COUNT
       );
       count = countSore?.value ? countSore.value : 10;
     }
@@ -224,7 +224,7 @@ export function UserTable() {
     </TableRow>
   );
   const per: UserPermission = user?.permissions.get(
-    PermissionEnum.users.name
+    PermissionEnum.vaccine_certificate.name
   ) as UserPermission;
   const hasView = per?.view;
   const hasAdd = per?.add;
@@ -247,7 +247,7 @@ export function UserTable() {
             }
             showDialog={async () => true}
           >
-            <AddUser onComplete={addItem} />
+            <AddCertificate onComplete={addItem} />
           </NastranModel>
         )}
 
@@ -411,7 +411,7 @@ export function UserTable() {
           </NastranModel>
         </div>
         <CustomSelect
-          paginationKey={CACHE.USER_TABLE_PAGINATION_COUNT}
+          paginationKey={CACHE.VACCINE_CERTIFICATE_TABLE_PAGINATION_COUNT}
           options={[
             { value: "10", label: "10" },
             { value: "20", label: "20" },
@@ -420,7 +420,9 @@ export function UserTable() {
           className="w-fit sm:self-baseline"
           updateCache={updateComponentCache}
           getCache={async () =>
-            await getComponentCache(CACHE.USER_TABLE_PAGINATION_COUNT)
+            await getComponentCache(
+              CACHE.VACCINE_CERTIFICATE_TABLE_PAGINATION_COUNT
+            )
           }
           placeholder={`${t("select")}...`}
           emptyPlaceholder={t("no_options_found")}

@@ -1,5 +1,4 @@
 import AddUserAccount from "./steps/AddUserAccount";
-import AddUserInformation from "./steps/AddUserInformation";
 import AddUserPermission from "./steps/AddUserPermission";
 import { useTranslation } from "react-i18next";
 import { useModelOnRequestHide } from "@/components/custom-ui/model/hook/useModelOnRequestHide";
@@ -13,11 +12,12 @@ import { setServerError } from "@/validation/validation";
 import { Check, Database, ShieldBan, User as UserIcon } from "lucide-react";
 import { checkStrength, passwordStrengthScore } from "@/validation/utils";
 import { EpiFinanceUser } from "@/lib/types";
+import AddPersonalDetail from "./steps/add-personal-detail";
 
-export interface AddUserProps {
+export interface AddCertificateProps {
   onComplete: (user: EpiFinanceUser) => void;
 }
-export default function AddUser(props: AddUserProps) {
+export default function AddCertificate(props: AddCertificateProps) {
   const { onComplete } = props;
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
@@ -149,7 +149,7 @@ export default function AddUser(props: AddUserProps) {
         ]}
         components={[
           {
-            component: <AddUserInformation />,
+            component: <AddPersonalDetail />,
             validationRules: [
               { name: "full_name", rules: ["required", "max:45", "min:3"] },
               { name: "username", rules: ["required", "max:45", "min:3"] },

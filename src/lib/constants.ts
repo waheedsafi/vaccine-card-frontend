@@ -14,11 +14,15 @@ export const RoleEnum = {
   debugger: 7,
 };
 export const TaskTypeEnum = {
-  certificate_reciept: 1,
+  epi: 1,
+  finance: 2,
 };
 export const ChecklistEnum = {
   reciept: 1,
-  user_letter_of_introduction: 2,
+  epi_user_letter_of_introduction: 2,
+  finance_user_letter_of_introduction: 3,
+  epi_letter_of_password_change: 4,
+  finance_letter_of_password_change: 4,
 };
 
 export const PermissionEnum = {
@@ -127,6 +131,7 @@ export const CALENDAR_FORMAT = {
   format_4: "dddd DD MMMM YYYY / hh:mm:ss A",
 };
 export const CACHE = {
+  VACCINE_CERTIFICATE_TABLE_PAGINATION_COUNT: "VACCINE_CERTIFICATE_TABLE",
   USER_TABLE_PAGINATION_COUNT: "USER_TABLE",
   AUDIT_TABLE_PAGINATION_COUNT: "AUDIT_TABLE",
   USER_ACTIVITY_TABLE_PAGINATION_COUNT: "USER_ACTIVITY_TABLE",

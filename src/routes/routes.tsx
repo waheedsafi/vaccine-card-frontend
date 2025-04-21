@@ -18,10 +18,8 @@ import UserEditPage from "@/views/pages/auth/users/edit/user-edit-page";
 import SettingsPage from "@/views/pages/auth/settings/settings-page";
 import ActivityPage from "@/views/pages/auth/activity/activity-page";
 import EpiAdminReportPage from "@/views/pages/auth/report/epi/admin/epi-admin-report-page";
-import EpiUserVaccineCertificatePage from "@/views/pages/auth/vaccine-certificate/epi/user/epi-user-vaccine-certificate-page";
 import FinanceAdminDashboardPage from "@/views/pages/auth/dashboard/finance/admin/finance-admin-dashboard-page";
 import FinanceAdminReportPage from "@/views/pages/auth/report/finance/admin/finance-admin-report-page";
-import FinanceCertificatePaymentUserPage from "@/views/pages/auth/certificate-payment/finance/user/finance-certificate-payment-user-page";
 import DebuggerDashboardPage from "@/views/pages/auth/dashboard/debugger/debugger-dashboard-page";
 import UsersProfilePage from "@/views/pages/auth/profile/users/users-profile-page";
 import UserLoginPage from "@/views/pages/guest/users/user-login-page";
@@ -30,6 +28,8 @@ import FinanceLoginPage from "@/views/pages/guest/finance/finance-login-page";
 import DebuggerAuditPage from "@/views/pages/auth/audit/debugger-audit-page";
 import DebuggerLogsPage from "@/views/pages/auth/logs/debugger-logs-page";
 import UserPage from "@/views/pages/auth/users/user-page";
+import FinanceCertificatePaymentUserPage from "@/views/pages/auth/vaccine/payment/finance/user/finance-certificate-payment-user-page";
+import EpiUserVaccineCertificatePage from "@/views/pages/auth/vaccine/certificate/epi/user/epi-user-vaccine-certificate-page";
 
 export const getEpiSuperRouter = (
   user: User | Epi | Finance,

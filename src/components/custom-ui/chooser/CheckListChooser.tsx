@@ -108,7 +108,7 @@ const CheckListChooser = React.forwardRef<HTMLInputElement, CheckListProps>(
                   <label className="flex flex-col items-center justify-center h-full transition-opacity duration-150 cursor-pointer hover:opacity-80">
                     <CloudUpload className="size-[30px] bg-primary text-primary-foreground rounded-full p-[4px]" />
                     <strong className="ltr:text-md-ltr rtl:text-lg-rtl font-medium text-primary-text">
-                      {t("select_a_file")}
+                      {t("select_a")}
                     </strong>
                   </label>
                 </UploadButton>

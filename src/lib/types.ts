@@ -1,9 +1,10 @@
 import {
   ActivityModel,
   Audit,
+  Role,
   SelectUserPermission,
   SubPermission,
-  User,
+  UserPermission,
 } from "@/database/tables";
 import { DateObject } from "react-multi-date-picker";
 
@@ -12,6 +13,7 @@ export interface IMenuItem {
   key: string;
 }
 export interface UserInformation {
+  registration_number: string;
   profile: any;
   imagePreviewUrl: any;
   full_name: string;
@@ -36,6 +38,18 @@ export interface UserInformation {
     name: string;
     selected: boolean;
   };
+  province: {
+    id: string;
+    name: string;
+  };
+  zone: {
+    id: string;
+    name: string;
+  };
+  gender: {
+    id: string;
+    name: string;
+  };
   permission: Map<string, SelectUserPermission>;
   allSelected: boolean;
   created_at: string;
@@ -45,9 +59,51 @@ export interface UserPassword {
   old_password: string;
   new_password: string;
   confirm_password: string;
+  letter_of_pass_change: FileType | undefined;
 }
+export type Order = "desc" | "asc";
+export type UserSort =
+  | "created_at"
+  | "username"
+  | "destination"
+  | "status"
+  | "job";
+export type UserSearch =
+  | "registration_number"
+  | "username"
+  | "contact"
+  | "email"
+  | "zone";
+export interface UserFilter {
+  sort: UserSort;
+  order: Order;
+  search: {
+    column: UserSearch;
+    value: string;
+  };
+  date: DateObject[];
+}
+export type EpiFinanceUser = {
+  id: string;
+  registeration_number: string;
+  full_name: string;
+  username: string;
+  email: string;
+  status: number;
+  grant: boolean;
+  profile: any;
+  role: Role;
+  contact: string;
+  job: string;
+  destination: string;
+  permissions: Map<string, UserPermission>;
+  created_at: string;
+  zone: string;
+  province: string;
+  gender: string;
+};
 export interface UserPaginationData {
-  data: User[];
+  data: EpiFinanceUser[];
   lastPage: number;
   perPage: number;
   currentPage: number;
@@ -63,24 +119,6 @@ export interface UserData {
   name: string;
   data: any;
 }
-export type Order = "desc" | "asc";
-export type UserSort =
-  | "created_at"
-  | "username"
-  | "destination"
-  | "status"
-  | "job";
-export type UserSearch = "username" | "contact" | "email";
-export interface UserFilter {
-  sort: UserSort;
-  order: Order;
-  search: {
-    column: UserSearch;
-    value: string;
-  };
-  date: DateObject[];
-}
-
 export interface UserRecordCount {
   activeUserCount: number | null;
   inActiveUserCount: number | null;
