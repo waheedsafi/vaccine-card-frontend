@@ -1,5 +1,5 @@
 {
-  "app_name": "International Relations Directorate",
+  "app_name": "Vaccine Certification",
   "total": "Total",
   "user_today": "User Today",
   "total_active": "Total Active",
@@ -190,5 +190,6 @@
   "user_letter_of_introduction": "Letter of introduction",
   "issued_certificate": "Issued certificate",
   "certificate_payment": "Certificate payment",
-  "letter_of_pass_change": "Letter of password change"
+  "letter_of_pass_change": "Letter of password change",
+  "vaccine_certificate": "Vaccine certificate"
 }

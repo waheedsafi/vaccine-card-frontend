@@ -1,5 +1,5 @@
 {
-  "app_name": "ریاست روابط بین المللی",
+  "app_name": "سرتیفیکیت واکسن",
   "total": "مجموع",
   "user_today": "کاربر امروز",
   "total_active": "مجموع فعال",
@@ -193,5 +193,6 @@
   "user_letter_of_introduction": "معرفی نامه",
   "issued_certificate": "صادر سرتیفیکیت",
   "certificate_payment": "پرداخت سرتیفیکیت",
-  "letter_of_pass_change": "نامه تغییر رمز عبور"
+  "letter_of_pass_change": "نامه تغییر رمز عبور",
+  "vaccine_certificate": "واکسن سرتیفیکیت"
 }
