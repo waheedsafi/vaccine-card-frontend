@@ -119,7 +119,6 @@ const CheckListChooser = React.forwardRef<HTMLInputElement, CheckListProps>(
                   }}
                   onFailed={async (failed: boolean, response: any) => {
                     if (failed) {
-                      console.log(response);
                       onFailed(failed, response);
                       setUploaded(false);
                     }

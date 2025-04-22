@@ -2,7 +2,7 @@ import APICombobox from "@/components/custom-ui/combobox/APICombobox";
 import CustomDatePicker from "@/components/custom-ui/DatePicker/CustomDatePicker";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
-import { BookDashed, Mail, Phone, UserRound } from "lucide-react";
+import { BookDashed, Phone, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { DateObject } from "react-multi-date-picker";
@@ -66,12 +66,12 @@ export default function AddPersonalDetail() {
         size_="sm"
         dir="ltr"
         className="rtl:text-end"
-        lable={t("passport_no")}
+        lable={t("passport_number")}
         placeholder={t("enter")}
-        defaultValue={userData["passport_no"]}
+        defaultValue={userData["passport_number"]}
         type="text"
-        name="passport_no"
-        errorMessage={error.get("passport_no")}
+        name="passport_number"
+        errorMessage={error.get("passport_number")}
         onChange={handleChange}
         startContent={
           <BookDashed className="text-tertiary size-[18px] pointer-events-none" />

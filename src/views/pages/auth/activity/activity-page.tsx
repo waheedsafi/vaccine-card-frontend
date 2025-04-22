@@ -8,8 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Briefcase } from "lucide-react";
-
 import { useUserAuthState } from "@/context/AuthContextProvider";
 import { UserPermission } from "@/database/tables";
 import { PermissionEnum } from "@/lib/constants";
@@ -25,7 +23,7 @@ import Pagination from "@/components/custom-ui/table/Pagination";
 
 import { setDateToURL, toLocaleDate } from "@/lib/utils";
 import NastranModel from "@/components/custom-ui/model/NastranModel";
-import { Languages, ListFilter, MapPinHouse, Search } from "lucide-react";
+import { ListFilter, Search } from "lucide-react";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";

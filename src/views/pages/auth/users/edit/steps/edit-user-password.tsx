@@ -173,9 +173,7 @@ export function EditUserPassword(props: EditUserPasswordProps) {
                 className=" border rounded-md p-2"
                 number={undefined}
                 hasEdit={true}
-                url={`${
-                  import.meta.env.VITE_API_BASE_URL
-                }/api/v1/epi/file/upload`}
+                url={`${import.meta.env.VITE_API_BASE_URL}/api/v1/file/upload`}
                 headers={{
                   Authorization: "Bearer " + getConfiguration()?.token,
                 }}

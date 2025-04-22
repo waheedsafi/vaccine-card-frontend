@@ -130,7 +130,7 @@ export default function AddVaccineDetail() {
           hasEdit={true}
           url={`${
             import.meta.env.VITE_API_BASE_URL
-          }/api/v1/epi/no/identifier/file/upload`}
+          }/api/v1/no/identifier/file/upload`}
           headers={{
             Authorization: "Bearer " + getConfiguration()?.token,
           }}

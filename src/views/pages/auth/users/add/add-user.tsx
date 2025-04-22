@@ -8,11 +8,12 @@ import Stepper from "@/components/custom-ui/stepper/Stepper";
 import CompleteStep from "@/components/custom-ui/stepper/CompleteStep";
 import axiosClient from "@/lib/axois-client";
 import { toast } from "@/components/ui/use-toast";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { setServerError } from "@/validation/validation";
 import { Check, Database, ShieldBan, User as UserIcon } from "lucide-react";
 import { checkStrength, passwordStrengthScore } from "@/validation/utils";
 import { EpiFinanceUser } from "@/lib/types";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
 
 export interface AddUserProps {
   onComplete: (user: EpiFinanceUser) => void;
@@ -20,6 +21,7 @@ export interface AddUserProps {
 export default function AddUser(props: AddUserProps) {
   const { onComplete } = props;
   const { t } = useTranslation();
+  const { user } = useGeneralAuthState();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
     userData: any,
@@ -70,7 +72,7 @@ export default function AddUser(props: AddUserProps) {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      const response = await axiosClient.post("epi/user/store", {
+      const response = await axiosClient.post(checklist.store_user_url, {
         permissions: userData?.permissions,
         status: userData.status == true,
         role_id: userData?.role?.id,
@@ -110,7 +112,13 @@ export default function AddUser(props: AddUserProps) {
   const closeModel = () => {
     modelOnRequestHide();
   };
+  const checklist = useMemo(() => {
+    const isFinance = user.role.name.startsWith("finance");
 
+    return {
+      store_user_url: isFinance ? "finance/user/store" : "epi/user/store",
+    };
+  }, [user.role.name]);
   return (
     <div className="pt-4">
       {/* Header */}

@@ -22,7 +22,7 @@ export const ChecklistEnum = {
   epi_user_letter_of_introduction: 2,
   finance_user_letter_of_introduction: 3,
   epi_letter_of_password_change: 4,
-  finance_letter_of_password_change: 4,
+  finance_letter_of_password_change: 5,
 };
 
 export const PermissionEnum = {

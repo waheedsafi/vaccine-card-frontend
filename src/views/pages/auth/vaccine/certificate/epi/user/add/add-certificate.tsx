@@ -152,7 +152,7 @@ export default function AddCertificate(props: AddCertificateProps) {
               { name: "province", rules: ["required"] },
               { name: "district", rules: ["required"] },
               { name: "date_of_birth", rules: ["required"] },
-              { name: "passport_no", rules: ["required"] },
+              { name: "passport_number", rules: ["required"] },
               { name: "nationality", rules: ["required"] },
               { name: "travel_type", rules: ["required"] },
               { name: "destina_country", rules: ["required"] },
