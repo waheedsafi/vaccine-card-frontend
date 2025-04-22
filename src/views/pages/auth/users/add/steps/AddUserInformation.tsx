@@ -71,6 +71,8 @@ export default function AddUserInformation() {
         defaultValue={userData["contact"]}
         type="text"
         name="contact"
+        required={true}
+        requiredHint={`* ${t("required")}`}
         errorMessage={error.get("contact")}
         onChange={handleChange}
         startContent={

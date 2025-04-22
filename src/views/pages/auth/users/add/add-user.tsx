@@ -157,6 +157,7 @@ export default function AddUser(props: AddUserProps) {
               { name: "full_name", rules: ["required", "max:45", "min:3"] },
               { name: "username", rules: ["required", "max:45", "min:3"] },
               { name: "email", rules: ["required"] },
+              { name: "contact", rules: ["required"] },
               { name: "destination", rules: ["required"] },
               { name: "job", rules: ["required"] },
               { name: "province", rules: ["required"] },

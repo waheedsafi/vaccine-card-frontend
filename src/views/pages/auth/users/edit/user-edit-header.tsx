@@ -1,6 +1,12 @@
 import IconButton from "@/components/custom-ui/button/IconButton";
 import { Pencil, Trash2 } from "lucide-react";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useMemo,
+  useState,
+} from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
 import axiosClient from "@/lib/axois-client";
@@ -8,6 +14,7 @@ import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import { UserInformation } from "@/lib/types";
 import CachedImage from "@/components/custom-ui/image/CachedImage";
 import { validateFile } from "@/lib/utils";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
 
 export interface UserEditHeaderProps {
   id: string | undefined;
@@ -18,9 +25,22 @@ export interface UserEditHeaderProps {
 
 export default function UserEditHeader(props: UserEditHeaderProps) {
   const { id, userData, setUserData, failed } = props;
+  const { user } = useGeneralAuthState();
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const authData = useMemo(() => {
+    const isFinance = user.role.name.startsWith("finance");
+
+    return {
+      delete_profile_url: isFinance
+        ? "finance/user/delete/profile-picture"
+        : "epi/user/delete/profile-picture",
+      update_profile_url: isFinance
+        ? "finance/user/update/profile-picture"
+        : "epi/user/update/profile-picture",
+    };
+  }, [user.role.name]);
   const onFileUploadChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const maxFileSize = 2 * 1024 * 1024; // 2MB
     const validTypes: string[] = ["image/jpeg", "image/png", "image/jpg"];
@@ -45,7 +65,7 @@ export default function UserEditHeader(props: UserEditHeaderProps) {
       formData.append("profile", file);
       try {
         const response = await axiosClient.post(
-          "user/update/profile-picture",
+          `${authData.update_profile_url}`,
           formData,
           {
             headers: {
@@ -97,7 +117,7 @@ export default function UserEditHeader(props: UserEditHeaderProps) {
 
     try {
       const response = await axiosClient.delete(
-        "user/delete/profile-picture/" + id
+        `${authData.delete_profile_url}/${id}`
       );
       if (response.status == 200 && userData) {
         // Change logged in user data
