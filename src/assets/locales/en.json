@@ -182,7 +182,9 @@
   "application": "application",
   "zone": "Zone",
   "registration_number": "Registration Number",
+  "ministry_emp_portal": "ministry emplyee portal",
   "are_a_finance": "Are you Finance?",
+  "click_here": "click here",
   "are_a_epi": "Are you EPI?",
   "finance_login": "Finance login",
   "epi_login": "EPI login",
@@ -195,6 +197,7 @@
   "enter_name": "Enter name",
   "date_of_birth": "Date of birth",
   "enter": "Enter",
+  "welcome":"welcome"
   "passport_number": "Passport Number",
   "travel_type": "Travel type",
   "destina_country": "Destination country",

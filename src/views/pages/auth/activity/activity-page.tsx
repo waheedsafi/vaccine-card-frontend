@@ -51,7 +51,7 @@ export default function Activity() {
   const { updateComponentCache, getComponentCache } = useCacheDB();
   const [state] = useGlobalState();
   const [selectedTab, setSelectedTab] = useState("admin"); // default to "user"
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [searchParams] = useSearchParams();
   const { user } = useUserAuthState();
 

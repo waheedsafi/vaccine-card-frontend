@@ -195,5 +195,14 @@
   "certificate_payment": "Certificate payment",
   "letter_of_pass_change": "Letter of password change",
   "enter_name": "نام را وارد کنید",
-  "date_of_birth": "تاریخ تولد"
+  "date_of_birth": "تاریخ تولد",
+  "in_active":"غیر فعال",
+  "ministry_emp_portal":"وزارت کارمندانو پورتل",
+  "are_a_finance":"تاسو مالی یاست",
+  "click_here":"دلته کلیک وکړئ",
+  "are_a_epi":"تاسود مافیت کتلوی یاست ",
+  "finance_login":"مالي ننوتل ",
+  "epi_login":"مافیت کتلوی ننوتل",
+  "gender":"جنس",
+  "enter":"ننوتل",
 }
