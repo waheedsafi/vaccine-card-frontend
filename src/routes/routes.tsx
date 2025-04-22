@@ -556,7 +556,10 @@ export const getFinanceUserRouter = (
     </BrowserRouter>
   );
 };
-export const getDebuggerRouter = (user: User, authenticated: boolean) => {
+export const getDebuggerRouter = (
+  user: User | Epi | Finance,
+  authenticated: boolean
+) => {
   const permissions: Map<string, UserPermission> = user.permissions;
   return (
     <BrowserRouter>

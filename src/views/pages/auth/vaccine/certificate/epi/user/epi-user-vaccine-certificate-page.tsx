@@ -6,7 +6,6 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "@/components/custom-ui/Breadcrumb/Breadcrumb";
-import VaccineCertificateHeader from "./vaccine-certificate-header";
 import { VaccineCertificateTable } from "./vaccine-certificate-table";
 export interface VaccineCertificatePageProps {}
 export default function VaccineCertificatePage() {
@@ -24,7 +23,6 @@ export default function VaccineCertificatePage() {
           {t("certificate")}
         </BreadcrumbItem>
       </Breadcrumb>
-      <VaccineCertificateHeader />
       <VaccineCertificateTable />
     </div>
   );

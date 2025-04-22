@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import CheckListChooser from "@/components/custom-ui/chooser/CheckListChooser";
 import { FileType } from "@/lib/types";
 
-export default function AddUserAccount() {
+export default function AddVaccineDetail() {
   const { userData, setUserData, error } = useContext(StepperContext);
   const [isVisible, setIsVisible] = useState(false);
   const { t } = useTranslation();
@@ -34,7 +34,6 @@ export default function AddUserAccount() {
       task_type: isFinance ? TaskTypeEnum.finance : TaskTypeEnum.epi,
     };
   }, [user.role.name]);
-  console.log(error);
   return (
     <div className="flex flex-col mt-10 gap-y-3 w-full lg:w-[60%] 2xl:w-1/3">
       <PasswordInput

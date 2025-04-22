@@ -197,6 +197,11 @@
   "enter_name": "Enter name",
   "date_of_birth": "Date of birth",
   "enter": "Enter",
-  "passport_no": "Passport Number",
   "welcome":"welcome"
+  "passport_number": "Passport Number",
+  "travel_type": "Travel type",
+  "destina_country": "Destination country",
+  "father_name": "Father name",
+  "nationality": "Nationality",
+  "vaccine_detail": "Vaccine detail"
 }

@@ -2,7 +2,7 @@ import APICombobox from "@/components/custom-ui/combobox/APICombobox";
 import CustomDatePicker from "@/components/custom-ui/DatePicker/CustomDatePicker";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
-import { Mail, Phone, UserRound } from "lucide-react";
+import { BookDashed, Mail, Phone, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { DateObject } from "react-multi-date-picker";
@@ -47,21 +47,6 @@ export default function AddPersonalDetail() {
           <UserRound className="text-tertiary size-[18px] pointer-events-none" />
         }
       />
-      <APICombobox
-        placeholderText={t("search_item")}
-        errorText={t("no_item")}
-        required={true}
-        requiredHint={`* ${t("required")}`}
-        onSelect={(selection: any) =>
-          setUserData({ ...userData, ["gender"]: selection })
-        }
-        lable={t("gender")}
-        selectedItem={userData["gender"]?.name}
-        placeHolder={t("select_a")}
-        errorMessage={error.get("gender")}
-        apiUrl={"genders"}
-        mode="single"
-      />
       <CustomInput
         size_="sm"
         dir="ltr"
@@ -76,6 +61,36 @@ export default function AddPersonalDetail() {
         startContent={
           <Phone className="text-tertiary size-[18px] pointer-events-none" />
         }
+      />
+      <CustomInput
+        size_="sm"
+        dir="ltr"
+        className="rtl:text-end"
+        lable={t("passport_no")}
+        placeholder={t("enter")}
+        defaultValue={userData["passport_no"]}
+        type="text"
+        name="passport_no"
+        errorMessage={error.get("passport_no")}
+        onChange={handleChange}
+        startContent={
+          <BookDashed className="text-tertiary size-[18px] pointer-events-none" />
+        }
+      />
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["gender"]: selection })
+        }
+        lable={t("gender")}
+        selectedItem={userData["gender"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("gender")}
+        apiUrl={"genders"}
+        mode="single"
       />
       <APICombobox
         placeholderText={t("search_item")}
@@ -121,17 +136,51 @@ export default function AddPersonalDetail() {
         className="py-3 w-full"
         errorMessage={error.get("date_of_birth")}
       />
-      <CustomInput
-        size_="sm"
-        dir="ltr"
-        className="rtl:text-end"
-        lable={t("passport_no")}
-        placeholder={t("enter")}
-        defaultValue={userData["passport_no"]}
-        type="text"
-        name="passport_no"
-        errorMessage={error.get("passport_no")}
-        onChange={handleChange}
+
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["nationality"]: selection })
+        }
+        lable={t("nationality")}
+        selectedItem={userData["nationality"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("nationality")}
+        apiUrl={"nationalities"}
+        mode="single"
+      />
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["travel_type"]: selection })
+        }
+        lable={t("travel_type")}
+        selectedItem={userData["travel_type"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("travel_type")}
+        apiUrl={"travel/types"}
+        mode="single"
+      />
+      <APICombobox
+        placeholderText={t("search_item")}
+        errorText={t("no_item")}
+        required={true}
+        requiredHint={`* ${t("required")}`}
+        onSelect={(selection: any) =>
+          setUserData({ ...userData, ["destina_country"]: selection })
+        }
+        lable={t("destina_country")}
+        selectedItem={userData["destina_country"]?.name}
+        placeHolder={t("select_a")}
+        errorMessage={error.get("destina_country")}
+        apiUrl={"countries"}
+        mode="single"
       />
     </div>
   );

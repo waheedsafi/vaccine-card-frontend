@@ -6,8 +6,8 @@ import React, {
   useEffect,
 } from "react";
 import { Calendar, Locale } from "react-date-object";
-import arabic from "react-date-object/calendars/arabic";
-import arabic_ar from "react-date-object/locales/arabic_ar";
+import gregorian from "react-date-object/calendars/gregorian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
 import { CACHE, CALENDAR, CALENDAR_LOCALE } from "@/lib/constants";
 import { getCalender } from "@/lib/utils";
 import useCacheDB from "@/lib/indexeddb/useCacheDB";
@@ -28,13 +28,13 @@ type Action = { type: "changeLanguage"; payload: SystemLanguage };
 
 const initialState: State = {
   systemLanguage: {
-    calendar: arabic,
-    local: arabic_ar,
+    calendar: gregorian,
+    local: gregorian_en,
     info: {
-      calendarId: CALENDAR.LUNAR,
-      localeId: CALENDAR_LOCALE.arabic,
+      calendarId: CALENDAR.Gregorian,
+      localeId: CALENDAR_LOCALE.english,
     },
-    format: "dddd DD MMMM YYYY / hh:mm:ss A",
+    format: "YYYY-MM-DD hh:mm A",
   },
 };
 

@@ -84,6 +84,9 @@ export default function AddUser(props: AddUserProps) {
         full_name: userData.full_name,
         gender_id: userData.gender.id,
         province_id: userData.province.id,
+        zone: userData.zone.name,
+        job: userData.job.name,
+        destination: userData.destination.name,
       });
       if (response.status == 200) {
         onComplete(response.data.user);
@@ -154,6 +157,7 @@ export default function AddUser(props: AddUserProps) {
               { name: "full_name", rules: ["required", "max:45", "min:3"] },
               { name: "username", rules: ["required", "max:45", "min:3"] },
               { name: "email", rules: ["required"] },
+              { name: "contact", rules: ["required"] },
               { name: "destination", rules: ["required"] },
               { name: "job", rules: ["required"] },
               { name: "province", rules: ["required"] },

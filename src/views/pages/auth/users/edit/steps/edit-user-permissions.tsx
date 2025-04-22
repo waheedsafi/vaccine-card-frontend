@@ -9,7 +9,7 @@ import {
 import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import { RefreshCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axiosClient from "@/lib/axois-client";
 import { toast } from "@/components/ui/use-toast";
 import ButtonSpinner from "@/components/custom-ui/spinner/ButtonSpinner";
@@ -19,12 +19,14 @@ import { IUserPermission, UserAction } from "@/lib/types";
 import PermissionSub from "@/components/custom-ui/general/PermissionSub";
 import { PermissionEnum } from "@/lib/constants";
 import { UserPermission } from "@/database/tables";
+import { useGeneralAuthState } from "@/context/AuthContextProvider";
 export interface EditUserPermissionsProps {
   permissions: UserPermission;
 }
 
 export default function EditUserPermissions(props: EditUserPermissionsProps) {
   const { t } = useTranslation();
+  const { user } = useGeneralAuthState();
   const { permissions } = props;
   let { id } = useParams();
 
@@ -32,12 +34,25 @@ export default function EditUserPermissions(props: EditUserPermissionsProps) {
   const [failed, setFailed] = useState(false);
   const [userData, setUserData] = useState<IUserPermission[]>([]);
   const [saving, setSaving] = useState(false);
+  const authData = useMemo(() => {
+    const isFinance = user.role.name.startsWith("finance");
 
+    return {
+      permission_url: isFinance
+        ? "finance/user/permissions"
+        : "epi/user/permissions",
+      store_permission_url: isFinance
+        ? "edit/finance/user/permissions"
+        : "edit/epi/user/permissions",
+    };
+  }, [user.role.name]);
   const loadPermissions = async () => {
     try {
       if (loading) return;
       setLoading(true);
-      const response = await axiosClient.get(`user-permissions/${id}`);
+      const response = await axiosClient.get(
+        `${authData.permission_url}/${id}`
+      );
       if (response.status == 200) {
         setUserData(response.data);
       }
@@ -62,7 +77,7 @@ export default function EditUserPermissions(props: EditUserPermissionsProps) {
       if (saving) return;
       setSaving(true);
       const response = await axiosClient.post(
-        `edit/user-permissions`,
+        authData.store_permission_url,
         {
           permissions: userData,
           user_id: id,
