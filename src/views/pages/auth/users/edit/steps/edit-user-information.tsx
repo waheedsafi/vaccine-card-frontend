@@ -82,10 +82,6 @@ export default function EditUserInformation(props: EditUserInformationProps) {
           rules: ["required"],
         },
         {
-          name: "role",
-          rules: ["required"],
-        },
-        {
           name: "status",
           rules: ["required"],
         },
@@ -118,7 +114,6 @@ export default function EditUserInformation(props: EditUserInformationProps) {
     formData.append("email", tempUserData.email);
     formData.append("destination_id", tempUserData.destination.id);
     formData.append("job_id", tempUserData.job.id);
-    formData.append("role_id", tempUserData.role.id);
     formData.append("status", `${tempUserData.status == true}`);
     formData.append("province_id", tempUserData.province.id);
     formData.append("gender_id", tempUserData.gender.id);
@@ -309,6 +304,7 @@ export default function EditUserInformation(props: EditUserInformationProps) {
               translate={true}
               cacheData={false}
               mode="single"
+              readonly={true}
             />
             <APICombobox
               placeholderText={t("search_item")}

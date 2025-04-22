@@ -1,6 +1,7 @@
 import {
   ActivityModel,
   Audit,
+  PersonCertificate,
   Role,
   SelectUserPermission,
   SubPermission,
@@ -109,6 +110,15 @@ export interface UserPaginationData {
   currentPage: number;
   totalItems: number;
 }
+export type PersonCertificateSearch = "passport_number" | "username";
+export interface PersonCertificatePaginationData {
+  data: PersonCertificate[];
+  lastPage: number;
+  perPage: number;
+  currentPage: number;
+  totalItems: number;
+}
+
 export interface Configuration {
   token?: string;
   type?: string;

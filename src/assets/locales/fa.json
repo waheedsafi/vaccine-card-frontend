@@ -198,5 +198,10 @@
   "enter_name": "نام را وارد کنید",
   "date_of_birth": "تاریخ تولد",
   "enter": "وارد کنید",
-  "passport_no": "پاسپورت نمبر"
+  "passport_number": "پاسپورت نمبر",
+  "travel_type": "نوع سفر",
+  "destina_country": "کشور مقصد",
+  "father_name": "نام پدر",
+  "nationality": "ملیت",
+  "vaccine_detail": "معلومات واکسین"
 }

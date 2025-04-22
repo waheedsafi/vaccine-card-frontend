@@ -181,7 +181,15 @@ export type Finance = {
   province: string;
   gender: string;
 };
-
+export type PersonCertificate = {
+  id: string;
+  passport_number: string;
+  full_name: string;
+  father_name: string;
+  contact: string;
+  gender: string;
+  last_visit_date: string;
+};
 export type CheckList = {
   id: string;
   type: string;

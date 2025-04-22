@@ -1,5 +1,3 @@
-import AddUserAccount from "./steps/AddUserAccount";
-import AddUserPermission from "./steps/AddUserPermission";
 import { useTranslation } from "react-i18next";
 import { useModelOnRequestHide } from "@/components/custom-ui/model/hook/useModelOnRequestHide";
 import CloseButton from "@/components/custom-ui/button/CloseButton";
@@ -9,13 +7,14 @@ import axiosClient from "@/lib/axois-client";
 import { toast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import { setServerError } from "@/validation/validation";
-import { Check, Database, ShieldBan, User as UserIcon } from "lucide-react";
+import { Check, Database, User as UserIcon } from "lucide-react";
 import { checkStrength, passwordStrengthScore } from "@/validation/utils";
-import { EpiFinanceUser } from "@/lib/types";
 import AddPersonalDetail from "./steps/add-personal-detail";
+import AddVaccineDetail from "./steps/add-vaccine-detail";
+import { PersonCertificate } from "@/database/tables";
 
 export interface AddCertificateProps {
-  onComplete: (user: EpiFinanceUser) => void;
+  onComplete: (personCertificate: PersonCertificate) => void;
 }
 export default function AddCertificate(props: AddCertificateProps) {
   const { onComplete } = props;
@@ -135,12 +134,8 @@ export default function AddCertificate(props: AddCertificateProps) {
             icon: <UserIcon className="size-[16px]" />,
           },
           {
-            description: t("account_information"),
+            description: t("vaccine_detail"),
             icon: <Database className="size-[16px]" />,
-          },
-          {
-            description: t("permissions"),
-            icon: <ShieldBan className="size-[16px]" />,
           },
           {
             description: t("complete"),
@@ -152,16 +147,19 @@ export default function AddCertificate(props: AddCertificateProps) {
             component: <AddPersonalDetail />,
             validationRules: [
               { name: "full_name", rules: ["required", "max:45", "min:3"] },
-              { name: "username", rules: ["required", "max:45", "min:3"] },
-              { name: "email", rules: ["required"] },
-              { name: "destination", rules: ["required"] },
-              { name: "job", rules: ["required"] },
-              { name: "province", rules: ["required"] },
+              { name: "father_name", rules: ["required", "max:45", "min:3"] },
               { name: "gender", rules: ["required"] },
+              { name: "province", rules: ["required"] },
+              { name: "district", rules: ["required"] },
+              { name: "date_of_birth", rules: ["required"] },
+              { name: "passport_no", rules: ["required"] },
+              { name: "nationality", rules: ["required"] },
+              { name: "travel_type", rules: ["required"] },
+              { name: "destina_country", rules: ["required"] },
             ],
           },
           {
-            component: <AddUserAccount />,
+            component: <AddVaccineDetail />,
             validationRules: [
               {
                 name: "password",
@@ -210,10 +208,6 @@ export default function AddCertificate(props: AddCertificateProps) {
               //   ],
               // },
             ],
-          },
-          {
-            component: <AddUserPermission />,
-            validationRules: [],
           },
           {
             component: (

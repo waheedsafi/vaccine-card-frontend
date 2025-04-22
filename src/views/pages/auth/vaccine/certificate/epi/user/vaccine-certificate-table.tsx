@@ -10,16 +10,16 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { useGlobalState } from "@/context/GlobalStateContext";
-import { Epi, User, UserPermission } from "@/database/tables";
+import { PersonCertificate, UserPermission } from "@/database/tables";
 import { CACHE, PermissionEnum } from "@/lib/constants";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
 import axiosClient from "@/lib/axois-client";
 
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
 import Pagination from "@/components/custom-ui/table/Pagination";
-import { setDateToURL, toLocaleDate } from "@/lib/utils";
+import { toLocaleDate } from "@/lib/utils";
 import NastranModel from "@/components/custom-ui/model/NastranModel";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import { ListFilter, Search } from "lucide-react";
@@ -28,87 +28,67 @@ import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
 import { DateObject } from "react-multi-date-picker";
 import useCacheDB from "@/lib/indexeddb/useCacheDB";
-import CachedImage from "@/components/custom-ui/image/CachedImage";
 import FilterDialog from "@/components/custom-ui/dialog/filter-dialog";
 import {
-  EpiFinanceUser,
-  Order,
-  UserPaginationData,
-  UserSearch,
-  UserSort,
+  PersonCertificatePaginationData,
+  PersonCertificateSearch,
 } from "@/lib/types";
 import AddCertificate from "./add/add-certificate";
 
 export function VaccineCertificateTable() {
   const { user } = useGeneralAuthState();
   const navigate = useNavigate();
+  const [error, setError] = useState<Map<string, string>>();
   const searchRef = useRef<HTMLInputElement>(null);
   const { updateComponentCache, getComponentCache } = useCacheDB();
   const [searchParams] = useSearchParams();
   // Accessing individual search filters
   const searchValue = searchParams.get("sch_val");
   const searchColumn = searchParams.get("sch_col");
-  const sort = searchParams.get("sort");
-  const order = searchParams.get("order");
-  const startDate = searchParams.get("st_dt");
-  const endDate = searchParams.get("en_dt");
   const filters = {
-    sort: sort == null ? "created_at" : sort,
-    order: order == null ? "desc" : order,
     search: {
-      column: searchColumn == null ? "username" : searchColumn,
+      column: searchColumn == null ? "passport_number" : searchColumn,
       value: searchValue == null ? "" : searchValue,
     },
-    date:
-      startDate && endDate
-        ? [
-            new DateObject(new Date(startDate)),
-            new DateObject(new Date(endDate)),
-          ]
-        : startDate
-        ? [new DateObject(new Date(startDate))]
-        : endDate
-        ? [new DateObject(new Date(endDate))]
-        : [],
   };
-  const loadList = async (
+
+  const searchPerson = async (
     searchInput: string | undefined = undefined,
     count: number | undefined,
     page: number | undefined
   ) => {
     try {
+      // 1. validate
+      if (searchInput?.trim() == "") {
+        const errMap = new Map<string, string>();
+        errMap.set("search", `${t(filters.search.column)} ${t("is_required")}`);
+        setError(errMap);
+        return;
+      } else {
+        const errMap = new Map<string, string>();
+        setError(errMap);
+      }
       if (loading) return;
       setLoading(true);
-      // 1. Organize date
-      let dates = {
-        startDate: startDate,
-        endDate: endDate,
-      };
-      // 2. Send data
-      const response = await axiosClient.get(
-        user.role.name.startsWith("finance") ? "finance/users" : "epi/users",
-        {
-          params: {
-            page: page,
-            per_page: count,
-            filters: {
-              sort: filters.sort,
-              order: filters.order,
-              search: {
-                column: filters.search.column,
-                value: searchInput,
-              },
-              date: dates,
+      const response = await axiosClient.get("epi/certificate/search", {
+        params: {
+          page: page,
+          per_page: count,
+          filters: {
+            search: {
+              column: filters.search.column,
+              value: searchInput,
             },
           },
-        }
-      );
-      const fetch = response.data.users.data as Epi[];
-      const lastPage = response.data.users.last_page;
-      const totalItems = response.data.users.total;
-      const perPage = response.data.users.per_page;
-      const currentPage = response.data.users.current_page;
-      setUsers({
+        },
+      });
+      const fetch = response.data.personCertificates
+        .data as PersonCertificate[];
+      const lastPage = response.data.person_certificates.last_page;
+      const totalItems = response.data.person_certificates.total;
+      const perPage = response.data.person_certificates.per_page;
+      const currentPage = response.data.person_certificates.current_page;
+      setPersonCertificates({
         filterList: {
           data: fetch,
           lastPage: lastPage,
@@ -134,31 +114,9 @@ export function VaccineCertificateTable() {
       setLoading(false);
     }
   };
-  const initialize = async (
-    searchInput: string | undefined = undefined,
-    count: number | undefined,
-    page: number | undefined
-  ) => {
-    if (!count) {
-      const countSore = await getComponentCache(
-        CACHE.VACCINE_CERTIFICATE_TABLE_PAGINATION_COUNT
-      );
-      count = countSore?.value ? countSore.value : 10;
-    }
-    if (!searchInput) {
-      searchInput = filters.search.value;
-    }
-    if (!page) {
-      page = 1;
-    }
-    loadList(searchInput, count, page);
-  };
-  useEffect(() => {
-    initialize(undefined, undefined, 1);
-  }, [sort, startDate, endDate, order]);
-  const [users, setUsers] = useState<{
-    filterList: UserPaginationData;
-    unFilterList: UserPaginationData;
+  const [personCertificates, setPersonCertificates] = useState<{
+    filterList: PersonCertificatePaginationData;
+    unFilterList: PersonCertificatePaginationData;
   }>({
     filterList: {
       data: [],
@@ -179,27 +137,21 @@ export function VaccineCertificateTable() {
   const { t } = useTranslation();
   const [state] = useGlobalState();
 
-  const addItem = (user: EpiFinanceUser) => {
-    setUsers((prevState) => ({
+  const addItem = (personCertificate: PersonCertificate) => {
+    setPersonCertificates((prevState) => ({
       filterList: {
         ...prevState.filterList,
-        data: [user, ...prevState.filterList.data],
+        data: [personCertificate, ...prevState.filterList.data],
       },
       unFilterList: {
         ...prevState.unFilterList,
-        data: [user, ...prevState.unFilterList.data],
+        data: [personCertificate, ...prevState.unFilterList.data],
       },
     }));
   };
 
   const skeleton = (
     <TableRow>
-      <TableCell>
-        <Shimmer className="h-[24px] w-full rounded-sm" />
-      </TableCell>
-      <TableCell>
-        <Shimmer className="h-[24px] w-full rounded-sm" />
-      </TableCell>
       <TableCell>
         <Shimmer className="h-[24px] w-full rounded-sm" />
       </TableCell>
@@ -229,8 +181,8 @@ export function VaccineCertificateTable() {
   const hasView = per?.view;
   const hasAdd = per?.add;
 
-  const watchOnClick = async (user: User) => {
-    const userId = user.id;
+  const watchOnClick = async (personCertificate: PersonCertificate) => {
+    const userId = personCertificate.id;
     navigate(`/users/${userId}`);
   };
   return (
@@ -256,6 +208,8 @@ export function VaccineCertificateTable() {
           placeholder={`${t(filters.search.column)}...`}
           parentClassName="sm:flex-1 col-span-3"
           type="text"
+          name="search"
+          errorMessage={error?.get("search")}
           ref={searchRef}
           startContent={
             <Search className="size-[18px] mx-auto rtl:mr-[4px] text-primary pointer-events-none" />
@@ -264,7 +218,7 @@ export function VaccineCertificateTable() {
             <SecondaryButton
               onClick={async () => {
                 if (searchRef.current != undefined)
-                  await initialize(
+                  await searchPerson(
                     searchRef.current.value,
                     undefined,
                     undefined
@@ -293,119 +247,42 @@ export function VaccineCertificateTable() {
           >
             <FilterDialog
               filters={filters}
-              sortOnComplete={async (filterName: UserSort) => {
-                if (filterName != filters.sort) {
-                  const queryParams = new URLSearchParams();
-                  queryParams.set("sort", filterName);
-                  queryParams.set("order", filters.order);
-                  queryParams.set("sch_col", filters.search.column);
-                  queryParams.set("sch_val", filters.search.value);
-                  setDateToURL(queryParams, filters.date);
-                  navigate(`/users?${queryParams.toString()}`, {
-                    replace: true,
-                  });
-                }
-              }}
-              searchFilterChanged={async (filterName: UserSearch) => {
+              sortOnComplete={async () => {}}
+              searchFilterChanged={async (
+                filterName: PersonCertificateSearch
+              ) => {
                 if (filterName != filters.search.column) {
                   const queryParams = new URLSearchParams();
-                  queryParams.set("sort", filters.sort);
-                  queryParams.set("order", filters.order);
                   queryParams.set("sch_col", filterName);
                   queryParams.set("sch_val", filters.search.value);
-                  setDateToURL(queryParams, filters.date);
-                  navigate(`/users?${queryParams.toString()}`, {
+                  navigate(`/vaccine_certificate?${queryParams.toString()}`, {
                     replace: true,
                   });
                 }
               }}
-              orderOnComplete={async (filterName: Order) => {
-                if (filterName != filters.order) {
-                  const queryParams = new URLSearchParams();
-                  queryParams.set("sort", filters.sort);
-                  queryParams.set("order", filterName);
-                  queryParams.set("sch_col", filters.search.column);
-                  queryParams.set("sch_val", filters.search.value);
-                  setDateToURL(queryParams, filters.date);
-                  navigate(`/users?${queryParams.toString()}`, {
-                    replace: true,
-                  });
-                }
-              }}
-              dateOnComplete={(selectedDates: DateObject[]) => {
-                if (selectedDates.length == 2) {
-                  const queryParams = new URLSearchParams();
-                  queryParams.set("order", filters.order);
-                  queryParams.set("sort", filters.sort);
-                  queryParams.set("sch_col", filters.search.column);
-                  queryParams.set("sch_val", filters.search.value);
-                  setDateToURL(queryParams, selectedDates);
-                  navigate(`/users?${queryParams.toString()}`, {
-                    replace: true,
-                  });
-                }
-              }}
+              orderOnComplete={async () => {}}
+              dateOnComplete={(_selectedDates: DateObject[]) => {}}
               filtersShowData={{
-                sort: [
-                  {
-                    name: "created_at",
-                    translate: t("date"),
-                    onClick: () => {},
-                  },
-                  {
-                    name: "username",
-                    translate: t("username"),
-                    onClick: () => {},
-                  },
-                  {
-                    name: "destination",
-                    translate: t("department"),
-                    onClick: () => {},
-                  },
-                  { name: "status", translate: t("status"), onClick: () => {} },
-                  { name: "job", translate: t("job"), onClick: () => {} },
-                ],
-                order: [
-                  {
-                    name: "asc",
-                    translate: t("asc"),
-                    onClick: () => {},
-                  },
-                  {
-                    name: "desc",
-                    translate: t("desc"),
-                    onClick: () => {},
-                  },
-                ],
+                sort: [],
+                order: [],
                 search: [
                   {
-                    name: "registration_number",
-                    translate: t("registration_number"),
+                    name: "passport_number",
+                    translate: t("passport_number"),
                     onClick: () => {},
                   },
-                  {
-                    name: "username",
-                    translate: t("username"),
-                    onClick: () => {},
-                  },
-                  { name: "email", translate: t("email"), onClick: () => {} },
                   {
                     name: "contact",
                     translate: t("contact"),
                     onClick: () => {},
                   },
-                  {
-                    name: "zone",
-                    translate: t("zone"),
-                    onClick: () => {},
-                  },
                 ],
               }}
               showColumns={{
-                sort: true,
-                order: true,
+                sort: false,
+                order: false,
                 search: true,
-                date: true,
+                date: false,
               }}
             />
           </NastranModel>
@@ -428,110 +305,94 @@ export function VaccineCertificateTable() {
           emptyPlaceholder={t("no_options_found")}
           rangePlaceholder={t("count")}
           onChange={async (value: string) =>
-            await initialize(undefined, parseInt(value), undefined)
+            await searchPerson(undefined, parseInt(value), undefined)
           }
         />
       </div>
       <Table className="bg-card rounded-md my-[2px] py-8">
         <TableHeader className="rtl:text-3xl-rtl ltr:text-xl-ltr">
           <TableRow className="hover:bg-transparent">
-            <TableHead className="text-start px-1">
-              {t("registration_number")}
-            </TableHead>
-            <TableHead className="text-center px-1 w-[60px]">
-              {t("profile")}
-            </TableHead>
-            <TableHead className="text-start">{t("username")}</TableHead>
-            <TableHead className="text-start">{t("role")}</TableHead>
-            <TableHead className="text-start">{t("email")}</TableHead>
+            <TableHead className="text-start px-1">{t("#")}</TableHead>
+            <TableHead className="text-start">{t("passport_number")}</TableHead>
+            <TableHead className="text-start">{t("full_name")}</TableHead>
+            <TableHead className="text-start">{t("father_name")}</TableHead>
             <TableHead className="text-start">{t("contact")}</TableHead>
-            <TableHead className="text-start">{t("zone")}</TableHead>
-            <TableHead className="text-start">{t("join_date")}</TableHead>
-            <TableHead className="text-start w-[60px]">{t("status")}</TableHead>
+            <TableHead className="text-start">{t("gender")}</TableHead>
+            <TableHead className="text-start">{t("last_visit_date")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="rtl:text-xl-rtl ltr:text-2xl-ltr">
           {loading ? (
             <>{skeleton}</>
           ) : (
-            users.filterList.data.map((item: Epi) => (
-              <TableRowIcon
-                read={hasView}
-                remove={false}
-                edit={false}
-                onEdit={async () => {}}
-                key={item.email}
-                item={item}
-                onRemove={async () => {}}
-                onRead={watchOnClick}
-              >
-                <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
-                  {item.registeration_number}
-                </TableCell>
-                <TableCell className="px-1 py-0">
-                  <CachedImage
-                    src={item?.profile}
-                    alt="Avatar"
-                    ShimmerIconClassName="size-[18px]"
-                    shimmerClassName="size-[36px] mx-auto shadow-lg border border-tertiary rounded-full"
-                    className="size-[36px] object-center object-cover mx-auto shadow-lg border border-tertiary rounded-full"
-                    routeIdentifier={"profile"}
-                  />
-                </TableCell>
-                <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
-                  {item.username}
-                </TableCell>
-                <TableCell>
-                  <h1 className="truncate">{item?.destination}</h1>
-                  <h1 className="truncate text-primary/90">{item?.job}</h1>
-                </TableCell>
-                <TableCell
-                  dir="ltr"
-                  className="truncate rtl:text-sm-rtl rtl:text-end"
+            personCertificates.filterList.data.map(
+              (item: PersonCertificate) => (
+                <TableRowIcon
+                  read={hasView}
+                  remove={false}
+                  edit={false}
+                  onEdit={async () => {}}
+                  key={item.id}
+                  item={item}
+                  onRemove={async () => {}}
+                  onRead={watchOnClick}
                 >
-                  {item.email}
-                </TableCell>
-                <TableCell
-                  dir="ltr"
-                  className="rtl:text-end rtl:text-sm-rtl truncate"
-                >
-                  {item?.contact == "null" ? "" : item?.contact}
-                </TableCell>
-                <TableCell
-                  dir="ltr"
-                  className="rtl:text-end rtl:text-sm-rtl truncate"
-                >
-                  {item.zone}
-                </TableCell>
-                <TableCell className="truncate">
-                  {toLocaleDate(new Date(item.created_at), state)}
-                </TableCell>
-                <TableCell>
-                  {item?.status == 1 ? (
-                    <h1 className="truncate text-center rtl:text-md-rtl ltr:text-lg-ltr bg-green-500 px-1 py-[2px] shadow-md text-primary-foreground font-bold rounded-sm">
-                      {t("active")}
-                    </h1>
-                  ) : (
-                    <h1 className="truncate text-center rtl:text-md-rtl ltr:text-lg-ltr bg-red-400 px-1 py-[2px] shadow-md text-primary-foreground font-bold rounded-sm">
-                      {t("lock")}
-                    </h1>
-                  )}
-                </TableCell>
-              </TableRowIcon>
-            ))
+                  <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                    {item.id}
+                  </TableCell>
+                  <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                    {item.passport_number}
+                  </TableCell>
+
+                  <TableCell
+                    dir="ltr"
+                    className="truncate rtl:text-sm-rtl rtl:text-end"
+                  >
+                    {item.full_name}
+                  </TableCell>
+                  <TableCell
+                    dir="ltr"
+                    className="truncate rtl:text-sm-rtl rtl:text-end"
+                  >
+                    {item.father_name}
+                  </TableCell>
+                  <TableCell
+                    dir="ltr"
+                    className="rtl:text-end rtl:text-sm-rtl truncate"
+                  >
+                    {item?.contact == "null" ? "" : item?.contact}
+                  </TableCell>
+                  <TableCell
+                    dir="ltr"
+                    className="truncate rtl:text-sm-rtl rtl:text-end"
+                  >
+                    {item.contact}
+                  </TableCell>
+                  <TableCell
+                    dir="ltr"
+                    className="truncate rtl:text-sm-rtl rtl:text-end"
+                  >
+                    {item.gender}
+                  </TableCell>
+                  <TableCell className="truncate">
+                    {toLocaleDate(new Date(item.last_visit_date), state)}
+                  </TableCell>
+                </TableRowIcon>
+              )
+            )
           )}
         </TableBody>
       </Table>
       <div className="flex justify-between rounded-md bg-card flex-1 p-3 items-center">
         <h1 className="rtl:text-lg-rtl ltr:text-md-ltr font-medium">{`${t(
           "page"
-        )} ${users.unFilterList.currentPage} ${t("of")} ${
-          users.unFilterList.lastPage
+        )} ${personCertificates.unFilterList.currentPage} ${t("of")} ${
+          personCertificates.unFilterList.lastPage
         }`}</h1>
         <Pagination
-          lastPage={users.unFilterList.lastPage}
+          lastPage={personCertificates.unFilterList.lastPage}
           onPageChange={async (page) =>
-            await initialize(undefined, undefined, page)
+            await searchPerson(undefined, undefined, page)
           }
         />
       </div>

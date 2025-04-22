@@ -13,7 +13,7 @@ import { toast } from "@/components/ui/use-toast";
 import CheckListChooser from "@/components/custom-ui/chooser/CheckListChooser";
 import { FileType } from "@/lib/types";
 
-export default function AddUserAccount() {
+export default function AddVaccineDetail() {
   const { userData, setUserData, error } = useContext(StepperContext);
   const [isVisible, setIsVisible] = useState(false);
   const { t } = useTranslation();
