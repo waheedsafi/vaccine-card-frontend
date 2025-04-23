@@ -32,21 +32,21 @@ export default function AddCertificate() {
       userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
         const item: {
           id: any;
-          vaccine_type: any;
+          vaccine_type_id: any;
           registration_number: any;
           volume: any;
           page: any;
           registration_date: any;
-          vaccine_center: any;
+          vaccine_center_id: any;
           doses: any[];
         } = {
           id: vaccine.id,
-          vaccine_type: vaccine.vaccine_type,
+          vaccine_type_id: vaccine.vaccine_type?.id,
           registration_number: vaccine.registration_number,
           volume: vaccine.volume,
           page: vaccine.page,
           registration_date: vaccine.registration_date?.toDate()?.toISOString(),
-          vaccine_center: vaccine.vaccine_center,
+          vaccine_center_id: vaccine.vaccine_center?.id,
           doses: [],
         };
         const doses: any[] = [];
