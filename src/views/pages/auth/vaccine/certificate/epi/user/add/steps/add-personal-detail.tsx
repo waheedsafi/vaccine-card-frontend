@@ -2,6 +2,7 @@ import APICombobox from "@/components/custom-ui/combobox/APICombobox";
 import CustomDatePicker from "@/components/custom-ui/DatePicker/CustomDatePicker";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
+import { useScrollToElement } from "@/hook/use-scroll-to-element";
 import { BookDashed, Phone, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,14 +10,15 @@ import { DateObject } from "react-multi-date-picker";
 
 export default function AddPersonalDetail() {
   const { t } = useTranslation();
-
   const { userData, setUserData, error } = useContext(StepperContext);
+  useScrollToElement(error);
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
   return (
-    <div className="flex flex-col mt-10 w-full lg:w-[60%] 2xl:w-1/3 gap-y-6 pb-12">
+    <div className="flex flex-col lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4 xl:gap-x-12 lg:items-center mt-4 gap-y-3 w-full lg:w-full">
       <CustomInput
         required={true}
         lable={t("full_name")}
@@ -46,6 +48,18 @@ export default function AddPersonalDetail() {
         startContent={
           <UserRound className="text-tertiary size-[18px] pointer-events-none" />
         }
+      />
+      <CustomDatePicker
+        placeholder={t("select_a_date")}
+        lable={t("date_of_birth")}
+        requiredHint={`* ${t("required")}`}
+        required={true}
+        value={userData.date_of_birth}
+        dateOnComplete={(date: DateObject) => {
+          setUserData({ ...userData, date_of_birth: date });
+        }}
+        className="py-3 w-full"
+        errorMessage={error.get("date_of_birth")}
       />
       <CustomInput
         size_="sm"
@@ -124,18 +138,6 @@ export default function AddPersonalDetail() {
           key={userData?.province?.id}
         />
       )}
-      <CustomDatePicker
-        placeholder={t("select_a_date")}
-        lable={t("date_of_birth")}
-        requiredHint={`* ${t("required")}`}
-        required={true}
-        value={userData.date_of_birth}
-        dateOnComplete={(date: DateObject) => {
-          setUserData({ ...userData, date_of_birth: date });
-        }}
-        className="py-3 w-full"
-        errorMessage={error.get("date_of_birth")}
-      />
 
       <APICombobox
         placeholderText={t("search_item")}
@@ -179,7 +181,7 @@ export default function AddPersonalDetail() {
         selectedItem={userData["destina_country"]?.name}
         placeHolder={t("select_a")}
         errorMessage={error.get("destina_country")}
-        apiUrl={"countries"}
+        apiUrl={"destination-countries"}
         mode="single"
       />
     </div>

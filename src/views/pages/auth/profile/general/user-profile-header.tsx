@@ -9,11 +9,15 @@ import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import CachedImage from "@/components/custom-ui/image/CachedImage";
 import { validateFile } from "@/lib/utils";
 
-export default function UserProfileHeader() {
+interface UserProfileHeaderProps {
+  profile_upload_url: string;
+  profile_delete_url: string;
+}
+export default function UserProfileHeader(props: UserProfileHeaderProps) {
+  const { profile_delete_url, profile_upload_url } = props;
   const { user, setUser } = useUserAuthState();
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
-
   const onFileUploadChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileInput = e.target;
     const maxFileSize = 2 * 1024 * 1024; // 2MB
@@ -35,15 +39,11 @@ export default function UserProfileHeader() {
     const formData = new FormData();
     formData.append("profile", file);
     try {
-      const response = await axiosClient.post(
-        "user/profile/picture-update",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosClient.post(profile_upload_url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status == 200) {
         // Change logged in user data
         await setUser({
@@ -77,7 +77,7 @@ export default function UserProfileHeader() {
     setLoading(true);
 
     try {
-      const response = await axiosClient.delete("delete/profile-picture");
+      const response = await axiosClient.delete(profile_delete_url);
       if (response.status == 200) {
         // Change logged in user data
         await setUser({

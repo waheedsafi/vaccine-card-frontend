@@ -138,7 +138,14 @@ export default function EditUserPermissions(props: EditUserPermissionsProps) {
     singleRow: (value: boolean, permission: string) => {
       const updatedUserData = userData.map((perm) =>
         perm.permission === permission
-          ? { ...perm, add: value, edit: value, delete: value, view: value }
+          ? {
+              ...perm,
+              add: value,
+              edit: value,
+              delete: value,
+              view: value,
+              singleRow: value,
+            }
           : perm
       );
       setUserData(updatedUserData);
@@ -209,7 +216,14 @@ export default function EditUserPermissions(props: EditUserPermissionsProps) {
           // Update the sub array with the updated SubPermission
           const updatedSub = perm.sub.map((sub) =>
             sub.id === subId
-              ? { ...sub, add: value, edit: value, delete: value, view: value }
+              ? {
+                  ...sub,
+                  add: value,
+                  edit: value,
+                  delete: value,
+                  view: value,
+                  singleRow: value,
+                }
               : sub
           );
           return { ...perm, sub: updatedSub }; // Return the updated permission object

@@ -12,12 +12,14 @@ import { getConfiguration, validateFile } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
 import CheckListChooser from "@/components/custom-ui/chooser/CheckListChooser";
 import { FileType } from "@/lib/types";
+import { useScrollToElement } from "@/hook/use-scroll-to-element";
 
 export default function AddUserAccount() {
   const { userData, setUserData, error } = useContext(StepperContext);
   const [isVisible, setIsVisible] = useState(false);
   const { t } = useTranslation();
   const { user } = useGeneralAuthState();
+  useScrollToElement(error);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;

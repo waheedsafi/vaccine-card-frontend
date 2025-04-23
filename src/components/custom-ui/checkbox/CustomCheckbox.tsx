@@ -42,9 +42,10 @@ const CustomCheckbox = React.forwardRef<HTMLInputElement, CustomCheckboxProps>(
           </h1>
         )}
         <div
-          className={`flex items-center space-x-4 ${parentClassName} ${
-            error && "border-red-400 border"
-          }`}
+          className={cn(
+            `flex items-center space-x-4 ${error && "border-red-400 border"}`,
+            parentClassName
+          )}
         >
           <Checkbox
             checked={checked}

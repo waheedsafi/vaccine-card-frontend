@@ -13,6 +13,8 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "@/components/custom-ui/Breadcrumb/Breadcrumb";
+import VaccineTypeTab from "./tabs/vaccine/type/vaccine-type-tab";
+import VaccineCenterTab from "./tabs/vaccine/center/vaccine-center-tab";
 
 export default function SettingsPage() {
   const { user } = useUserAuthState();
@@ -51,6 +53,24 @@ export default function SettingsPage() {
           <MapPinHouse className="size-[16px] ltr:mr-1 rtl:ml-1" />
           {t("reference")}
         </TabsTrigger>
+      ) : key == PermissionEnum.settings.sub.vaccine_type ? (
+        <TabsTrigger
+          key={index}
+          value={key.toString()}
+          className="gap-x-1 bg-card shadow rtl:text-2xl-rtl ltr:text-xl-ltr data-[state=active]:bg-primary data-[state=active]:text-tertiary"
+        >
+          <MapPinHouse className="size-[16px] ltr:mr-1 rtl:ml-1" />
+          {t("vaccine_type")}
+        </TabsTrigger>
+      ) : key == PermissionEnum.settings.sub.vaccine_center ? (
+        <TabsTrigger
+          key={index}
+          value={key.toString()}
+          className="gap-x-1 bg-card shadow rtl:text-2xl-rtl ltr:text-xl-ltr data-[state=active]:bg-primary data-[state=active]:text-tertiary"
+        >
+          <MapPinHouse className="size-[16px] ltr:mr-1 rtl:ml-1" />
+          {t("vaccine_center")}
+        </TabsTrigger>
       ) : undefined;
     }
   );
@@ -86,6 +106,18 @@ export default function SettingsPage() {
           className="w-full px-4 pt-8"
         >
           <DestinationTab permissions={per} />
+        </TabsContent>
+        <TabsContent
+          value={PermissionEnum.settings.sub.vaccine_center.toString()}
+          className="w-full px-4 pt-8"
+        >
+          <VaccineCenterTab permissions={per} />
+        </TabsContent>
+        <TabsContent
+          value={PermissionEnum.settings.sub.vaccine_type.toString()}
+          className="w-full px-4 pt-8"
+        >
+          <VaccineTypeTab permissions={per} />
         </TabsContent>
       </Tabs>
     </>

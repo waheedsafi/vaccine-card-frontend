@@ -15,7 +15,7 @@ export default function FakeCombobox(props: FakeComboboxProps) {
       <Label className="font-medium rtl:text-xl-rtl ltr:text-xl-ltr">
         {title}
       </Label>
-      <h1 className="px-4 py-[10px] font-medium border rounded-md relative rtl:text-xl-rtl ltr:text-xl-ltr">
+      <h1 className="px-4 py-[14px] font-medium border rounded-md relative rtl:text-xl-rtl ltr:text-xl-ltr">
         {selected}
         {icon}
       </h1>

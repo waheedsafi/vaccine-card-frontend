@@ -9,10 +9,8 @@ import AuthLayout from "@/views/layout/auth-layout";
 import LoginPage from "@/views/pages/guest/login-page";
 import EpiSuperDashboardPage from "@/views/pages/auth/dashboard/epi/super/epi-super-dashboard-page";
 import EpiSuperReportPage from "@/views/pages/auth/report/epi/super/epi-super-report-page";
-import EpiProfilePage from "@/views/pages/auth/profile/epi/epi-profile-page";
 import FinanceSuperDashboardPage from "@/views/pages/auth/dashboard/finance/super/finance-super-dashboard-page";
 import FinanceSuperReportPage from "@/views/pages/auth/report/finance/super/finance-super-report-page";
-import FinanceProfilePage from "@/views/pages/auth/profile/finance/finance-profile-page";
 import EpiAdminDashboardPage from "@/views/pages/auth/dashboard/epi/admin/epi-admin-dashboard-page";
 import UserEditPage from "@/views/pages/auth/users/edit/user-edit-page";
 import SettingsPage from "@/views/pages/auth/settings/settings-page";
@@ -30,6 +28,7 @@ import DebuggerLogsPage from "@/views/pages/auth/logs/debugger-logs-page";
 import UserPage from "@/views/pages/auth/users/user-page";
 import FinanceCertificatePaymentUserPage from "@/views/pages/auth/vaccine/payment/finance/user/finance-certificate-payment-user-page";
 import EpiUserVaccineCertificatePage from "@/views/pages/auth/vaccine/certificate/epi/user/epi-user-vaccine-certificate-page";
+import FinaceEpiProfilePage from "@/views/pages/auth/profile/finance-epi/finance-epi-profile-page";
 
 export const getEpiSuperRouter = (
   user: User | Epi | Finance,
@@ -103,7 +102,7 @@ export const getEpiSuperRouter = (
               />
             }
           />
-          <Route path="profile" element={<EpiProfilePage />} />
+          <Route path="profile" element={<FinaceEpiProfilePage />} />
           <Route
             path="settings"
             element={
@@ -205,7 +204,7 @@ export const getEpiAdminRouter = (
               />
             }
           />
-          <Route path="profile" element={<EpiProfilePage />} />
+          <Route path="profile" element={<FinaceEpiProfilePage />} />
           <Route
             path="settings"
             element={
@@ -274,7 +273,7 @@ export const getEpiUserRouter = (
               />
             }
           />
-          <Route path="profile" element={<EpiProfilePage />} />
+          <Route path="profile" element={<FinaceEpiProfilePage />} />
           <Route
             path="settings"
             element={
@@ -365,7 +364,7 @@ export const getFinanceSuperRouter = (
               />
             }
           />
-          <Route path="profile" element={<FinanceProfilePage />} />
+          <Route path="profile" element={<FinaceEpiProfilePage />} />
           <Route
             path="settings"
             element={
@@ -468,7 +467,7 @@ export const getFinanceAdminRouter = (
               />
             }
           />
-          <Route path="profile" element={<FinanceProfilePage />} />
+          <Route path="profile" element={<FinaceEpiProfilePage />} />
           <Route
             path="settings"
             element={
@@ -537,7 +536,7 @@ export const getFinanceUserRouter = (
               />
             }
           />
-          <Route path="profile" element={<FinanceProfilePage />} />
+          <Route path="profile" element={<FinaceEpiProfilePage />} />
           <Route
             path="settings"
             element={

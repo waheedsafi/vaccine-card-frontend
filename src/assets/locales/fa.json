@@ -179,6 +179,7 @@
   "unauthorized": "غیر مجاز",
   "unauthorized_desc": "برای بازدید از صفحه اصلی ",
   "save_close": "ذخیره و بستن",
+  "select_row": "انتخاب ردیف",
   "application": "application",
   "zone": "زون",
   "registration_number": "شماره ثبت",
@@ -203,5 +204,17 @@
   "destina_country": "کشور مقصد",
   "father_name": "نام پدر",
   "nationality": "ملیت",
-  "vaccine_detail": "معلومات واکسین"
+  "vaccine_detail": "معلومات واکسین",
+  "vaccine_center": "مرکز واکسین",
+  "vaccine_type": "نوع واکسین",
+  "activity": "فعالیت",
+  "user_activity": "فعالیت کاربر",
+  "self_activity": "فعالیت خود",
+  "profile_activity": "فعالیت پروفایل",
+  "last_visit_date": "تاریخ آخرین بازدید",
+  "registration_date": "تاریخ ثبت نام",
+  "volume": "جلد",
+  "dose": "دوز",
+  "batch_number": "شماره بیج",
+  "vaccine_date": "تاریخ واکسین"
 }

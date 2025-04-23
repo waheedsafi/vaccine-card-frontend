@@ -35,7 +35,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={`${parentClassName}`}>
         <div
           className={`rtl:text-lg-rtl ltr:text-lg-ltr relative select-none h-fit ${
-            required || lable ? "mt-[20px]" : "mt-2"
+            required || lable ? "mt-[26px]" : "mt-2"
           } ${parentClassName}`}
         >
           {startContent && (
@@ -64,7 +64,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, InputProps>(
           {lable && (
             <label
               htmlFor={lable}
-              className="rtl:text-lg-rtl ltr:text-xl-ltr rtl:right-[4px] ltr:left-[4px] ltr:-top-[22px] rtl:-top-[24px] absolute font-semibold"
+              className="rtl:text-lg-rtl ltr:text-xl-ltr rtl:right-[4px] ltr:left-[4px] ltr:-top-[26px] rtl:-top-[29px] absolute font-semibold"
             >
               {lable}
             </label>

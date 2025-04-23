@@ -1,3 +1,5 @@
+import { DateObject } from "react-multi-date-picker";
+
 export type Role =
   | { role: 1; name: "epi_super" }
   | { role: 2; name: "epi_admin" }
@@ -25,6 +27,7 @@ export interface SubPermission {
   view: boolean;
   delete: boolean;
   add: boolean;
+  singleRow: boolean;
 }
 export type UserPermission = {
   id: number;
@@ -189,6 +192,30 @@ export type PersonCertificate = {
   contact: string;
   gender: string;
   last_visit_date: string;
+};
+export type VaccineType = {
+  id: string;
+  name: string;
+};
+export type VaccineCenter = {
+  id: string;
+  name: string;
+};
+export type Dose = {
+  id: string;
+  batch_number: string;
+  vaccine_date: string;
+  added_by: string;
+};
+export type Vaccine = {
+  id: string;
+  vaccine_type: VaccineType;
+  registration_number: string;
+  volume: string;
+  page: string;
+  registration_date: DateObject;
+  vaccine_center: VaccineCenter;
+  dose: Dose[];
 };
 export type CheckList = {
   id: string;

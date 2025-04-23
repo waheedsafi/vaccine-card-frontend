@@ -41,15 +41,17 @@ const PermissionSub = (props: PermissionSubProps) => {
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-4 px-3 lg:px-4 py-4 md:py-4 bg-primary/5 pb-4 mb-4 border hover:shadow transition-shadow ease-in-out rounded-xl shadow-sm">
         <div className="md:flex md:flex-wrap xl:grid md:space-y-2 xl:space-y-0 space-y-3 xl:grid-cols-6 mt-2 items-center border-b pb-3">
-          <div className="col-span-2 w-full xl:w-fit flex items-center gap-x-2">
+          <div className="col-span-2 w-full xl:w-fit flex justify-between items-center gap-x-2">
             <h1 className="rtl:text-2xl-rtl ltr:text-xl-ltr text-start font-bold text-tertiary">
               {t(permission.permission)}
             </h1>
             <CustomCheckbox
-              checked={permission.add}
+              parentClassName="space-x-1"
+              checked={permission.singleRow}
               onCheckedChange={(value: boolean) =>
                 mainActions["singleRow"](value, permission.permission)
               }
+              text={t("select_row")}
             />
           </div>
           <CustomCheckbox
@@ -92,12 +94,13 @@ const PermissionSub = (props: PermissionSubProps) => {
               !permission.view && "pointer-events-none opacity-60"
             }`}
           >
-            <div className="col-span-2 w-full xl:w-fit flex items-center gap-x-2">
+            <div className="col-span-2 w-full justify-between xl:w-fit flex items-center gap-x-2">
               <h1 className="rtl:text-2xl-rtl ltr:text-xl-ltr text-start font-bold text-tertiary">
                 {t(subPermission.name)}
               </h1>
               <CustomCheckbox
-                checked={subPermission.add}
+                parentClassName="space-x-1"
+                checked={subPermission.singleRow}
                 onCheckedChange={(value: boolean) =>
                   subActions["singleRow"](
                     value,
@@ -105,6 +108,7 @@ const PermissionSub = (props: PermissionSubProps) => {
                     subPermission.id
                   )
                 }
+                text={t("select_row")}
               />
             </div>
             <CustomCheckbox

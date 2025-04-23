@@ -164,7 +164,7 @@ export default function CustomDatePicker(props: CustomeDatePickerProps) {
         className={cn(
           `border relative px-3 py-1 rounded-md ${
             readonly && "cursor-not-allowed"
-          } ${required || lable ? "mt-[20px]" : "mt-2"} ${
+          } ${required || lable ? "mt-[26px]" : "mt-2"} ${
             errorMessage && "border-red-400"
           }`,
           className
@@ -182,12 +182,12 @@ export default function CustomDatePicker(props: CustomeDatePickerProps) {
           </span>
         )}
         {selectedDates ? (
-          <h1 className="flex items-center gap-x-2 text-ellipsis rtl:text-lg-rtl ltr:text-lg-ltr text-primary/80 text-nowrap">
+          <h1 className="flex items-center gap-x-2 py-[2px] text-ellipsis rtl:text-lg-rtl ltr:text-lg-ltr text-primary/80 text-nowrap">
             <CalendarDays className="size-[16px] inline-block text-tertiary rtl:ml-2 rtl:mr-2" />
             {formatHijriDate(selectedDates)}
           </h1>
         ) : (
-          <h1 className="flex items-center gap-x-2 text-ellipsis rtl:text-lg-rtl ltr:text-lg-ltr font-semibold text-primary text-nowrap">
+          <h1 className="flex items-center gap-x-2 py-[2px] text-ellipsis rtl:text-lg-rtl ltr:text-lg-ltr font-semibold text-primary text-nowrap">
             <CalendarDays className="size-[16px] inline-block text-tertiary" />
             {placeholder}
           </h1>
@@ -196,7 +196,7 @@ export default function CustomDatePicker(props: CustomeDatePickerProps) {
         {lable && (
           <label
             htmlFor={lable}
-            className="rtl:text-lg-rtl ltr:text-xl-ltr rtl:right-[4px] ltr:left-[4px] ltr:-top-[22px] rtl:-top-[24px] absolute font-semibold"
+            className="rtl:text-lg-rtl ltr:text-xl-ltr rtl:right-[4px] ltr:left-[4px] ltr:-top-[26px] rtl:-top-[29px] absolute font-semibold"
           >
             {lable}
           </label>

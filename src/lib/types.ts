@@ -159,6 +159,7 @@ export type IUserPermission = {
   view: boolean;
   delete: boolean;
   add: boolean;
+  singleRow: boolean;
   visible: boolean;
   permission: string;
   icon: string;

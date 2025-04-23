@@ -25,6 +25,7 @@ import FakeCombobox from "@/components/custom-ui/combobox/FakeCombobox";
 import { UserPermission } from "@/database/tables";
 import { PermissionEnum } from "@/lib/constants";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
+import { useScrollToElement } from "@/hook/use-scroll-to-element";
 export interface EditUserInformationProps {
   id: string | undefined;
   failed: boolean;
@@ -43,6 +44,8 @@ export default function EditUserInformation(props: EditUserInformationProps) {
   const { user } = useGeneralAuthState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Map<string, string>>(new Map());
+  useScrollToElement(error);
+
   useEffect(() => {
     setTempUserData(userData);
   }, [userData]);

@@ -179,6 +179,7 @@
   "unauthorized": "Unauthorized",
   "unauthorized_desc": "To vist home page ",
   "save_close": "Save & Close",
+  "select_row": "Select Row",
   "application": "application",
   "zone": "Zone",
   "registration_number": "Registration Number",
@@ -203,5 +204,17 @@
   "destina_country": "Destination country",
   "father_name": "Father name",
   "nationality": "Nationality",
-  "vaccine_detail": "Vaccine detail"
+  "vaccine_detail": "Vaccine detail",
+  "vaccine_center": "Vaccine center",
+  "vaccine_type": "Vaccine type",
+  "activity": "Activity",
+  "user_activity": "User Activity",
+  "self_activity": "Self Activity",
+  "profile_activity": "Profile Activity",
+  "last_visit_date": "Last visit date",
+  "registration_date": "Registration date",
+  "volume": "Volume",
+  "dose": "Dose",
+  "batch_number": "Batch number",
+  "vaccine_date": "Vaccine date"
 }

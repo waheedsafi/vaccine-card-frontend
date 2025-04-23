@@ -1,14 +1,16 @@
 import APICombobox from "@/components/custom-ui/combobox/APICombobox";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
+import { useScrollToElement } from "@/hook/use-scroll-to-element";
 import { Mail, Phone, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function AddUserInformation() {
   const { t } = useTranslation();
-
   const { userData, setUserData, error } = useContext(StepperContext);
+  useScrollToElement(error);
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -83,14 +85,14 @@ export default function AddUserInformation() {
         placeholderText={t("search_item")}
         errorText={t("no_item")}
         onSelect={(selection: any) =>
-          setUserData({ ...userData, ["destination"]: selection })
+          setUserData({ ...userData, ["department"]: selection })
         }
-        lable={t("destination")}
+        lable={t("department")}
         required={true}
         requiredHint={`* ${t("required")}`}
-        selectedItem={userData["destination"]?.name}
+        selectedItem={userData["department"]?.name}
         placeHolder={t("select_destination")}
-        errorMessage={error.get("destination")}
+        errorMessage={error.get("department")}
         apiUrl={"destinations"}
         mode="single"
       />

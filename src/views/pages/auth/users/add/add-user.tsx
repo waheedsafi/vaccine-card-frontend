@@ -78,7 +78,7 @@ export default function AddUser(props: AddUserProps) {
         role_id: userData?.role?.id,
         zone_id: userData?.zone?.id,
         job_id: userData.job.id,
-        destination_id: userData.destination.id,
+        destination_id: userData.department.id,
         contact: userData.contact,
         password: userData.password,
         email: userData.email,
@@ -88,7 +88,7 @@ export default function AddUser(props: AddUserProps) {
         province_id: userData.province.id,
         zone: userData.zone.name,
         job: userData.job.name,
-        destination: userData.destination.name,
+        destination: userData.department.name,
       });
       if (response.status == 200) {
         onComplete(response.data.user);
@@ -101,7 +101,7 @@ export default function AddUser(props: AddUserProps) {
       toast({
         toastType: "ERROR",
         title: t("error"),
-        description: error.response.data.message,
+        description: error.response?.data?.message,
       });
       setServerError(error.response.data.errors, setError);
       console.log(error);
@@ -166,7 +166,7 @@ export default function AddUser(props: AddUserProps) {
               { name: "username", rules: ["required", "max:45", "min:3"] },
               { name: "email", rules: ["required"] },
               { name: "contact", rules: ["required"] },
-              { name: "destination", rules: ["required"] },
+              { name: "department", rules: ["required"] },
               { name: "job", rules: ["required"] },
               { name: "province", rules: ["required"] },
               { name: "gender", rules: ["required"] },

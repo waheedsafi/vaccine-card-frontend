@@ -149,6 +149,12 @@ export const toLocaleDate = (date: Date, state: any) => {
     .format();
   return gre;
 };
+export const dateObjectToString = (date: DateObject, state: any) => {
+  const gre = date
+    .convert(state.systemLanguage.calendar, state.systemLanguage.local)
+    .format();
+  return gre;
+};
 
 export const setDateToURL = (
   queryParams: URLSearchParams,
@@ -227,4 +233,17 @@ export const validateFile = (
   }
 
   return file;
+};
+
+export const scrollToElement = (error: Map<string, string>) => {
+  if (error.size > 0) {
+    const firstKey = error.keys().next().value;
+    const element = document.querySelector(`[name="${firstKey}"]`);
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth", // Smooth scrolling
+        block: "center", // Align at the top of the viewport
+      });
+    }
+  }
 };

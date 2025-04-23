@@ -21,47 +21,10 @@ export default function AddCertificate(props: AddCertificateProps) {
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
-    userData: any,
-    currentStep: number,
-    setError: Dispatch<SetStateAction<Map<string, string>>>
+    _userData: any,
+    _currentStep: number,
+    _setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
-    if (currentStep == 1) {
-      try {
-        let formData = new FormData();
-        formData.append("email", userData?.email);
-        formData.append("contact", userData?.contact);
-        const response = await axiosClient.post(
-          "user/validate/email/contact",
-          formData
-        );
-        if (response.status == 200) {
-          const emailExist = response.data.email_found === true;
-          const contactExist = response.data.contact_found === true;
-          if (emailExist || contactExist) {
-            const errMap = new Map<string, string>();
-            if (emailExist) {
-              errMap.set("email", `${t("email")} ${t("is_registered_before")}`);
-            }
-            if (contactExist) {
-              errMap.set(
-                "contact",
-                `${t("contact")} ${t("is_registered_before")}`
-              );
-            }
-            setError(errMap);
-            return false;
-          }
-        }
-      } catch (error: any) {
-        toast({
-          toastType: "ERROR",
-          title: t("error"),
-          description: error.response.data.message,
-        });
-        console.log(error);
-        return false;
-      }
-    }
     return true;
   };
   const stepsCompleted = async (
@@ -146,67 +109,30 @@ export default function AddCertificate(props: AddCertificateProps) {
           {
             component: <AddPersonalDetail />,
             validationRules: [
-              { name: "full_name", rules: ["required", "max:45", "min:3"] },
-              { name: "father_name", rules: ["required", "max:45", "min:3"] },
-              { name: "gender", rules: ["required"] },
-              { name: "province", rules: ["required"] },
-              { name: "district", rules: ["required"] },
-              { name: "date_of_birth", rules: ["required"] },
-              { name: "passport_number", rules: ["required"] },
-              { name: "nationality", rules: ["required"] },
-              { name: "travel_type", rules: ["required"] },
-              { name: "destina_country", rules: ["required"] },
+              // { name: "full_name", rules: ["required", "max:45", "min:3"] },
+              // { name: "father_name", rules: ["required", "max:45", "min:3"] },
+              // { name: "gender", rules: ["required"] },
+              // { name: "province", rules: ["required"] },
+              // { name: "district", rules: ["required"] },
+              // { name: "date_of_birth", rules: ["required"] },
+              // { name: "passport_number", rules: ["required"] },
+              // { name: "nationality", rules: ["required"] },
+              // { name: "travel_type", rules: ["required"] },
+              // { name: "destina_country", rules: ["required"] },
             ],
           },
           {
             component: <AddVaccineDetail />,
             validationRules: [
-              {
-                name: "password",
-                rules: [
-                  (value: any) => {
-                    const strength = checkStrength(value, t);
-                    const score = passwordStrengthScore(strength);
-                    if (score === 4) return true;
-                    return false;
-                  },
-                ],
-              },
-              { name: "user_letter_of_introduction", rules: ["required"] },
-              { name: "role", rules: ["required"] },
-              { name: "zone", rules: ["required"] },
-              // {
-              //   name: "role",
-              //   rules: [
-              //     (value: any) => {
-              //       if (
-              //         user.role.role == RoleEnum.epi_super ||
-              //         user.role.role == RoleEnum.finance_super
-              //       ) {
-              //         return false;
-              //       } else {
-              //         if (value) return false;
-              //         else return true;
-              //       }
-              //     },
-              //   ],
-              // },
-              // {
-              //   name: "zone",
-              //   rules: [
-              //     (value: any) => {
-              //       if (
-              //         user.role.role == RoleEnum.epi_super ||
-              //         user.role.role == RoleEnum.finance_super
-              //       ) {
-              //         return false;
-              //       } else {
-              //         if (value) return false;
-              //         else return true;
-              //       }
-              //     },
-              //   ],
-              // },
+              { name: "vaccine_type", rules: ["required"] },
+              { name: "registration_date", rules: ["required"] },
+              { name: "registration_number", rules: ["required"] },
+              { name: "volume", rules: ["required"] },
+              { name: "page", rules: ["required"] },
+              { name: "vaccine_center", rules: ["required"] },
+              { name: "batch_number", rules: ["required"] },
+              { name: "vaccine_date", rules: ["required"] },
+              { name: "vaccine_date", rules: ["required"] },
             ],
           },
           {
