@@ -203,19 +203,20 @@ export type VaccineCenter = {
 };
 export type Dose = {
   id: string;
+  dose: string;
   batch_number: string;
-  vaccine_date: string;
+  vaccine_date: string | DateObject;
   added_by: string;
 };
 export type Vaccine = {
   id: string;
-  vaccine_type: VaccineType;
+  vaccine_type?: VaccineType;
   registration_number: string;
   volume: string;
   page: string;
   registration_date: DateObject;
-  vaccine_center: VaccineCenter;
-  dose: Dose[];
+  vaccine_center?: VaccineCenter;
+  doses: Dose[];
 };
 export type CheckList = {
   id: string;

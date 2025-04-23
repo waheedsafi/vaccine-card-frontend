@@ -216,5 +216,9 @@
   "volume": "جلد",
   "dose": "دوز",
   "batch_number": "شماره بیج",
-  "vaccine_date": "تاریخ واکسین"
+  "vaccine_date": "تاریخ واکسین",
+  "no_dose_error": "شما باید یک دوز تعیین کنید",
+  "new_center": "سنتر جدید",
+  "add_dose_to_list": "دوز را به لیست اضافه کنید",
+  "add_vaccine_to_list": "واکسین را به لیست اضافه کنید"
 }

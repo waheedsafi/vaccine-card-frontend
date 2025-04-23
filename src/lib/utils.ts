@@ -235,15 +235,5 @@ export const validateFile = (
   return file;
 };
 
-export const scrollToElement = (error: Map<string, string>) => {
-  if (error.size > 0) {
-    const firstKey = error.keys().next().value;
-    const element = document.querySelector(`[name="${firstKey}"]`);
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth", // Smooth scrolling
-        block: "center", // Align at the top of the viewport
-      });
-    }
-  }
-};
+export const generateUUID = () =>
+  Math.random().toString(36).slice(2) + Date.now().toString(36);

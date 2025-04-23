@@ -8,10 +8,10 @@ import { toast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import { setServerError } from "@/validation/validation";
 import { Check, Database, User as UserIcon } from "lucide-react";
-import { checkStrength, passwordStrengthScore } from "@/validation/utils";
 import AddPersonalDetail from "./steps/add-personal-detail";
 import AddVaccineDetail from "./steps/add-vaccine-detail";
-import { PersonCertificate } from "@/database/tables";
+import { Dose, PersonCertificate, Vaccine } from "@/database/tables";
+import { isString } from "@/lib/utils";
 
 export interface AddCertificateProps {
   onComplete: (personCertificate: PersonCertificate) => void;
@@ -32,23 +32,60 @@ export default function AddCertificate(props: AddCertificateProps) {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      const response = await axiosClient.post("epi/user/store", {
-        permissions: userData?.permissions,
-        status: userData.status == true,
-        role_id: userData?.role?.id,
-        zone_id: userData?.zone?.id,
-        job_id: userData.job.id,
-        destination_id: userData.destination.id,
-        contact: userData.contact,
-        password: userData.password,
-        email: userData.email,
-        username: userData.username,
+      console.log("error");
+
+      const formatedVaccines: any[] = [];
+      userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
+        const item: {
+          id: any;
+          vaccine_type: any;
+          registration_number: any;
+          volume: any;
+          page: any;
+          registration_date: any;
+          vaccine_center: any;
+          doses: any[];
+        } = {
+          id: vaccine.id,
+          vaccine_type: vaccine.vaccine_type,
+          registration_number: vaccine.registration_number,
+          volume: vaccine.volume,
+          page: vaccine.page,
+          registration_date: vaccine.registration_date?.toDate()?.toISOString(),
+          vaccine_center: vaccine.vaccine_center,
+          doses: [],
+        };
+        const doses: any[] = [];
+
+        vaccine.doses.forEach((dose: any) => {
+          doses.push({
+            id: dose.id,
+            dose: dose.dose,
+            batch_number: dose.batch_number,
+            vaccine_date: dose.vaccine_date?.toDate()?.toISOString(),
+            added_by: dose.added_by,
+          });
+        });
+        item.doses.push(doses);
+        formatedVaccines.push(doses);
+      });
+      const response = await axiosClient.post("epi/certificate/detail/store", {
+        vaccines: JSON.stringify(formatedVaccines),
         full_name: userData.full_name,
-        gender_id: userData.gender.id,
-        province_id: userData.province.id,
+        father_name: userData.father_name,
+        date_of_birth: !isString(userData.date_of_birth)
+          ? userData.date_of_birth?.toDate()?.toISOString()
+          : userData.date_of_birth,
+        contact: userData.contact,
+        passport_number: userData.passport_number,
+        gender_id: userData.gender?.id,
+        province_id: userData.province?.id,
+        district_id: userData.district?.id,
+        nationality_id: userData.nationality?.id,
+        destina_country_id: userData.destina_country?.id,
       });
       if (response.status == 200) {
-        onComplete(response.data.user);
+        // onComplete(response.data.user);
         toast({
           toastType: "SUCCESS",
           description: response.data.message,
@@ -109,30 +146,40 @@ export default function AddCertificate(props: AddCertificateProps) {
           {
             component: <AddPersonalDetail />,
             validationRules: [
-              // { name: "full_name", rules: ["required", "max:45", "min:3"] },
-              // { name: "father_name", rules: ["required", "max:45", "min:3"] },
-              // { name: "gender", rules: ["required"] },
-              // { name: "province", rules: ["required"] },
-              // { name: "district", rules: ["required"] },
-              // { name: "date_of_birth", rules: ["required"] },
-              // { name: "passport_number", rules: ["required"] },
-              // { name: "nationality", rules: ["required"] },
-              // { name: "travel_type", rules: ["required"] },
-              // { name: "destina_country", rules: ["required"] },
+              { name: "full_name", rules: ["required", "max:45", "min:3"] },
+              { name: "father_name", rules: ["required", "max:45", "min:3"] },
+              { name: "gender", rules: ["required"] },
+              { name: "province", rules: ["required"] },
+              { name: "district", rules: ["required"] },
+              { name: "date_of_birth", rules: ["required"] },
+              { name: "passport_number", rules: ["required"] },
+              { name: "nationality", rules: ["required"] },
+              { name: "travel_type", rules: ["required"] },
+              { name: "destina_country", rules: ["required"] },
             ],
           },
           {
             component: <AddVaccineDetail />,
             validationRules: [
-              { name: "vaccine_type", rules: ["required"] },
-              { name: "registration_date", rules: ["required"] },
-              { name: "registration_number", rules: ["required"] },
-              { name: "volume", rules: ["required"] },
-              { name: "page", rules: ["required"] },
-              { name: "vaccine_center", rules: ["required"] },
-              { name: "batch_number", rules: ["required"] },
-              { name: "vaccine_date", rules: ["required"] },
-              { name: "vaccine_date", rules: ["required"] },
+              {
+                name: "vaccines_list",
+                rules: [
+                  (value: any) => {
+                    if (value && Array.isArray(value)) {
+                      if (value.length == 0) {
+                        toast({
+                          toastType: "ERROR",
+                          title: t("error"),
+                          description: t("no_dose_error"),
+                        });
+                        return false;
+                      }
+                      return true;
+                    }
+                    return false;
+                  },
+                ],
+              },
             ],
           },
           {
