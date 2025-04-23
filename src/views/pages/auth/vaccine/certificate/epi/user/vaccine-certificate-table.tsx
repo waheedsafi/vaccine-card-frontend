@@ -137,19 +137,6 @@ export function VaccineCertificateTable() {
   const { t } = useTranslation();
   const [state] = useGlobalState();
 
-  const addItem = (personCertificate: PersonCertificate) => {
-    setPersonCertificates((prevState) => ({
-      filterList: {
-        ...prevState.filterList,
-        data: [personCertificate, ...prevState.filterList.data],
-      },
-      unFilterList: {
-        ...prevState.unFilterList,
-        data: [personCertificate, ...prevState.unFilterList.data],
-      },
-    }));
-  };
-
   const skeleton = (
     <TableRow>
       <TableCell>
@@ -199,7 +186,7 @@ export function VaccineCertificateTable() {
             }
             showDialog={async () => true}
           >
-            <AddCertificate onComplete={addItem} />
+            <AddCertificate />
           </NastranModel>
         )}
 

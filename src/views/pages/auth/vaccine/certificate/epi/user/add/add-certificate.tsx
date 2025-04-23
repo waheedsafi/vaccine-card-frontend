@@ -10,14 +10,10 @@ import { setServerError } from "@/validation/validation";
 import { Check, Database, User as UserIcon } from "lucide-react";
 import AddPersonalDetail from "./steps/add-personal-detail";
 import AddVaccineDetail from "./steps/add-vaccine-detail";
-import { Dose, PersonCertificate, Vaccine } from "@/database/tables";
+import { Vaccine } from "@/database/tables";
 import { isString } from "@/lib/utils";
 
-export interface AddCertificateProps {
-  onComplete: (personCertificate: PersonCertificate) => void;
-}
-export default function AddCertificate(props: AddCertificateProps) {
-  const { onComplete } = props;
+export default function AddCertificate() {
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -32,8 +28,6 @@ export default function AddCertificate(props: AddCertificateProps) {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      console.log("error");
-
       const formatedVaccines: any[] = [];
       userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
         const item: {
@@ -67,7 +61,7 @@ export default function AddCertificate(props: AddCertificateProps) {
           });
         });
         item.doses.push(doses);
-        formatedVaccines.push(doses);
+        formatedVaccines.push(item);
       });
       const response = await axiosClient.post("epi/certificate/detail/store", {
         vaccines: JSON.stringify(formatedVaccines),
@@ -84,8 +78,8 @@ export default function AddCertificate(props: AddCertificateProps) {
         nationality_id: userData.nationality?.id,
         destina_country_id: userData.destina_country?.id,
       });
+      return false;
       if (response.status == 200) {
-        // onComplete(response.data.user);
         toast({
           toastType: "SUCCESS",
           description: response.data.message,
