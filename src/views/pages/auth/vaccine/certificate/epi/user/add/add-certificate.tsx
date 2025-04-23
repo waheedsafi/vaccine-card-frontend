@@ -76,6 +76,7 @@ export default function AddCertificate() {
         province_id: userData.province?.id,
         district_id: userData.district?.id,
         nationality_id: userData.nationality?.id,
+        travel_type_id: userData.travel_type?.id,
         destina_country_id: userData.destina_country?.id,
       });
       return false;
