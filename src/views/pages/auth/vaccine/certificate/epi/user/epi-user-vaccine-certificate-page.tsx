@@ -12,7 +12,7 @@ export default function VaccineCertificatePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const handleGoBack = () => navigate(-1);
-  const handleGoHome = () => navigate("/dashboard", { replace: true });
+  const handleGoHome = () => navigate("/", { replace: true });
 
   return (
     <div className="px-2 pt-2 flex flex-col gap-y-[2px] relative select-none rtl:text-2xl-rtl ltr:text-xl-ltr">

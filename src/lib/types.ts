@@ -1,6 +1,7 @@
 import {
   ActivityModel,
   Audit,
+  CertificatePayment,
   PersonCertificate,
   Role,
   SelectUserPermission,
@@ -118,7 +119,13 @@ export interface PersonCertificatePaginationData {
   currentPage: number;
   totalItems: number;
 }
-
+export interface CertificatePaymentPaginationData {
+  data: CertificatePayment[];
+  lastPage: number;
+  perPage: number;
+  currentPage: number;
+  totalItems: number;
+}
 export interface Configuration {
   token?: string;
   type?: string;

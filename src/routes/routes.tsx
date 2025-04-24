@@ -29,6 +29,7 @@ import UserPage from "@/views/pages/auth/users/user-page";
 import FinanceCertificatePaymentUserPage from "@/views/pages/auth/vaccine/payment/finance/user/finance-certificate-payment-user-page";
 import EpiUserVaccineCertificatePage from "@/views/pages/auth/vaccine/certificate/epi/user/epi-user-vaccine-certificate-page";
 import FinaceEpiProfilePage from "@/views/pages/auth/profile/finance-epi/finance-epi-profile-page";
+import VaccineCertificateEditPage from "@/views/pages/auth/vaccine/certificate/epi/user/edit/vaccine-certificate-edit-page";
 
 export const getEpiSuperRouter = (
   user: User | Epi | Finance,
@@ -267,6 +268,17 @@ export const getEpiUserRouter = (
             element={
               <ProtectedRoute
                 element={<EpiUserVaccineCertificatePage />}
+                routeName="vaccine_certificate"
+                permissions={permissions}
+                authenticated={authenticated}
+              />
+            }
+          />
+          <Route
+            path="vaccine_certificate/:id"
+            element={
+              <ProtectedRoute
+                element={<VaccineCertificateEditPage />}
                 routeName="vaccine_certificate"
                 permissions={permissions}
                 authenticated={authenticated}

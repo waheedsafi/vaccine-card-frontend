@@ -8,12 +8,11 @@ import { toast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import { setServerError } from "@/validation/validation";
 import { Check, Database, User as UserIcon } from "lucide-react";
-import AddPersonalDetail from "./steps/add-personal-detail";
-import AddVaccineDetail from "./steps/add-vaccine-detail";
 import { Vaccine } from "@/database/tables";
 import { isString } from "@/lib/utils";
+import PaymentDetail from "./steps/payment-detail";
 
-export default function AddCertificate() {
+export default function AddPayment() {
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -79,6 +78,7 @@ export default function AddCertificate() {
         travel_type_id: userData.travel_type?.id,
         destina_country_id: userData.destina_country?.id,
       });
+      return false;
       if (response.status == 200) {
         toast({
           toastType: "SUCCESS",
@@ -124,10 +124,6 @@ export default function AddCertificate() {
         confirmText={t("confirm")}
         steps={[
           {
-            description: t("personal_details"),
-            icon: <UserIcon className="size-[16px]" />,
-          },
-          {
             description: t("vaccine_detail"),
             icon: <Database className="size-[16px]" />,
           },
@@ -138,42 +134,11 @@ export default function AddCertificate() {
         ]}
         components={[
           {
-            component: <AddPersonalDetail />,
+            component: <PaymentDetail />,
             validationRules: [
               { name: "full_name", rules: ["required", "max:45", "min:3"] },
               { name: "father_name", rules: ["required", "max:45", "min:3"] },
               { name: "gender", rules: ["required"] },
-              { name: "province", rules: ["required"] },
-              { name: "district", rules: ["required"] },
-              { name: "date_of_birth", rules: ["required"] },
-              { name: "passport_number", rules: ["required"] },
-              { name: "nationality", rules: ["required"] },
-              { name: "travel_type", rules: ["required"] },
-              { name: "destina_country", rules: ["required"] },
-            ],
-          },
-          {
-            component: <AddVaccineDetail />,
-            validationRules: [
-              {
-                name: "vaccines_list",
-                rules: [
-                  (value: any) => {
-                    if (value && Array.isArray(value)) {
-                      if (value.length == 0) {
-                        toast({
-                          toastType: "ERROR",
-                          title: t("error"),
-                          description: t("no_dose_error"),
-                        });
-                        return false;
-                      }
-                      return true;
-                    }
-                    return false;
-                  },
-                ],
-              },
             ],
           },
           {

@@ -10,7 +10,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { useGlobalState } from "@/context/GlobalStateContext";
-import { PersonCertificate, UserPermission } from "@/database/tables";
+import { CertificatePayment, UserPermission } from "@/database/tables";
 import { CACHE, PermissionEnum } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,12 +30,13 @@ import { DateObject } from "react-multi-date-picker";
 import useCacheDB from "@/lib/indexeddb/useCacheDB";
 import FilterDialog from "@/components/custom-ui/dialog/filter-dialog";
 import {
+  CertificatePaymentPaginationData,
   PersonCertificatePaginationData,
   PersonCertificateSearch,
 } from "@/lib/types";
-import AddCertificate from "./add/add-certificate";
+import AddPayment from "./add/add-payment";
 
-export function VaccineCertificateTable() {
+export function CertificatePaymentTable() {
   const { user } = useGeneralAuthState();
   const navigate = useNavigate();
   const [error, setError] = useState<Map<string, string>>();
@@ -70,7 +71,7 @@ export function VaccineCertificateTable() {
       }
       if (loading) return;
       setLoading(true);
-      const response = await axiosClient.get("epi/certificate/search", {
+      const response = await axiosClient.get("finance/certificate/search", {
         params: {
           page: page,
           per_page: count,
@@ -83,13 +84,12 @@ export function VaccineCertificateTable() {
         },
       });
       const fetch = response.data.person_certificates
-        .data as PersonCertificate[];
+        .data as CertificatePayment[];
 
       const lastPage = response.data.person_certificates.last_page;
       const totalItems = response.data.person_certificates.total;
       const perPage = response.data.person_certificates.per_page;
       const currentPage = response.data.person_certificates.current_page;
-
       setPersonCertificates({
         filterList: {
           data: fetch,
@@ -117,8 +117,8 @@ export function VaccineCertificateTable() {
     }
   };
   const [personCertificates, setPersonCertificates] = useState<{
-    filterList: PersonCertificatePaginationData;
-    unFilterList: PersonCertificatePaginationData;
+    filterList: CertificatePaymentPaginationData;
+    unFilterList: CertificatePaymentPaginationData;
   }>({
     filterList: {
       data: [],
@@ -165,14 +165,14 @@ export function VaccineCertificateTable() {
     </TableRow>
   );
   const per: UserPermission = user?.permissions.get(
-    PermissionEnum.vaccine_certificate.name
+    PermissionEnum.certificate_payment.name
   ) as UserPermission;
   const hasView = per?.view;
   const hasAdd = per?.add;
 
-  const watchOnClick = async (personCertificate: PersonCertificate) => {
+  const watchOnClick = async (personCertificate: CertificatePayment) => {
     const userId = personCertificate.id;
-    navigate(`/vaccine_certificate/${userId}`);
+    navigate(`/users/${userId}`);
   };
   return (
     <>
@@ -188,7 +188,7 @@ export function VaccineCertificateTable() {
             }
             showDialog={async () => true}
           >
-            <AddCertificate />
+            <AddPayment />
           </NastranModel>
         )}
 
@@ -260,11 +260,6 @@ export function VaccineCertificateTable() {
                     translate: t("passport_number"),
                     onClick: () => {},
                   },
-                  {
-                    name: "contact",
-                    translate: t("contact"),
-                    onClick: () => {},
-                  },
                 ],
               }}
               showColumns={{
@@ -306,6 +301,7 @@ export function VaccineCertificateTable() {
             <TableHead className="text-start">{t("full_name")}</TableHead>
             <TableHead className="text-start">{t("father_name")}</TableHead>
             <TableHead className="text-start">{t("contact")}</TableHead>
+            <TableHead className="text-start">{t("payment")}</TableHead>
             <TableHead className="text-start">{t("last_visit_date")}</TableHead>
           </TableRow>
         </TableHeader>
@@ -314,7 +310,7 @@ export function VaccineCertificateTable() {
             <>{skeleton}</>
           ) : (
             personCertificates.filterList.data.map(
-              (item: PersonCertificate) => (
+              (item: CertificatePayment) => (
                 <TableRowIcon
                   read={hasView}
                   remove={false}
@@ -346,9 +342,9 @@ export function VaccineCertificateTable() {
                   </TableCell>
                   <TableCell
                     dir="ltr"
-                    className="rtl:text-end rtl:text-sm-rtl truncate"
+                    className="truncate rtl:text-sm-rtl rtl:text-end"
                   >
-                    {item?.contact}
+                    {item.contact}
                   </TableCell>
                   <TableCell className="truncate">
                     {toLocaleDate(new Date(item.last_visit_date), state)}

@@ -193,6 +193,15 @@ export type PersonCertificate = {
   gender: string;
   last_visit_date: string;
 };
+export type CertificatePayment = {
+  id: string;
+  passport_number: string;
+  full_name: string;
+  father_name: string;
+  contact: string;
+  has_payment: number;
+  last_visit_date: string;
+};
 export type VaccineType = {
   id: string;
   name: string;
