@@ -1,16 +1,11 @@
 import { useNavigate, useParams } from "react-router";
 import { useTranslation } from "react-i18next";
-import EditUserInformation from "./steps/edit-user-information";
-import { EditUserPassword } from "./steps/edit-user-password";
 import axiosClient from "@/lib/axois-client";
 import { useEffect, useState } from "react";
-import { UserInformation } from "@/lib/types";
 import { toast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Database, KeyRound, ShieldBan } from "lucide-react";
-import UserEditHeader from "./user-edit-header";
-import EditUserPermissions from "./steps/edit-user-permissions";
-import { UserPermission } from "@/database/tables";
+import { Person, UserPermission } from "@/database/tables";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { PermissionEnum } from "@/lib/constants";
 import {
@@ -19,9 +14,9 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "@/components/custom-ui/Breadcrumb/Breadcrumb";
-import { EditUserActivity } from "./steps/edit-user-activity";
-import { EditUserIssuedCirtificate } from "./steps/edit-user-issued-certificate";
-import { EditUserCirtificatePayment } from "./steps/edit-user-certificate-payment";
+import PersonEditHeader from "./person-edit-header";
+import EditPersonInformation from "./steps/edit-person-information";
+import PersonVaccinesInformation from "./steps/person-vaccines-information";
 
 export default function VaccineCertificateEditPage() {
   const { user } = useGeneralAuthState();
@@ -32,12 +27,12 @@ export default function VaccineCertificateEditPage() {
   let { id } = useParams();
   const direction = i18n.dir();
   const [failed, setFailed] = useState(false);
-  const [userData, setUserData] = useState<UserInformation | undefined>();
+  const [userData, setUserData] = useState<Person>();
   const loadInformation = async () => {
     try {
       const response = await axiosClient.get(`epi/person/information/${id}`);
       if (response.status == 200) {
-        const user = response.data.user as UserInformation;
+        const user = response.data.data as Person;
         setUserData(user);
         if (failed) setFailed(false);
       }
@@ -62,59 +57,38 @@ export default function VaccineCertificateEditPage() {
 
   const tableList = Array.from(per.sub).map(
     ([key, _subPermission], index: number) => {
-      return key == PermissionEnum.users.sub.user_information ? (
+      return key ==
+        PermissionEnum.vaccine_certificate.sub
+          .vaccine_certificate_person_info ? (
         <TabsTrigger
           key={index}
           className={`${selectedTabStyle}`}
           value={key.toString()}
         >
           <Database className="size-[18px]" />
-          {t("account_information")}
+          {t("person_info")}
         </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_password ? (
+      ) : key ==
+        PermissionEnum.vaccine_certificate.sub
+          .vaccine_certificate_vaccination_info ? (
         <TabsTrigger
           key={index}
           className={`${selectedTabStyle}`}
           value={key.toString()}
         >
           <KeyRound className="size-[18px]" />
-          {t("update_account_password")}
+          {t("vaccination_info")}
         </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_permission ? (
+      ) : key ==
+        PermissionEnum.vaccine_certificate.sub
+          .vaccine_certificate_card_issuing ? (
         <TabsTrigger
           key={index}
           className={`${selectedTabStyle}`}
           value={key.toString()}
         >
           <ShieldBan className="size-[18px]" />
-          {t("update_account_permissions")}
-        </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_issued_certificate ? (
-        <TabsTrigger
-          key={index}
-          className={`${selectedTabStyle}`}
-          value={key.toString()}
-        >
-          <ShieldBan className="size-[18px]" />
-          {t("issued_certificate")}
-        </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_issued_certificate_payment ? (
-        <TabsTrigger
-          key={index}
-          className={`${selectedTabStyle}`}
-          value={key.toString()}
-        >
-          <ShieldBan className="size-[18px]" />
-          {t("certificate_payment")}
-        </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_profile_activity ? (
-        <TabsTrigger
-          key={index}
-          className={`${selectedTabStyle}`}
-          value={key.toString()}
-        >
-          <ShieldBan className="size-[18px]" />
-          {t("activity")}
+          {t("card_issuing")}
         </TabsTrigger>
       ) : undefined;
     }
@@ -127,30 +101,25 @@ export default function VaccineCertificateEditPage() {
         <BreadcrumbItem onClick={handleGoBack}>{t("users")}</BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem onClick={handleGoBack}>
-          {userData?.username}
+          {userData?.full_name}
         </BreadcrumbItem>
       </Breadcrumb>
       {/* Cards */}
       <Tabs
         dir={direction}
-        defaultValue={PermissionEnum.users.sub.user_information.toString()}
+        defaultValue={PermissionEnum.vaccine_certificate.sub.vaccine_certificate_person_info.toString()}
         className="flex flex-col sm:flex-row gap-x-3 gap-y-2 sm:gap-y-0"
       >
         <TabsList className="sm:min-h-[550px] h-fit pb-8 min-w-[300px] md:w-[300px] gap-y-4 items-start justify-start flex flex-col bg-card border">
-          <UserEditHeader
-            id={id}
-            failed={failed}
-            userData={userData}
-            setUserData={setUserData}
-          />
+          <PersonEditHeader userData={userData} />
           {tableList}
         </TabsList>
 
         <TabsContent
           className="flex-1 m-0"
-          value={PermissionEnum.users.sub.user_information.toString()}
+          value={PermissionEnum.vaccine_certificate.sub.vaccine_certificate_person_info.toString()}
         >
-          <EditUserInformation
+          <EditPersonInformation
             id={id}
             failed={failed}
             userData={userData}
@@ -159,53 +128,12 @@ export default function VaccineCertificateEditPage() {
             permissions={per}
           />
         </TabsContent>
+
         <TabsContent
           className="flex-1 m-0"
-          value={PermissionEnum.users.sub.user_password.toString()}
+          value={PermissionEnum.vaccine_certificate.sub.vaccine_certificate_vaccination_info.toString()}
         >
-          <EditUserPassword
-            id={id}
-            userData={userData}
-            failed={failed}
-            refreshPage={loadInformation}
-            permissions={per}
-          />
-        </TabsContent>
-        <TabsContent
-          className="flex-1 m-0"
-          value={PermissionEnum.users.sub.user_permission.toString()}
-        >
-          <EditUserPermissions permissions={per} />
-        </TabsContent>
-        <TabsContent
-          className="flex-1 m-0"
-          value={PermissionEnum.users.sub.user_profile_activity.toString()}
-        >
-          <EditUserActivity
-            failed={failed}
-            refreshPage={loadInformation}
-            permissions={per}
-          />
-        </TabsContent>
-        <TabsContent
-          className="flex-1 m-0"
-          value={PermissionEnum.users.sub.user_issued_certificate.toString()}
-        >
-          <EditUserIssuedCirtificate
-            failed={failed}
-            refreshPage={loadInformation}
-            permissions={per}
-          />
-        </TabsContent>
-        <TabsContent
-          className="flex-1 m-0"
-          value={PermissionEnum.users.sub.user_issued_certificate_payment.toString()}
-        >
-          <EditUserCirtificatePayment
-            failed={failed}
-            refreshPage={loadInformation}
-            permissions={per}
-          />
+          <PersonVaccinesInformation id={id} />
         </TabsContent>
       </Tabs>
     </div>

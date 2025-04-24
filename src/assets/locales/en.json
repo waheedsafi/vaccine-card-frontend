@@ -220,5 +220,8 @@
   "no_dose_error": "You must assign a dose",
   "new_center": "New Center",
   "add_dose_to_list": "Add dose to list",
-  "add_vaccine_to_list": "Add vaccine to list"
+  "add_vaccine_to_list": "Add vaccine to list",
+  "unpaid": "Unpaid",
+  "paid": "Paid",
+  "action": "Action"
 }

@@ -184,6 +184,18 @@ export type Finance = {
   province: string;
   gender: string;
 };
+export type Person = {
+  id: string;
+  full_name: string;
+  father_name: string;
+  passport_number: string;
+  date_of_birth: string | DateObject;
+  contact: string;
+  gender: { id: string; name: string };
+  nationality: { id: string; name: string };
+  district: { id: string; name: string };
+  province: { id: string; name: string };
+};
 export type PersonCertificate = {
   id: string;
   passport_number: string;
@@ -226,6 +238,12 @@ export type Vaccine = {
   registration_date: DateObject;
   vaccine_center?: VaccineCenter;
   doses: Dose[];
+};
+export type PersonVisit = {
+  vaccine_type: string;
+  visited_date: string;
+  travel_type: string;
+  destination_country: string;
 };
 export type CheckList = {
   id: string;

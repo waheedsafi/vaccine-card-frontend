@@ -21,51 +21,24 @@ export default function PaymentDetail() {
     <div className="flex flex-col lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4 xl:gap-x-12 lg:items-center mt-4 gap-y-3 w-full lg:w-full">
       <CustomInput
         required={true}
-        lable={t("full_name")}
+        lable={t("passport_number")}
         requiredHint={`* ${t("required")}`}
         size_="sm"
-        name="full_name"
-        defaultValue={userData["full_name"]}
-        placeholder={t("enter_your_name")}
+        name="passport_number"
+        defaultValue={userData["passport_number"]}
+        placeholder={t("enter")}
         type="text"
-        errorMessage={error.get("full_name")}
+        errorMessage={error.get("passport_number")}
         onBlur={handleChange}
         startContent={
           <UserRound className="text-tertiary size-[18px] pointer-events-none" />
         }
-      />
-      <CustomInput
-        required={true}
-        requiredHint={`* ${t("required")}`}
-        size_="sm"
-        lable={t("father_name")}
-        name="father_name"
-        defaultValue={userData["father_name"]}
-        placeholder={t("enter_name")}
-        type="text"
-        errorMessage={error.get("father_name")}
-        onBlur={handleChange}
-        startContent={
-          <UserRound className="text-tertiary size-[18px] pointer-events-none" />
-        }
-      />
-      <CustomDatePicker
-        placeholder={t("select_a_date")}
-        lable={t("date_of_birth")}
-        requiredHint={`* ${t("required")}`}
-        required={true}
-        value={userData.date_of_birth}
-        dateOnComplete={(date: DateObject) => {
-          setUserData({ ...userData, date_of_birth: date });
-        }}
-        className="py-3 w-full"
-        errorMessage={error.get("date_of_birth")}
       />
       <CustomInput
         size_="sm"
         dir="ltr"
         className="rtl:text-end"
-        lable={t("contact")}
+        lable={t("amount_to_pay")}
         placeholder={t("enter_ur_pho_num")}
         defaultValue={userData["contact"]}
         type="text"

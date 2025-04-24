@@ -12,7 +12,7 @@ import { Vaccine } from "@/database/tables";
 import { isString } from "@/lib/utils";
 import PaymentDetail from "./steps/payment-detail";
 
-export default function AddPayment() {
+export default function TakePayment() {
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -78,7 +78,6 @@ export default function AddPayment() {
         travel_type_id: userData.travel_type?.id,
         destina_country_id: userData.destina_country?.id,
       });
-      return false;
       if (response.status == 200) {
         toast({
           toastType: "SUCCESS",

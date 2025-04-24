@@ -31,10 +31,9 @@ import useCacheDB from "@/lib/indexeddb/useCacheDB";
 import FilterDialog from "@/components/custom-ui/dialog/filter-dialog";
 import {
   CertificatePaymentPaginationData,
-  PersonCertificatePaginationData,
   PersonCertificateSearch,
 } from "@/lib/types";
-import AddPayment from "./add/add-payment";
+import TakePayment from "./add/take-payment";
 
 export function CertificatePaymentTable() {
   const { user } = useGeneralAuthState();
@@ -183,12 +182,12 @@ export function CertificatePaymentTable() {
             isDismissable={false}
             button={
               <PrimaryButton className="rtl:text-lg-rtl font-semibold ltr:text-md-ltr">
-                {t("add")}
+                {t("take_payment")}
               </PrimaryButton>
             }
             showDialog={async () => true}
           >
-            <AddPayment />
+            <TakePayment />
           </NastranModel>
         )}
 
@@ -321,23 +320,15 @@ export function CertificatePaymentTable() {
                   onRemove={async () => {}}
                   onRead={watchOnClick}
                 >
-                  <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
-                    {item.id}
-                  </TableCell>
-                  <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                  <TableCell className="truncate">{item.id}</TableCell>
+                  <TableCell className="truncate">
                     {item.passport_number}
                   </TableCell>
 
-                  <TableCell
-                    dir="ltr"
-                    className="truncate rtl:text-sm-rtl rtl:text-end"
-                  >
+                  <TableCell dir="ltr" className="truncate">
                     {item.full_name}
                   </TableCell>
-                  <TableCell
-                    dir="ltr"
-                    className="truncate rtl:text-sm-rtl rtl:text-end"
-                  >
+                  <TableCell dir="ltr" className="truncate">
                     {item.father_name}
                   </TableCell>
                   <TableCell
@@ -345,6 +336,9 @@ export function CertificatePaymentTable() {
                     className="truncate rtl:text-sm-rtl rtl:text-end"
                   >
                     {item.contact}
+                  </TableCell>
+                  <TableCell dir="ltr" className="truncate">
+                    {item.has_payment == 1 ? t("paid") : t("unpaid")}
                   </TableCell>
                   <TableCell className="truncate">
                     {toLocaleDate(new Date(item.last_visit_date), state)}
