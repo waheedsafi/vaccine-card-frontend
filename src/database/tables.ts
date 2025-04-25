@@ -213,6 +213,8 @@ export type CertificatePayment = {
   contact: string;
   has_payment: number;
   last_visit_date: string;
+  visit_id: string;
+  amount: number;
 };
 export type VaccineType = {
   id: string;

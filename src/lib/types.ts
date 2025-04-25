@@ -30,7 +30,7 @@ export interface UserInformation {
     selected: boolean;
   };
   role: {
-    id: string;
+    id: number;
     name: string;
     selected: boolean;
   };

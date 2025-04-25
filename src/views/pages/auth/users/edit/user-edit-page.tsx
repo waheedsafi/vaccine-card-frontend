@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import EditUserInformation from "./steps/edit-user-information";
 import { EditUserPassword } from "./steps/edit-user-password";
 import axiosClient from "@/lib/axois-client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UserInformation } from "@/lib/types";
 import { toast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,7 +12,7 @@ import UserEditHeader from "./user-edit-header";
 import EditUserPermissions from "./steps/edit-user-permissions";
 import { UserPermission } from "@/database/tables";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
-import { PermissionEnum } from "@/lib/constants";
+import { PermissionEnum, RoleEnum } from "@/lib/constants";
 import {
   Breadcrumb,
   BreadcrumbHome,
@@ -61,7 +61,14 @@ export default function UserEditPage() {
   const per: UserPermission = user?.permissions.get(
     PermissionEnum.users.name
   ) as UserPermission;
-
+  const isAdmin = useMemo(() => {
+    if (userData) {
+      return (
+        userData.role.id == RoleEnum.epi_admin ||
+        userData.role.id == RoleEnum.finance_admin
+      );
+    }
+  }, [userData?.role]);
   const tableList = Array.from(per.sub).map(
     ([key, _subPermission], index: number) => {
       return key == PermissionEnum.users.sub.user_information ? (
@@ -91,7 +98,8 @@ export default function UserEditPage() {
           <ShieldBan className="size-[18px]" />
           {t("update_account_permissions")}
         </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_issued_certificate ? (
+      ) : key == PermissionEnum.users.sub.user_issued_certificate &&
+        !isAdmin ? (
         <TabsTrigger
           key={index}
           className={`${selectedTabStyle}`}
@@ -100,7 +108,8 @@ export default function UserEditPage() {
           <ShieldBan className="size-[18px]" />
           {t("issued_certificate")}
         </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_issued_certificate_payment ? (
+      ) : key == PermissionEnum.users.sub.user_issued_certificate_payment &&
+        !isAdmin ? (
         <TabsTrigger
           key={index}
           className={`${selectedTabStyle}`}
@@ -109,7 +118,7 @@ export default function UserEditPage() {
           <ShieldBan className="size-[18px]" />
           {t("certificate_payment")}
         </TabsTrigger>
-      ) : key == PermissionEnum.users.sub.user_profile_activity ? (
+      ) : key == PermissionEnum.users.sub.user_profile_activity && !isAdmin ? (
         <TabsTrigger
           key={index}
           className={`${selectedTabStyle}`}

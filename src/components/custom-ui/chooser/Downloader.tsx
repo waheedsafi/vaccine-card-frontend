@@ -8,6 +8,7 @@ import IconButton from "../button/IconButton";
 
 interface DownloaderProps {
   downloadText: string;
+  onComplete?: () => void;
   filetoDownload: FileType;
   errorText: string;
   cancelText: string;
@@ -24,6 +25,7 @@ const Downloader = (props: DownloaderProps) => {
     lockUpload,
     apiUrl,
     params,
+    onComplete,
   } = props;
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -66,6 +68,9 @@ const Downloader = (props: DownloaderProps) => {
 
         // Clean up the URL object after download
         window.URL.revokeObjectURL(fileURL);
+        if (onComplete) {
+          onComplete();
+        }
       }
     } catch (error: any) {
       toast({

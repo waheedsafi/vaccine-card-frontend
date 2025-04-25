@@ -17,10 +17,8 @@ import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import axiosClient from "@/lib/axois-client";
 import { setServerError, validate } from "@/validation/validation";
 import ButtonSpinner from "@/components/custom-ui/spinner/ButtonSpinner";
-import { useGlobalState } from "@/context/GlobalStateContext";
 import { Person, UserPermission } from "@/database/tables";
 import { PermissionEnum } from "@/lib/constants";
-import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { useScrollToElement } from "@/hook/use-scroll-to-element";
 import CustomDatePicker from "@/components/custom-ui/DatePicker/CustomDatePicker";
 import { DateObject } from "react-multi-date-picker";
@@ -40,9 +38,7 @@ export default function EditPersonInformation(
   const [tempUserData, setTempUserData] = useState<Person | undefined>(
     userData
   );
-  const [state] = useGlobalState();
   const { t } = useTranslation();
-  const { user } = useGeneralAuthState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Map<string, string>>(new Map());
   useScrollToElement(error);

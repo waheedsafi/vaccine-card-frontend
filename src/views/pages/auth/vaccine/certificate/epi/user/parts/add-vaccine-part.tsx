@@ -306,6 +306,7 @@ export default function AddVaccinePart(props: AddVaccinePartProps) {
           placeHolder={t("select_a")}
           errorMessage={error.get("vaccine_center")}
           apiUrl={"vaccine-centers"}
+          cacheData={false}
           mode="single"
         />
         <CustomCheckbox

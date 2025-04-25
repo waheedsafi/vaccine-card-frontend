@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, Languages, MapPinHouse } from "lucide-react";
+import { Briefcase, MapPinHouse } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import LanguageTab from "./tabs/language/language-tab";
 import JobTab from "./tabs/job/job-tab";
 import DestinationTab from "./tabs/destination/destination-tab";
 import { useUserAuthState } from "@/context/AuthContextProvider";
@@ -16,26 +15,17 @@ import {
 import VaccineTypeTab from "./tabs/vaccine/type/vaccine-type-tab";
 import VaccineCenterTab from "./tabs/vaccine/center/vaccine-center-tab";
 
-export default function SettingsPage() {
+export default function ConfigurationsPage() {
   const { user } = useUserAuthState();
   const { t, i18n } = useTranslation();
   const direction = i18n.dir();
   const per: UserPermission = user?.permissions.get(
-    PermissionEnum.settings.name
+    PermissionEnum.configurations.name
   ) as UserPermission;
 
   const tableList = Array.from(per.sub).map(
     ([key, _subPermission], index: number) => {
-      return key == PermissionEnum.settings.sub.setting_language ? (
-        <TabsTrigger
-          key={index}
-          value={key.toString()}
-          className="gap-x-1 bg-card shadow rtl:text-2xl-rtl ltr:text-xl-ltr data-[state=active]:bg-primary data-[state=active]:text-tertiary"
-        >
-          <Languages className="size-[16px] ltr:mr-1 rtl:ml-1" />
-          {t("language")}
-        </TabsTrigger>
-      ) : key == PermissionEnum.settings.sub.setting_job ? (
+      return key == PermissionEnum.configurations.sub.configuration_job ? (
         <TabsTrigger
           key={index}
           value={key.toString()}
@@ -44,7 +34,7 @@ export default function SettingsPage() {
           <Briefcase className="size-[16px] ltr:mr-1 rtl:ml-1" />
           {t("job")}
         </TabsTrigger>
-      ) : key == PermissionEnum.settings.sub.setting_destination ? (
+      ) : key == PermissionEnum.configurations.sub.configuration_destination ? (
         <TabsTrigger
           key={index}
           value={key.toString()}
@@ -53,7 +43,8 @@ export default function SettingsPage() {
           <MapPinHouse className="size-[16px] ltr:mr-1 rtl:ml-1" />
           {t("reference")}
         </TabsTrigger>
-      ) : key == PermissionEnum.settings.sub.vaccine_type ? (
+      ) : key ==
+        PermissionEnum.configurations.sub.configuration_vaccine_type ? (
         <TabsTrigger
           key={index}
           value={key.toString()}
@@ -62,7 +53,8 @@ export default function SettingsPage() {
           <MapPinHouse className="size-[16px] ltr:mr-1 rtl:ml-1" />
           {t("vaccine_type")}
         </TabsTrigger>
-      ) : key == PermissionEnum.settings.sub.vaccine_center ? (
+      ) : key ==
+        PermissionEnum.configurations.sub.configuration_vaccine_center ? (
         <TabsTrigger
           key={index}
           value={key.toString()}
@@ -90,31 +82,25 @@ export default function SettingsPage() {
           {tableList}
         </TabsList>
         <TabsContent
-          value={PermissionEnum.settings.sub.setting_language.toString()}
-          className="overflow-y-auto self-start w-full sm:w-1/2 xl:w-1/3"
-        >
-          <LanguageTab />
-        </TabsContent>
-        <TabsContent
-          value={PermissionEnum.settings.sub.setting_job.toString()}
+          value={PermissionEnum.configurations.sub.configuration_job.toString()}
           className="w-full px-4 pt-8"
         >
           <JobTab permissions={per} />
         </TabsContent>
         <TabsContent
-          value={PermissionEnum.settings.sub.setting_destination.toString()}
+          value={PermissionEnum.configurations.sub.configuration_destination.toString()}
           className="w-full px-4 pt-8"
         >
           <DestinationTab permissions={per} />
         </TabsContent>
         <TabsContent
-          value={PermissionEnum.settings.sub.vaccine_center.toString()}
+          value={PermissionEnum.configurations.sub.configuration_vaccine_center.toString()}
           className="w-full px-4 pt-8"
         >
           <VaccineCenterTab permissions={per} />
         </TabsContent>
         <TabsContent
-          value={PermissionEnum.settings.sub.vaccine_type.toString()}
+          value={PermissionEnum.configurations.sub.configuration_vaccine_type.toString()}
           className="w-full px-4 pt-8"
         >
           <VaccineTypeTab permissions={per} />

@@ -53,14 +53,13 @@ export const PermissionEnum = {
     },
   },
   reports: { name: "reports", sub: {} },
-  settings: {
-    name: "settings",
+  configurations: {
+    name: "configurations",
     sub: {
-      setting_language: 21,
-      setting_job: 22,
-      setting_destination: 23,
-      vaccine_type: 24,
-      vaccine_center: 25,
+      configuration_job: 21,
+      configuration_destination: 22,
+      configuration_vaccine_type: 23,
+      configuration_vaccine_center: 24,
     },
   },
   logs: { name: "logs", sub: {} },

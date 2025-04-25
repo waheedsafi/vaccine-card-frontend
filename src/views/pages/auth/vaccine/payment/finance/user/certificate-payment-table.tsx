@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
-import { useGlobalState } from "@/context/GlobalStateContext";
 import { CertificatePayment, UserPermission } from "@/database/tables";
 import { CACHE, PermissionEnum } from "@/lib/constants";
 import { useRef, useState } from "react";
@@ -19,10 +18,9 @@ import axiosClient from "@/lib/axois-client";
 
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
 import Pagination from "@/components/custom-ui/table/Pagination";
-import { toLocaleDate } from "@/lib/utils";
 import NastranModel from "@/components/custom-ui/model/NastranModel";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
-import { ListFilter, Search } from "lucide-react";
+import { Coins, ListFilter, Search } from "lucide-react";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
@@ -33,6 +31,7 @@ import {
   CertificatePaymentPaginationData,
   PersonCertificateSearch,
 } from "@/lib/types";
+import React from "react";
 import TakePayment from "./add/take-payment";
 
 export function CertificatePaymentTable() {
@@ -136,7 +135,23 @@ export function CertificatePaymentTable() {
   });
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
-  const [state] = useGlobalState();
+  const markAsPaid = (visitIdToUpdate: string) => {
+    setPersonCertificates((prev) => ({
+      ...prev,
+      filterList: {
+        ...prev.filterList,
+        data: prev.filterList.data.map((item) =>
+          item.visit_id === visitIdToUpdate ? { ...item, has_payment: 1 } : item
+        ),
+      },
+      unFilterList: {
+        ...prev.unFilterList,
+        data: prev.unFilterList.data.map((item) =>
+          item.visit_id === visitIdToUpdate ? { ...item, has_payment: 1 } : item
+        ),
+      },
+    }));
+  };
 
   const skeleton = (
     <TableRow>
@@ -176,21 +191,6 @@ export function CertificatePaymentTable() {
   return (
     <>
       <div className="flex flex-col sm:items-baseline sm:flex-row rounded-md bg-card gap-2 flex-1 px-2 py-2 mt-4">
-        {hasAdd && (
-          <NastranModel
-            size="lg"
-            isDismissable={false}
-            button={
-              <PrimaryButton className="rtl:text-lg-rtl font-semibold ltr:text-md-ltr">
-                {t("take_payment")}
-              </PrimaryButton>
-            }
-            showDialog={async () => true}
-          >
-            <TakePayment />
-          </NastranModel>
-        )}
-
         <CustomInput
           size_="lg"
           placeholder={`${t(filters.search.column)}...`}
@@ -301,6 +301,7 @@ export function CertificatePaymentTable() {
             <TableHead className="text-start">{t("father_name")}</TableHead>
             <TableHead className="text-start">{t("contact")}</TableHead>
             <TableHead className="text-start">{t("payment")}</TableHead>
+            <TableHead className="text-start">{t("amount")}</TableHead>
             <TableHead className="text-start">{t("last_visit_date")}</TableHead>
           </TableRow>
         </TableHeader>
@@ -310,40 +311,66 @@ export function CertificatePaymentTable() {
           ) : (
             personCertificates.filterList.data.map(
               (item: CertificatePayment) => (
-                <TableRowIcon
-                  read={hasView}
-                  remove={false}
-                  edit={false}
-                  onEdit={async () => {}}
-                  key={item.id}
-                  item={item}
-                  onRemove={async () => {}}
-                  onRead={watchOnClick}
-                >
-                  <TableCell className="truncate">{item.id}</TableCell>
-                  <TableCell className="truncate">
-                    {item.passport_number}
-                  </TableCell>
-
-                  <TableCell dir="ltr" className="truncate">
-                    {item.full_name}
-                  </TableCell>
-                  <TableCell dir="ltr" className="truncate">
-                    {item.father_name}
-                  </TableCell>
-                  <TableCell
-                    dir="ltr"
-                    className="truncate rtl:text-sm-rtl rtl:text-end"
+                <React.Fragment key={item.id}>
+                  <TableRowIcon
+                    read={hasView}
+                    remove={false}
+                    edit={false}
+                    onEdit={async () => {}}
+                    key={item.id}
+                    item={item}
+                    onRemove={async () => {}}
+                    onRead={watchOnClick}
                   >
-                    {item.contact}
-                  </TableCell>
-                  <TableCell dir="ltr" className="truncate">
-                    {item.has_payment == 1 ? t("paid") : t("unpaid")}
-                  </TableCell>
-                  <TableCell className="truncate">
-                    {toLocaleDate(new Date(item.last_visit_date), state)}
-                  </TableCell>
-                </TableRowIcon>
+                    <TableCell className="truncate">{item.id}</TableCell>
+                    <TableCell className="truncate">
+                      {item.passport_number}
+                    </TableCell>
+
+                    <TableCell dir="ltr" className="truncate">
+                      {item.full_name}
+                    </TableCell>
+                    <TableCell dir="ltr" className="truncate">
+                      {item.father_name}
+                    </TableCell>
+                    <TableCell
+                      dir="ltr"
+                      className="truncate rtl:text-sm-rtl rtl:text-end"
+                    >
+                      {item.contact}
+                    </TableCell>
+                    <TableCell dir="ltr" className="truncate">
+                      {item.has_payment == 1 ? t("paid") : t("unpaid")}
+                    </TableCell>
+                    <TableCell dir="ltr" className="truncate">
+                      {item.amount}
+                    </TableCell>
+                  </TableRowIcon>
+                  {hasAdd && item.has_payment == 0 && (
+                    <TableRow key={item.passport_number} className=" py-8">
+                      <TableCell colSpan={8} className="text-center pt-8 pb-4">
+                        <NastranModel
+                          size="lg"
+                          isDismissable={false}
+                          button={
+                            <PrimaryButton className="rtl:text-lg-rtl font-semibold ltr:text-md-ltr">
+                              {t("take_payment")}
+                              <Coins className=" text-tertiary size-[18px] transition" />
+                            </PrimaryButton>
+                          }
+                          showDialog={async () => true}
+                        >
+                          <TakePayment
+                            visit_id={item.visit_id}
+                            onComplete={() => markAsPaid(item.visit_id)}
+                            amount={item.amount}
+                            passport_number={item.passport_number}
+                          />
+                        </NastranModel>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
               )
             )
           )}

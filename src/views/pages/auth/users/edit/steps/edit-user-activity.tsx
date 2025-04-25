@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
-import { useUserAuthState } from "@/context/AuthContextProvider";
 import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import { UserPermission } from "@/database/tables";
 export interface EditUserActivityProps {
@@ -17,10 +16,9 @@ export interface EditUserActivityProps {
 }
 
 export function EditUserActivity(props: EditUserActivityProps) {
-  const { failed, refreshPage, permissions } = props;
-  const { user, logoutUser } = useUserAuthState();
+  const { failed } = props;
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   return (
     <Card>

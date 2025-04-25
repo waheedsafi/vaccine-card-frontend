@@ -140,7 +140,9 @@ export default function VaccineTypeTab(props: JobTabProps) {
     ),
     [selected.visible]
   );
-  const job = permissions.sub.get(PermissionEnum.settings.sub.setting_job);
+  const job = permissions.sub.get(
+    PermissionEnum.configurations.sub.configuration_vaccine_type
+  );
   const hasEdit = job?.edit;
   const hasAdd = job?.add;
   const hasDelete = job?.delete;

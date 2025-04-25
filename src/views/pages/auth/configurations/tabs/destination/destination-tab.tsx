@@ -18,27 +18,27 @@ import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { Search } from "lucide-react";
 import Shimmer from "@/components/custom-ui/shimmer/Shimmer";
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
-import JobDialog from "./job-dialog";
-import { Job, UserPermission } from "@/database/tables";
+import { Destination, UserPermission } from "@/database/tables";
+import DestinationDialog from "./destination-dialog";
 import { PermissionEnum } from "@/lib/constants";
-interface JobTabProps {
+interface DestinationTabProps {
   permissions: UserPermission;
 }
-export default function JobTab(props: JobTabProps) {
+export default function DestinationTab(props: DestinationTabProps) {
   const { permissions } = props;
   const { t } = useTranslation();
   const [state] = useGlobalState();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<{
     visible: boolean;
-    job: any;
+    destination: any;
   }>({
     visible: false,
-    job: undefined,
+    destination: undefined,
   });
-  const [jobs, setJobs] = useState<{
-    unFilterList: Job[];
-    filterList: Job[];
+  const [destinations, setDestinations] = useState<{
+    unFilterList: Destination[];
+    filterList: Destination[];
   }>({
     unFilterList: [],
     filterList: [],
@@ -49,15 +49,16 @@ export default function JobTab(props: JobTabProps) {
       setLoading(true);
 
       // 2. Send data
-      const response = await axiosClient.get(`jobs`);
-      const fetch = response.data as Job[];
-      setJobs({
+      const response = await axiosClient.get(`complete-destinations`);
+      const fetch = response.data as Destination[];
+      setDestinations({
         unFilterList: fetch,
         filterList: fetch,
       });
     } catch (error: any) {
       toast({
         toastType: "ERROR",
+        title: "Error!",
         description: error.response.data.message,
       });
     } finally {
@@ -71,24 +72,24 @@ export default function JobTab(props: JobTabProps) {
   const searchOnChange = (e: any) => {
     const { value } = e.target;
     // 1. Filter
-    const filtered = jobs.unFilterList.filter((item: Job) =>
+    const filtered = destinations.unFilterList.filter((item: Destination) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
-    setJobs({
-      ...jobs,
+    setDestinations({
+      ...destinations,
       filterList: filtered,
     });
   };
-  const add = (job: Job) => {
-    setJobs((prev) => ({
-      unFilterList: [job, ...prev.unFilterList],
-      filterList: [job, ...prev.filterList],
+  const add = (destination: Destination) => {
+    setDestinations((prev) => ({
+      unFilterList: [destination, ...prev.unFilterList],
+      filterList: [destination, ...prev.filterList],
     }));
   };
-  const update = (job: Job) => {
-    setJobs((prevState) => {
+  const update = (destination: Destination) => {
+    setDestinations((prevState) => {
       const updatedUnFiltered = prevState.unFilterList.map((item) =>
-        item.id === job.id ? { ...item, name: job.name } : item
+        item.id === destination.id ? destination : item
       );
 
       return {
@@ -98,17 +99,21 @@ export default function JobTab(props: JobTabProps) {
       };
     });
   };
-  const remove = async (job: Job) => {
+  const remove = async (destination: Destination) => {
     try {
       // 1. Remove from backend
-      const response = await axiosClient.delete(`job/${job.id}`);
+      const response = await axiosClient.delete(
+        `destination/${destination.id}`
+      );
       if (response.status === 200) {
         // 2. Remove from frontend
-        setJobs((prevJobs) => ({
-          unFilterList: prevJobs.unFilterList.filter(
-            (item) => item.id !== job.id
+        setDestinations((prevDestinations) => ({
+          unFilterList: prevDestinations.unFilterList.filter(
+            (item) => item.id !== destination.id
           ),
-          filterList: prevJobs.filterList.filter((item) => item.id !== job.id),
+          filterList: prevDestinations.filterList.filter(
+            (item) => item.id !== destination.id
+          ),
         }));
         toast({
           toastType: "SUCCESS",
@@ -130,21 +135,26 @@ export default function JobTab(props: JobTabProps) {
         showDialog={async () => {
           setSelected({
             visible: false,
-            job: undefined,
+            destination: undefined,
           });
           return true;
         }}
       >
-        <JobDialog job={selected.job} onComplete={update} />
+        <DestinationDialog
+          destination={selected.destination}
+          onComplete={update}
+        />
       </NastranModel>
     ),
     [selected.visible]
   );
-  const job = permissions.sub.get(PermissionEnum.settings.sub.setting_job);
-  const hasEdit = job?.edit;
-  const hasAdd = job?.add;
-  const hasDelete = job?.delete;
-  const hasView = job?.view;
+  const destination = permissions.sub.get(
+    PermissionEnum.configurations.sub.configuration_destination
+  );
+  const hasEdit = destination?.edit;
+  const hasAdd = destination?.add;
+  const hasDelete = destination?.delete;
+  const hasView = destination?.view;
   return (
     <div className="relative">
       <div className="rounded-md bg-card p-2 flex gap-x-4 items-baseline mt-4">
@@ -154,15 +164,14 @@ export default function JobTab(props: JobTabProps) {
             isDismissable={false}
             button={
               <PrimaryButton className="text-primary-foreground">
-                {t("add_job")}
+                {t("add_reference")}
               </PrimaryButton>
             }
             showDialog={async () => true}
           >
-            <JobDialog onComplete={add} />
+            <DestinationDialog onComplete={add} />
           </NastranModel>
         )}
-
         <CustomInput
           size_="lg"
           placeholder={`${t("search")}...`}
@@ -179,6 +188,8 @@ export default function JobTab(props: JobTabProps) {
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-start">{t("id")}</TableHead>
             <TableHead className="text-start">{t("name")}</TableHead>
+            <TableHead className="text-start">{t("color")}</TableHead>
+            <TableHead className="text-start">{t("type")}</TableHead>
             <TableHead className="text-start">{t("date")}</TableHead>
           </TableRow>
         </TableHeader>
@@ -194,31 +205,48 @@ export default function JobTab(props: JobTabProps) {
               <TableCell>
                 <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
               </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
             </TableRow>
           ) : (
-            jobs.filterList.map((job: Job, index: number) => (
-              <TableRowIcon
-                read={hasView}
-                remove={hasDelete}
-                edit={hasEdit}
-                onEdit={async (job: Job) => {
-                  setSelected({
-                    visible: true,
-                    job: job,
-                  });
-                }}
-                key={index}
-                item={job}
-                onRemove={remove}
-                onRead={async () => {}}
-              >
-                <TableCell className="font-medium">{job.id}</TableCell>
-                <TableCell>{job.name}</TableCell>
-                <TableCell>
-                  {toLocaleDate(new Date(job.created_at), state)}
-                </TableCell>
-              </TableRowIcon>
-            ))
+            destinations.filterList.map(
+              (destination: Destination, index: number) => (
+                <TableRowIcon
+                  read={hasView}
+                  remove={hasDelete}
+                  edit={hasEdit}
+                  onEdit={async (destination: Destination) => {
+                    setSelected({
+                      visible: true,
+                      destination: destination,
+                    });
+                  }}
+                  key={index}
+                  item={destination}
+                  onRemove={remove}
+                  onRead={async () => {}}
+                >
+                  <TableCell className="font-medium">
+                    {destination.id}
+                  </TableCell>
+                  <TableCell>{destination.name}</TableCell>
+                  <TableCell>
+                    <div
+                      className="h-5 w-8 rounded !bg-center !bg-cover transition-all"
+                      style={{ background: destination.color }}
+                    />
+                  </TableCell>
+                  <TableCell>{destination?.type?.name}</TableCell>
+                  <TableCell>
+                    {toLocaleDate(new Date(destination.created_at), state)}
+                  </TableCell>
+                </TableRowIcon>
+              )
+            )
           )}
         </TableBody>
       </Table>

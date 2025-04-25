@@ -24,7 +24,7 @@ import { PermissionEnum } from "@/lib/constants";
 interface JobTabProps {
   permissions: UserPermission;
 }
-export default function VaccineCenterTab(props: JobTabProps) {
+export default function JobTab(props: JobTabProps) {
   const { permissions } = props;
   const { t } = useTranslation();
   const [state] = useGlobalState();
@@ -140,7 +140,9 @@ export default function VaccineCenterTab(props: JobTabProps) {
     ),
     [selected.visible]
   );
-  const job = permissions.sub.get(PermissionEnum.settings.sub.setting_job);
+  const job = permissions.sub.get(
+    PermissionEnum.configurations.sub.configuration_job
+  );
   const hasEdit = job?.edit;
   const hasAdd = job?.add;
   const hasDelete = job?.delete;

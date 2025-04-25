@@ -20,7 +20,7 @@ export default function LoginPage() {
         {t("are_a_finance")}
 
         <span className="text-fourth cursor-pointer hover:opacity-70 rtl:text-xl-rtl font-bold ">
-          {t("click_here")}
+          {` ${t("click_here")}`}
         </span>
       </h1>
       <h1
@@ -30,7 +30,7 @@ export default function LoginPage() {
         {t("are_a_epi")}
 
         <span className="text-fourth cursor-pointer hover:opacity-70 rtl:text-xl-rtl font-bold">
-          {t("click_here")}
+          {` ${t("click_here")}`}
         </span>
       </h1>
     </div>

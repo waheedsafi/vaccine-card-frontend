@@ -8,10 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { useUserAuthState } from "@/context/AuthContextProvider";
-import { UserPermission } from "@/database/tables";
-import { PermissionEnum } from "@/lib/constants";
-
 import { toast } from "@/components/ui/use-toast";
 import { CACHE } from "@/lib/constants";
 import { useEffect, useRef, useState } from "react";
@@ -51,11 +47,6 @@ export default function Activity() {
   const [selectedTab, setSelectedTab] = useState("admin"); // default to "user"
   const [isAdmin, setIsAdmin] = useState(false);
   const [searchParams] = useSearchParams();
-  const { user } = useUserAuthState();
-
-  const per: UserPermission = user?.permissions.get(
-    PermissionEnum.settings.name
-  ) as UserPermission;
 
   // Accessing individual search filters
   const searchValue = searchParams.get("sch_val");
