@@ -33,7 +33,8 @@ export default function DownloadCard(props: DownloadCardProps) {
     try {
       const response = await axiosClient.post("epi/generate/certificate", {
         passport_number: passport_number,
-        payment_number: userData?.payment_number,
+        visit_id: visit_id,
+        payment_number: userData.payment_number,
       });
       if (response.status == 200) {
         // path: response.data?.path,
@@ -106,7 +107,7 @@ export default function DownloadCard(props: DownloadCardProps) {
                 successText={t("congratulation")}
                 closeText={t("close")}
                 closeModel={closeModel}
-                description={t("user_acc_crea")}
+                description={t("card_success")}
                 downloadText={t("download_reciept")}
                 passport_number={passport_number}
               />

@@ -112,7 +112,7 @@ export default function TakePayment(props: TakePaymentProps) {
                 closeText={t("close")}
                 visit_id={visit_id}
                 closeModel={closeModel}
-                description={t("user_acc_crea")}
+                description={t("payment_success")}
                 downloadText={t("download_reciept")}
                 passport_number={passport_number}
                 onComplete={closeModel}

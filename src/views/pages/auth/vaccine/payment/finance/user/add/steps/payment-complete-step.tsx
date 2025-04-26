@@ -62,7 +62,7 @@ export default function PaymentCompleteStep(props: ICompleteStepProps) {
         filetoDownload={{
           id: "",
           path: "",
-          name: "payment_reciept",
+          name: "payment_reciept.pdf",
           extension: "pdf",
           size: 2212,
         }}
