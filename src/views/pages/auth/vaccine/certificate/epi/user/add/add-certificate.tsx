@@ -98,7 +98,7 @@ export default function AddCertificate() {
         formatedVaccines.push(item);
       });
       const response = await axiosClient.post("epi/certificate/detail/store", {
-        // vaccines: JSON.stringify(formatedVaccines),
+        vaccines: JSON.stringify(formatedVaccines),
         full_name: userData.full_name,
         father_name: userData.father_name,
         date_of_birth: !isString(userData.date_of_birth)
