@@ -221,8 +221,12 @@ export default function Activity() {
         onValueChange={setSelectedTab}
       >
         <TabsList>
-          <TabsTrigger value="admin">Admin</TabsTrigger>
-          <TabsTrigger value="user">User</TabsTrigger>
+          <TabsTrigger className="font-bold" value="admin">
+            {t("admin")}
+          </TabsTrigger>
+          <TabsTrigger className="font-bold" value="user">
+            {t("user")}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
       <div className="flex flex-col sm:items-baseline sm:flex-row rounded-md bg-card dark:!bg-black/30 gap-2  px-2 py-2">
