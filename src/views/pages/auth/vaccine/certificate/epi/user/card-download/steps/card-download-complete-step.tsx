@@ -1,6 +1,8 @@
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import Downloader from "@/components/custom-ui/chooser/Downloader";
+import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
 import { motion } from "framer-motion";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ICompleteStepProps {
@@ -8,6 +10,7 @@ export interface ICompleteStepProps {
   successText: string;
   downloadText: string;
   passport_number: string;
+  payment_number: string;
   visit_id: string;
   closeText: string;
   closeModel: () => void;
@@ -24,6 +27,7 @@ export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
     visit_id,
   } = props;
   const { t } = useTranslation();
+  const { userData } = useContext(StepperContext);
 
   return (
     <div className="flex flex-col items-center mt-8">
@@ -73,6 +77,7 @@ export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
         params={{
           passport_number: passport_number,
           visit_id: visit_id,
+          payment_number: userData.payment_number,
         }}
       />
       <PrimaryButton

@@ -243,5 +243,7 @@
   "download_card": "Download card",
   "payment_number": "Payment number",
   "card_success": "Information was validated successfully, Now you can download the card.",
-  "payment_success": "Payment is completed successfully."
+  "payment_success": "Payment is completed successfully.",
+  "payment_info": "Payment information.",
+  "payment_info_des": "All customer payment information are listed here."
 }

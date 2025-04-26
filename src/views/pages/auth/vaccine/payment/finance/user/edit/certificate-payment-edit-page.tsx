@@ -9,7 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import axiosClient from "@/lib/axois-client";
 import { toast } from "@/components/ui/use-toast";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
 import {
   Table,
@@ -22,6 +22,12 @@ import {
 import { toLocaleDate } from "@/lib/utils";
 import Shimmer from "@/components/custom-ui/shimmer/Shimmer";
 import { useGlobalState } from "@/context/GlobalStateContext";
+import {
+  Breadcrumb,
+  BreadcrumbHome,
+  BreadcrumbItem,
+  BreadcrumbSeparator,
+} from "@/components/custom-ui/Breadcrumb/Breadcrumb";
 
 export function CertificatePaymentEditPage() {
   const { t } = useTranslation();
@@ -29,7 +35,9 @@ export function CertificatePaymentEditPage() {
   const [payments, setPayments] = useState<any[]>([]);
   let { id } = useParams();
   const [state] = useGlobalState();
-
+  const navigate = useNavigate();
+  const handleGoBack = () => navigate(-1);
+  const handleGoHome = () => navigate("/", { replace: true });
   const loadInformation = async () => {
     try {
       const response = await axiosClient.get("finance/payment/info/" + id);
@@ -74,85 +82,95 @@ export function CertificatePaymentEditPage() {
   );
 
   return (
-    <Card className="m-4">
-      <CardHeader className="space-y-0">
-        <CardTitle className="rtl:text-3xl-rtl ltr:text-2xl-ltr">
-          {t("update_account_password")}
-        </CardTitle>
-        <CardDescription className="rtl:text-xl-rtl ltr:text-lg-ltr">
-          {t("update_pass_descrip")}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table className="bg-card rounded-md my-[2px] py-8">
-          <TableHeader className="rtl:text-3xl-rtl ltr:text-xl-ltr">
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="text-start px-1">{t("#")}</TableHead>
-              <TableHead className="text-start">
-                {t("passport_number")}
-              </TableHead>
-              <TableHead className="text-start">{t("full_name")}</TableHead>
-              <TableHead className="text-start">{t("father_name")}</TableHead>
-              <TableHead className="text-start">{t("contact")}</TableHead>
-              <TableHead className="text-start">{t("payment")}</TableHead>
-              <TableHead className="text-start">
-                {t("last_visit_date")}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="rtl:text-xl-rtl ltr:text-2xl-ltr">
-            {loading ? (
-              <>{skeleton}</>
-            ) : (
-              payments.map((item: any) => (
-                <TableRowIcon
-                  read={false}
-                  remove={false}
-                  edit={false}
-                  onEdit={async () => {}}
-                  onRemove={async () => {}}
-                  onRead={async () => {}}
-                  item={undefined}
-                >
-                  <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
-                    {item.id}
-                  </TableCell>
-                  <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
-                    {item.passport_number}
-                  </TableCell>
+    <>
+      <Breadcrumb className=" mx-2 mt-2 bottom-2">
+        <BreadcrumbHome onClick={handleGoHome} />
+        <BreadcrumbSeparator />
+        <BreadcrumbItem onClick={handleGoBack}>
+          {t("certificate_payment")}
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <Card className="m-4">
+        <CardHeader className="space-y-0">
+          <CardTitle className="rtl:text-3xl-rtl ltr:text-2xl-ltr">
+            {t("payment_info")}
+          </CardTitle>
+          <CardDescription className="rtl:text-xl-rtl ltr:text-lg-ltr">
+            {t("update_pass_descrip")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table className="bg-card rounded-md my-[2px] py-8">
+            <TableHeader className="rtl:text-3xl-rtl ltr:text-xl-ltr">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="text-start px-1">{t("#")}</TableHead>
+                <TableHead className="text-start">
+                  {t("passport_number")}
+                </TableHead>
+                <TableHead className="text-start">{t("full_name")}</TableHead>
+                <TableHead className="text-start">{t("father_name")}</TableHead>
+                <TableHead className="text-start">{t("contact")}</TableHead>
+                <TableHead className="text-start">{t("payment")}</TableHead>
+                <TableHead className="text-start">
+                  {t("last_visit_date")}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="rtl:text-xl-rtl ltr:text-2xl-ltr">
+              {loading ? (
+                <>{skeleton}</>
+              ) : (
+                payments.map((item: any, index: number) => (
+                  <TableRowIcon
+                    key={index}
+                    read={false}
+                    remove={false}
+                    edit={false}
+                    onEdit={async () => {}}
+                    onRemove={async () => {}}
+                    onRead={async () => {}}
+                    item={undefined}
+                  >
+                    <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                      {item.id}
+                    </TableCell>
+                    <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                      {item.passport_number}
+                    </TableCell>
 
-                  <TableCell
-                    dir="ltr"
-                    className="truncate rtl:text-sm-rtl rtl:text-end"
-                  >
-                    {item.full_name}
-                  </TableCell>
-                  <TableCell
-                    dir="ltr"
-                    className="truncate rtl:text-sm-rtl rtl:text-end"
-                  >
-                    {item.father_name}
-                  </TableCell>
-                  <TableCell
-                    dir="ltr"
-                    className="rtl:text-end rtl:text-sm-rtl truncate"
-                  >
-                    {item?.contact}
-                  </TableCell>
-                  <TableCell dir="ltr" className="truncate">
-                    {item.payment_status_id == item.paid
-                      ? t("paid")
-                      : t("unpaid")}
-                  </TableCell>
-                  <TableCell className="truncate">
-                    {toLocaleDate(new Date(item.last_visit_date), state)}
-                  </TableCell>
-                </TableRowIcon>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                    <TableCell
+                      dir="ltr"
+                      className="truncate rtl:text-sm-rtl rtl:text-end"
+                    >
+                      {item.full_name}
+                    </TableCell>
+                    <TableCell
+                      dir="ltr"
+                      className="truncate rtl:text-sm-rtl rtl:text-end"
+                    >
+                      {item.father_name}
+                    </TableCell>
+                    <TableCell
+                      dir="ltr"
+                      className="rtl:text-end rtl:text-sm-rtl truncate"
+                    >
+                      {item?.contact}
+                    </TableCell>
+                    <TableCell dir="ltr" className="truncate">
+                      {item.payment_status_id == item.paid
+                        ? t("paid")
+                        : t("unpaid")}
+                    </TableCell>
+                    <TableCell className="truncate">
+                      {toLocaleDate(new Date(item.last_visit_date), state)}
+                    </TableCell>
+                  </TableRowIcon>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </>
   );
 }
