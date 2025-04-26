@@ -10,8 +10,8 @@ import { setServerError } from "@/validation/validation";
 import { Check, Database, User as UserIcon } from "lucide-react";
 import AddPersonalDetail from "./steps/add-personal-detail";
 import AddVaccineDetail from "./steps/add-vaccine-detail";
-import { Vaccine } from "@/database/tables";
-import { isString } from "@/lib/utils";
+// import { Vaccine } from "@/database/tables";
+// import { isString } from "@/lib/utils";
 
 export default function AddCertificate() {
   const { t } = useTranslation();
@@ -60,56 +60,56 @@ export default function AddCertificate() {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      const formatedVaccines: any[] = [];
-      userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
-        const item: {
-          id: any;
-          vaccine_type_id: any;
-          registration_number: any;
-          volume: any;
-          page: any;
-          registration_date: any;
-          vaccine_center_id: any;
-          doses: any[];
-        } = {
-          id: vaccine.id,
-          vaccine_type_id: vaccine.vaccine_type?.id,
-          registration_number: vaccine.registration_number,
-          volume: vaccine.volume,
-          page: vaccine.page,
-          registration_date: vaccine.registration_date?.toDate()?.toISOString(),
-          vaccine_center_id: vaccine.vaccine_center?.id,
-          doses: [],
-        };
-        const doses: any[] = [];
+      // const formatedVaccines: any[] = [];
+      // userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
+      //   const item: {
+      //     id: any;
+      //     vaccine_type_id: any;
+      //     registration_number: any;
+      //     volume: any;
+      //     page: any;
+      //     registration_date: any;
+      //     vaccine_center_id: any;
+      //     doses: any[];
+      //   } = {
+      //     id: vaccine.id,
+      //     vaccine_type_id: vaccine.vaccine_type?.id,
+      //     registration_number: vaccine.registration_number,
+      //     volume: vaccine.volume,
+      //     page: vaccine.page,
+      //     registration_date: vaccine.registration_date?.toDate()?.toISOString(),
+      //     vaccine_center_id: vaccine.vaccine_center?.id,
+      //     doses: [],
+      //   };
+      //   const doses: any[] = [];
 
-        vaccine.doses.forEach((dose: any) => {
-          doses.push({
-            id: dose.id,
-            dose: dose.dose,
-            batch_number: dose.batch_number,
-            vaccine_date: dose.vaccine_date?.toDate()?.toISOString(),
-            added_by: dose.added_by,
-          });
-        });
-        item.doses.push(doses);
-        formatedVaccines.push(item);
-      });
+      //   vaccine.doses.forEach((dose: any) => {
+      //     doses.push({
+      //       id: dose.id,
+      //       dose: dose.dose,
+      //       batch_number: dose.batch_number,
+      //       vaccine_date: dose.vaccine_date?.toDate()?.toISOString(),
+      //       added_by: dose.added_by,
+      //     });
+      //   });
+      //   item.doses.push(doses);
+      //   formatedVaccines.push(item);
+      // });
       const response = await axiosClient.post("epi/certificate/detail/store", {
-        vaccines: JSON.stringify(formatedVaccines),
+        // vaccines: JSON.stringify(formatedVaccines),
         full_name: userData.full_name,
-        father_name: userData.father_name,
-        date_of_birth: !isString(userData.date_of_birth)
-          ? userData.date_of_birth?.toDate()?.toISOString()
-          : userData.date_of_birth,
-        contact: userData.contact,
-        passport_number: userData.passport_number,
-        gender_id: userData.gender?.id,
-        province_id: userData.province?.id,
-        district_id: userData.district?.id,
-        nationality_id: userData.nationality?.id,
-        travel_type_id: userData.travel_type?.id,
-        destina_country_id: userData.destina_country?.id,
+        // father_name: userData.father_name,
+        // date_of_birth: !isString(userData.date_of_birth)
+        //   ? userData.date_of_birth?.toDate()?.toISOString()
+        //   : userData.date_of_birth,
+        // contact: userData.contact,
+        // passport_number: userData.passport_number,
+        // gender_id: userData.gender?.id,
+        // province_id: userData.province?.id,
+        // district_id: userData.district?.id,
+        // nationality_id: userData.nationality?.id,
+        // travel_type_id: userData.travel_type?.id,
+        // destina_country_id: userData.destina_country?.id,
       });
       if (response.status == 200) {
         toast({
