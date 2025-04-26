@@ -98,11 +98,11 @@ export default function VaccineCertificateEditPage() {
       <Breadcrumb>
         <BreadcrumbHome onClick={handleGoHome} />
         <BreadcrumbSeparator />
-        <BreadcrumbItem onClick={handleGoBack}>{t("users")}</BreadcrumbItem>
-        <BreadcrumbSeparator />
         <BreadcrumbItem onClick={handleGoBack}>
-          {userData?.full_name}
+          {t("certificate")}
         </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>{userData?.full_name}</BreadcrumbItem>
       </Breadcrumb>
       {/* Cards */}
       <Tabs

@@ -233,5 +233,13 @@
   "vaccination_info": "اطلاعات واکسین",
   "card_issuing": "صدور کارت",
   "certificate": "سرتیفیکیت",
-  "vaccines": "واکسین ها"
+  "vaccines": "واکسین ها",
+  "search_person": "اینجا یک شخص را جستجو کنید...",
+  "person_not_found": "رکورد شخص پیدا نشد!",
+  "search_payment": "پرداخت را اینجا جستجو کنید...",
+  "no_payment_found": "پرداختی پیدا نشد!",
+  "amount": "مبلغ",
+  "currency": "ارز",
+  "download_card": "دانلود کارت",
+  "payment_number": "شماره پرداخت"
 }

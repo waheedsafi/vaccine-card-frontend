@@ -204,17 +204,21 @@ export type PersonCertificate = {
   contact: string;
   gender: string;
   last_visit_date: string;
+  visit_id: string;
+  payment_status_id: number;
 };
+
 export type CertificatePayment = {
   id: string;
   passport_number: string;
   full_name: string;
   father_name: string;
   contact: string;
-  has_payment: number;
+  payment_status_id: number;
   last_visit_date: string;
   visit_id: string;
   amount: number;
+  currency: string;
 };
 export type VaccineType = {
   id: string;

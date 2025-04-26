@@ -3,6 +3,7 @@ import CustomDatePicker from "@/components/custom-ui/DatePicker/CustomDatePicker
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
 import { useScrollToElement } from "@/hook/use-scroll-to-element";
+import { CountryEnum } from "@/lib/constants";
 import { BookDashed, Phone, UserRound } from "lucide-react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -118,7 +119,7 @@ export default function AddPersonalDetail() {
         selectedItem={userData["province"]?.name}
         placeHolder={t("select_a")}
         errorMessage={error.get("province")}
-        apiUrl={"provinces/" + 1}
+        apiUrl={"provinces/" + CountryEnum.afghanistan}
         mode="single"
       />
       {userData.province && (

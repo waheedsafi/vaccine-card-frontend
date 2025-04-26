@@ -124,7 +124,9 @@ export default function CertificatePaymentEditPage() {
       <Breadcrumb>
         <BreadcrumbHome onClick={handleGoHome} />
         <BreadcrumbSeparator />
-        <BreadcrumbItem onClick={handleGoBack}>{t("users")}</BreadcrumbItem>
+        <BreadcrumbItem onClick={handleGoBack}>
+          {t("certificate_payment")}
+        </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem onClick={handleGoBack}>
           {userData?.username}

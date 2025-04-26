@@ -110,6 +110,25 @@ export const validate = async (
             break;
           }
         }
+        const floatLength: number = parseFloat(parts[1]);
+
+        if ("equal" == parts[0]) {
+          if (parseFloat(value) > floatLength) {
+            errMap.set(
+              item.name,
+              `${t(item.name)} ${t("is_more_than")} ${floatLength.toFixed(2)}`
+            );
+            // Allow one validation per loop to eliminate to much Rerender
+            break;
+          } else if (parseFloat(value) < floatLength) {
+            errMap.set(
+              item.name,
+              `${t(item.name)} ${t("is_less_than")} ${floatLength.toFixed(2)}`
+            );
+            // Allow one validation per loop to eliminate to much Rerender
+            break;
+          }
+        }
       }
     }
   });

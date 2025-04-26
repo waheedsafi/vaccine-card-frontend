@@ -20,7 +20,7 @@ export default function FinanceCertificatePaymentUserPage() {
         <BreadcrumbHome onClick={handleGoHome} />
         <BreadcrumbSeparator />
         <BreadcrumbItem onClick={handleGoBack}>
-          {t("certificate")}
+          {t("certificate_payment")}
         </BreadcrumbItem>
       </Breadcrumb>
       <CertificatePaymentTable />

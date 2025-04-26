@@ -22,6 +22,7 @@ import {
 import { EditUserActivity } from "./steps/edit-user-activity";
 import { EditUserIssuedCirtificate } from "./steps/edit-user-issued-certificate";
 import { EditUserCirtificatePayment } from "./steps/edit-user-certificate-payment";
+import Shimmer from "@/components/custom-ui/shimmer/Shimmer";
 
 export default function UserEditPage() {
   const { user } = useGeneralAuthState();
@@ -69,8 +70,10 @@ export default function UserEditPage() {
       );
     }
   }, [userData?.role]);
-  const tableList = Array.from(per.sub).map(
-    ([key, _subPermission], index: number) => {
+
+  const tableList = useMemo(() => {
+    if (!userData) return null;
+    return Array.from(per.sub).map(([key, _subPermission], index: number) => {
       return key == PermissionEnum.users.sub.user_information ? (
         <TabsTrigger
           key={index}
@@ -128,8 +131,8 @@ export default function UserEditPage() {
           {t("activity")}
         </TabsTrigger>
       ) : undefined;
-    }
-  );
+    });
+  }, [isAdmin, userData]);
   return (
     <div className="flex flex-col gap-y-3 px-3 pt-2 overflow-x-auto pb-12">
       <Breadcrumb>
@@ -148,13 +151,26 @@ export default function UserEditPage() {
         className="flex flex-col sm:flex-row gap-x-3 gap-y-2 sm:gap-y-0"
       >
         <TabsList className="sm:min-h-[550px] h-fit pb-8 min-w-[300px] md:w-[300px] gap-y-4 items-start justify-start flex flex-col bg-card border">
-          <UserEditHeader
-            id={id}
-            failed={failed}
-            userData={userData}
-            setUserData={setUserData}
-          />
-          {tableList}
+          {tableList ? (
+            <>
+              <UserEditHeader
+                id={id}
+                failed={failed}
+                userData={userData}
+                setUserData={setUserData}
+              />
+              {tableList}
+            </>
+          ) : (
+            <>
+              <Shimmer className="shadow-none mx-auto size-[86px] mt-6 rounded-full" />
+              <Shimmer className="h-[32px] shadow-none !mt-2 !mb-4 w-1/2 mx-auto rounded-sm" />
+              <Shimmer className="h-24 shadow-none w-[80%] mx-auto rounded-sm" />
+              <Shimmer className="h-[32px] shadow-none w-full rounded-sm" />
+              <Shimmer className="h-[32px] shadow-none w-full rounded-sm" />
+              <Shimmer className="h-[32px] shadow-none w-full rounded-sm" />
+            </>
+          )}
         </TabsList>
 
         <TabsContent

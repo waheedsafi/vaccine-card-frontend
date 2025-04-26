@@ -7,18 +7,16 @@ import { toast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import { setServerError } from "@/validation/validation";
 import { Check, Coins } from "lucide-react";
-import PaymentDetail from "./steps/payment-detail";
 import PaymentCompleteStep from "./steps/payment-complete-step";
+import CardPaymentDetail from "./steps/card-payment-detail";
 
-interface TakePaymentProps {
-  amount: number;
-  currency: string;
+interface DownloadCardProps {
+  passport_number: string;
   visit_id: string;
   onComplete: () => void;
-  passport_number: string;
 }
-export default function TakePayment(props: TakePaymentProps) {
-  const { amount, onComplete, passport_number, visit_id, currency } = props;
+export default function DownloadCard(props: DownloadCardProps) {
+  const { onComplete, passport_number } = props;
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -33,16 +31,18 @@ export default function TakePayment(props: TakePaymentProps) {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      const response = await axiosClient.post("finance/certificate/payment", {
+      const response = await axiosClient.post("epi/generate/certificate", {
         passport_number: passport_number,
-        paid_amount: userData.amount,
-        visit_id: visit_id,
+        payment_number: userData?.payment_number,
       });
       if (response.status == 200) {
+        // path: response.data?.path,
+
         toast({
           toastType: "SUCCESS",
-          description: response.data?.message,
+          description: response.data.message,
         });
+        onComplete();
       }
     } catch (error: any) {
       toast({
@@ -93,15 +93,10 @@ export default function TakePayment(props: TakePaymentProps) {
         ]}
         components={[
           {
-            component: (
-              <PaymentDetail
-                passport_number={passport_number}
-                amount={amount}
-                currency={currency}
-              />
-            ),
+            component: <CardPaymentDetail passport_number={passport_number} />,
             validationRules: [
-              { name: "amount", rules: ["required", `equal:${amount}`] },
+              { name: "payment_number", rules: ["required"] },
+              { name: "receipt", rules: ["required"] },
             ],
           },
           {

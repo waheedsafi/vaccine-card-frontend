@@ -27,6 +27,7 @@ export default function NastranSidebar() {
 
     items.push(
       <div
+        key={"dashboard"}
         onClick={() => navigateTo("/dashboard")}
         className={`flex gap-x-3 cursor-pointer items-center py-[8px] mx-2 rounded-[8px] ${
           dashboardSelected
@@ -65,6 +66,7 @@ export default function NastranSidebar() {
     );
     items.push(
       <div
+        key={"settings"}
         onClick={() => navigateTo("/settings")}
         className={`flex gap-x-3 cursor-pointer items-center py-[8px] mx-2 rounded-[8px] ${
           settingsSelected

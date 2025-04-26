@@ -233,5 +233,13 @@
   "vaccination_info": "Vaccination Information",
   "card_issuing": "Vaccination Information",
   "certificate": "Certificate",
-  "vaccines": "Vaccines"
+  "vaccines": "Vaccines",
+  "search_person": "Search a person here...",
+  "person_not_found": "Person record not found!",
+  "search_payment": "Search payment here...",
+  "no_payment_found": "No Payment found!",
+  "amount": "Amount",
+  "currency": "Currency",
+  "download_card": "Download card",
+  "payment_number": "Payment number"
 }

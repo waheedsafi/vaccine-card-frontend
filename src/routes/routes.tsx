@@ -32,6 +32,8 @@ import VaccineCertificateEditPage from "@/views/pages/auth/vaccine/certificate/e
 import CertificatePaymentEditPage from "@/views/pages/auth/vaccine/payment/finance/user/edit/certificate-payment-edit-page";
 import ConfigurationsPage from "@/views/pages/auth/configurations/configurations-page";
 import SettingsPage from "@/views/pages/auth/setting/settings-page";
+import FinanceUserDashboardPage from "@/views/pages/auth/dashboard/finance/user/finance-user-dashboard-page";
+import EpiUserDashboardPage from "@/views/pages/auth/dashboard/epi/user/epi-user-dashboard-page";
 
 export const getEpiSuperRouter = (
   user: User | Epi | Finance,
@@ -217,18 +219,9 @@ export const getEpiUserRouter = (
           }
         >
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="dashboard" element={<EpiUserDashboardPage />} />
+          <Route path="/" element={<EpiUserDashboardPage />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute
-                element={<EpiUserVaccineCertificatePage />}
-                routeName="vaccine_certificate"
-                permissions={permissions}
-                authenticated={authenticated}
-              />
-            }
-          />
           <Route
             path="vaccine_certificate"
             element={
@@ -455,18 +448,9 @@ export const getFinanceUserRouter = (
           }
         >
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="dashboard" element={<FinanceUserDashboardPage />} />
+          <Route path="/" element={<FinanceUserDashboardPage />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute
-                element={<FinanceCertificatePaymentUserPage />}
-                routeName="certificate_payment"
-                permissions={permissions}
-                authenticated={authenticated}
-              />
-            }
-          />
           <Route
             path="certificate_payment"
             element={

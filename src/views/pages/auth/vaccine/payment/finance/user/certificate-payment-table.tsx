@@ -10,7 +10,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useGeneralAuthState } from "@/context/AuthContextProvider";
 import { CertificatePayment, UserPermission } from "@/database/tables";
-import { CACHE, PermissionEnum } from "@/lib/constants";
+import { CACHE, PaymentStatusEnum, PermissionEnum } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
@@ -20,19 +20,18 @@ import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
 import Pagination from "@/components/custom-ui/table/Pagination";
 import NastranModel from "@/components/custom-ui/model/NastranModel";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
-import { Coins, ListFilter, Search } from "lucide-react";
+import { Coins, ListFilter, Search, TriangleAlert } from "lucide-react";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
 import { DateObject } from "react-multi-date-picker";
 import useCacheDB from "@/lib/indexeddb/useCacheDB";
 import FilterDialog from "@/components/custom-ui/dialog/filter-dialog";
-import {
-  CertificatePaymentPaginationData,
-  PersonCertificateSearch,
-} from "@/lib/types";
+import { PersonCertificateSearch } from "@/lib/types";
 import React from "react";
 import TakePayment from "./add/take-payment";
+import { toLocaleDate } from "@/lib/utils";
+import { useGlobalState } from "@/context/GlobalStateContext";
 
 export function CertificatePaymentTable() {
   const { user } = useGeneralAuthState();
@@ -50,6 +49,12 @@ export function CertificatePaymentTable() {
       value: searchValue == null ? "" : searchValue,
     },
   };
+  const [certificatePayment, setCertificatePayment] =
+    useState<CertificatePayment>();
+  const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const { t } = useTranslation();
+  const [state] = useGlobalState();
 
   const searchPerson = async (
     searchInput: string | undefined = undefined,
@@ -68,6 +73,9 @@ export function CertificatePaymentTable() {
         setError(errMap);
       }
       if (loading) return;
+      if (notFound) {
+        setNotFound(false);
+      }
       setLoading(true);
       const response = await axiosClient.get("finance/certificate/search", {
         params: {
@@ -81,76 +89,36 @@ export function CertificatePaymentTable() {
           },
         },
       });
-      const fetch = response.data.person_certificates
-        .data as CertificatePayment[];
+      const certificate_payment = response.data
+        .certificate_payment as CertificatePayment;
 
-      const lastPage = response.data.person_certificates.last_page;
-      const totalItems = response.data.person_certificates.total;
-      const perPage = response.data.person_certificates.per_page;
-      const currentPage = response.data.person_certificates.current_page;
-      setPersonCertificates({
-        filterList: {
-          data: fetch,
-          lastPage: lastPage,
-          totalItems: totalItems,
-          perPage: perPage,
-          currentPage: currentPage,
-        },
-        unFilterList: {
-          data: fetch,
-          lastPage: lastPage,
-          totalItems: totalItems,
-          perPage: perPage,
-          currentPage: currentPage,
-        },
-      });
+      if (certificate_payment) {
+        setCertificatePayment(certificate_payment);
+      } else {
+        setNotFound(true);
+        setCertificatePayment(undefined);
+      }
     } catch (error: any) {
       toast({
         toastType: "ERROR",
         title: t("error"),
-        description: error.response.data.message,
+        // description: error.response.data.message,
       });
+      setNotFound(true);
     } finally {
       setLoading(false);
     }
   };
-  const [personCertificates, setPersonCertificates] = useState<{
-    filterList: CertificatePaymentPaginationData;
-    unFilterList: CertificatePaymentPaginationData;
-  }>({
-    filterList: {
-      data: [],
-      lastPage: 1,
-      totalItems: 0,
-      perPage: 0,
-      currentPage: 0,
-    },
-    unFilterList: {
-      data: [],
-      lastPage: 1,
-      totalItems: 0,
-      perPage: 0,
-      currentPage: 0,
-    },
-  });
-  const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
-  const markAsPaid = (visitIdToUpdate: string) => {
-    setPersonCertificates((prev) => ({
-      ...prev,
-      filterList: {
-        ...prev.filterList,
-        data: prev.filterList.data.map((item) =>
-          item.visit_id === visitIdToUpdate ? { ...item, has_payment: 1 } : item
-        ),
-      },
-      unFilterList: {
-        ...prev.unFilterList,
-        data: prev.unFilterList.data.map((item) =>
-          item.visit_id === visitIdToUpdate ? { ...item, has_payment: 1 } : item
-        ),
-      },
-    }));
+
+  const markAsPaid = () => {
+    setCertificatePayment((prev) => {
+      if (!prev) return prev; // do nothing if prev is undefined
+
+      return {
+        ...prev,
+        payment_status_id: PaymentStatusEnum.paid,
+      };
+    });
   };
 
   const skeleton = (
@@ -301,89 +269,115 @@ export function CertificatePaymentTable() {
             <TableHead className="text-start">{t("father_name")}</TableHead>
             <TableHead className="text-start">{t("contact")}</TableHead>
             <TableHead className="text-start">{t("payment")}</TableHead>
-            <TableHead className="text-start">{t("amount")}</TableHead>
             <TableHead className="text-start">{t("last_visit_date")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="rtl:text-xl-rtl ltr:text-2xl-ltr">
           {loading ? (
             <>{skeleton}</>
-          ) : (
-            personCertificates.filterList.data.map(
-              (item: CertificatePayment) => (
-                <React.Fragment key={item.id}>
-                  <TableRowIcon
-                    read={hasView}
-                    remove={false}
-                    edit={false}
-                    onEdit={async () => {}}
-                    key={item.id}
-                    item={item}
-                    onRemove={async () => {}}
-                    onRead={watchOnClick}
-                  >
-                    <TableCell className="truncate">{item.id}</TableCell>
-                    <TableCell className="truncate">
-                      {item.passport_number}
-                    </TableCell>
+          ) : certificatePayment ? (
+            <React.Fragment>
+              <TableRowIcon
+                read={hasView}
+                remove={false}
+                edit={false}
+                onEdit={async () => {}}
+                item={certificatePayment}
+                onRemove={async () => {}}
+                onRead={watchOnClick}
+              >
+                <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                  {certificatePayment.id}
+                </TableCell>
+                <TableCell className="rtl:text-md-rtl truncate px-1 py-0">
+                  {certificatePayment.passport_number}
+                </TableCell>
 
-                    <TableCell dir="ltr" className="truncate">
-                      {item.full_name}
-                    </TableCell>
-                    <TableCell dir="ltr" className="truncate">
-                      {item.father_name}
-                    </TableCell>
-                    <TableCell
-                      dir="ltr"
-                      className="truncate rtl:text-sm-rtl rtl:text-end"
-                    >
-                      {item.contact}
-                    </TableCell>
-                    <TableCell dir="ltr" className="truncate">
-                      {item.has_payment == 1 ? t("paid") : t("unpaid")}
-                    </TableCell>
-                    <TableCell dir="ltr" className="truncate">
-                      {item.amount}
-                    </TableCell>
-                  </TableRowIcon>
-                  {hasAdd && item.has_payment == 0 && (
-                    <TableRow key={item.passport_number} className=" py-8">
-                      <TableCell colSpan={8} className="text-center pt-8 pb-4">
-                        <NastranModel
-                          size="lg"
-                          isDismissable={false}
-                          button={
-                            <PrimaryButton className="rtl:text-lg-rtl font-semibold ltr:text-md-ltr">
-                              {t("take_payment")}
-                              <Coins className=" text-tertiary size-[18px] transition" />
-                            </PrimaryButton>
-                          }
-                          showDialog={async () => true}
-                        >
-                          <TakePayment
-                            visit_id={item.visit_id}
-                            onComplete={() => markAsPaid(item.visit_id)}
-                            amount={item.amount}
-                            passport_number={item.passport_number}
-                          />
-                        </NastranModel>
-                      </TableCell>
-                    </TableRow>
+                <TableCell
+                  dir="ltr"
+                  className="truncate rtl:text-sm-rtl rtl:text-end"
+                >
+                  {certificatePayment.full_name}
+                </TableCell>
+                <TableCell
+                  dir="ltr"
+                  className="truncate rtl:text-sm-rtl rtl:text-end"
+                >
+                  {certificatePayment.father_name}
+                </TableCell>
+                <TableCell
+                  dir="ltr"
+                  className="rtl:text-end rtl:text-sm-rtl truncate"
+                >
+                  {certificatePayment?.contact}
+                </TableCell>
+                <TableCell dir="ltr" className="truncate">
+                  {certificatePayment.payment_status_id ==
+                  PaymentStatusEnum.paid
+                    ? t("paid")
+                    : t("unpaid")}
+                </TableCell>
+                <TableCell className="truncate">
+                  {toLocaleDate(
+                    new Date(certificatePayment.last_visit_date),
+                    state
                   )}
-                </React.Fragment>
-              )
-            )
+                </TableCell>
+              </TableRowIcon>
+              {hasAdd && certificatePayment.payment_status_id == null && (
+                <TableRow className=" py-8">
+                  <TableCell colSpan={8} className="text-center pt-8 pb-4">
+                    <NastranModel
+                      size="lg"
+                      isDismissable={false}
+                      button={
+                        <PrimaryButton className="rtl:text-lg-rtl font-semibold ltr:text-md-ltr">
+                          {t("take_payment")}
+                          <Coins className=" text-tertiary size-[18px] transition" />
+                        </PrimaryButton>
+                      }
+                      showDialog={async () => true}
+                    >
+                      <TakePayment
+                        amount={certificatePayment.amount}
+                        visit_id={certificatePayment.visit_id}
+                        onComplete={() => markAsPaid()}
+                        passport_number={certificatePayment.passport_number}
+                        currency={certificatePayment.currency}
+                      />
+                    </NastranModel>
+                  </TableCell>
+                </TableRow>
+              )}
+            </React.Fragment>
+          ) : notFound ? (
+            <TableRow>
+              <TableCell
+                colSpan={10}
+                className=" text-center text-red-400 ltr:text-xl-ltr drop-shadow-lg opacity-95 font-bold py-8 space-y-2"
+              >
+                <h1>{t("no_payment_found")}</h1>
+                <TriangleAlert className=" text-red-400 size-[32px] mx-auto" />
+              </TableCell>
+            </TableRow>
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={10}
+                className=" text-center text-tertiary ltr:text-xl-ltr drop-shadow-lg opacity-95 font-bold py-8"
+              >
+                <h1>{t("search_payment")}</h1>
+              </TableCell>
+            </TableRow>
           )}
         </TableBody>
       </Table>
       <div className="flex justify-between rounded-md bg-card flex-1 p-3 items-center">
         <h1 className="rtl:text-lg-rtl ltr:text-md-ltr font-medium">{`${t(
           "page"
-        )} ${personCertificates.unFilterList.currentPage} ${t("of")} ${
-          personCertificates.unFilterList.lastPage
-        }`}</h1>
+        )} 0 ${t("of")} ${1}`}</h1>
         <Pagination
-          lastPage={personCertificates.unFilterList.lastPage}
+          lastPage={1}
           onPageChange={async (page) =>
             await searchPerson(undefined, undefined, page)
           }

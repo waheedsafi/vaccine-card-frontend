@@ -94,8 +94,8 @@ export default function AddUserAccount() {
         errorMessage={error.get("role")}
         apiUrl={"roles"}
         translate={true}
-        cacheData={false}
         mode="single"
+        cacheData={false}
       />
       <APICombobox
         placeholderText={t("search_item")}
@@ -115,7 +115,7 @@ export default function AddUserAccount() {
       />
 
       <CustomCheckbox
-        checked={userData["status"] || true}
+        checked={userData["status"] == true}
         onCheckedChange={(value: boolean) =>
           setUserData({ ...userData, status: value })
         }

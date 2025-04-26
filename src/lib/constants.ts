@@ -24,6 +24,12 @@ export const ChecklistEnum = {
   epi_letter_of_password_change: 4,
   finance_letter_of_password_change: 5,
 };
+export const PaymentStatusEnum = {
+  payment: 1,
+  no_payment: 2,
+  paid: 3,
+  unpaid: 4,
+};
 
 export const PermissionEnum = {
   dashboard: { name: "dashboard", sub: {} },
@@ -77,7 +83,7 @@ export const StatusEnum = {
 };
 
 export const CountryEnum = {
-  afghanistan: 1,
+  afghanistan: 2,
 };
 
 export const PERMISSIONS_OPERATION = ["Add", "Edit", "Delete", "View"];
