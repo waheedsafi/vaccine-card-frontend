@@ -241,5 +241,7 @@
   "amount": "Amount",
   "currency": "Currency",
   "download_card": "Download card",
-  "payment_number": "Payment number"
+  "payment_number": "Payment number",
+  "card_success": "Information was validated successfully, Now you can download the card.",
+  "payment_success": "Payment is completed successfully."
 }

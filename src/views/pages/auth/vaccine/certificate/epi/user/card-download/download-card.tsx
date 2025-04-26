@@ -16,7 +16,7 @@ interface DownloadCardProps {
   onComplete: () => void;
 }
 export default function DownloadCard(props: DownloadCardProps) {
-  const { onComplete, passport_number } = props;
+  const { onComplete, passport_number, visit_id } = props;
   const { t } = useTranslation();
   const { modelOnRequestHide } = useModelOnRequestHide();
   const beforeStepSuccess = async (
@@ -102,6 +102,7 @@ export default function DownloadCard(props: DownloadCardProps) {
           {
             component: (
               <CardDownloadCompleteStep
+                visit_id={visit_id}
                 successText={t("congratulation")}
                 closeText={t("close")}
                 closeModel={closeModel}

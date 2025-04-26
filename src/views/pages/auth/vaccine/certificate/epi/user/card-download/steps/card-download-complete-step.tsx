@@ -1,8 +1,6 @@
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import Downloader from "@/components/custom-ui/chooser/Downloader";
-import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
 import { motion } from "framer-motion";
-import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ICompleteStepProps {
@@ -10,6 +8,7 @@ export interface ICompleteStepProps {
   successText: string;
   downloadText: string;
   passport_number: string;
+  visit_id: string;
   closeText: string;
   closeModel: () => void;
 }
@@ -22,8 +21,8 @@ export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
     successText,
     downloadText,
     passport_number,
+    visit_id,
   } = props;
-  const { userData } = useContext(StepperContext);
   const { t } = useTranslation();
 
   return (
@@ -73,7 +72,7 @@ export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
         apiUrl={"reciept/download"}
         params={{
           passport_number: passport_number,
-          payment_id: userData?.payment_id,
+          visit_id: visit_id,
         }}
       />
       <PrimaryButton
