@@ -102,7 +102,7 @@ export function CertificatePaymentTable() {
       toast({
         toastType: "ERROR",
         title: t("error"),
-        // description: error.response.data.message,
+        description: error.response.data.message,
       });
       setNotFound(true);
     } finally {
