@@ -3,6 +3,7 @@ import Downloader from "@/components/custom-ui/chooser/Downloader";
 import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
 import { motion } from "framer-motion";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface ICompleteStepProps {
   description: string;
@@ -13,7 +14,7 @@ export interface ICompleteStepProps {
   closeModel: () => void;
 }
 
-export default function PaymentCompleteStep(props: ICompleteStepProps) {
+export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
   const {
     description,
     closeModel,
@@ -23,6 +24,7 @@ export default function PaymentCompleteStep(props: ICompleteStepProps) {
     passport_number,
   } = props;
   const { userData } = useContext(StepperContext);
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col items-center mt-8">
@@ -63,8 +65,8 @@ export default function PaymentCompleteStep(props: ICompleteStepProps) {
           extension: "pdf",
           size: 2212,
         }}
-        errorText={""}
-        cancelText={""}
+        errorText={t("error")}
+        cancelText={t("cancel")}
         onComplete={() => {
           closeModel();
         }}

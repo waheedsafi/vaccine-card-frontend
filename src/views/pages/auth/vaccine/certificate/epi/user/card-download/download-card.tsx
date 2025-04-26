@@ -7,8 +7,8 @@ import { toast } from "@/components/ui/use-toast";
 import { Dispatch, SetStateAction } from "react";
 import { setServerError } from "@/validation/validation";
 import { Check, Coins } from "lucide-react";
-import PaymentCompleteStep from "./steps/payment-complete-step";
 import CardPaymentDetail from "./steps/card-payment-detail";
+import CardDownloadCompleteStep from "./steps/card-download-complete-step";
 
 interface DownloadCardProps {
   passport_number: string;
@@ -101,7 +101,7 @@ export default function DownloadCard(props: DownloadCardProps) {
           },
           {
             component: (
-              <PaymentCompleteStep
+              <CardDownloadCompleteStep
                 successText={t("congratulation")}
                 closeText={t("close")}
                 closeModel={closeModel}

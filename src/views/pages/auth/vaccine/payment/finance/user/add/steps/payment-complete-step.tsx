@@ -1,16 +1,17 @@
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import Downloader from "@/components/custom-ui/chooser/Downloader";
-import { StepperContext } from "@/components/custom-ui/stepper/StepperContext";
 import { motion } from "framer-motion";
-import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface ICompleteStepProps {
   description: string;
   successText: string;
   downloadText: string;
   passport_number: string;
+  visit_id: string;
   closeText: string;
   closeModel: () => void;
+  onComplete: () => void;
 }
 
 export default function PaymentCompleteStep(props: ICompleteStepProps) {
@@ -21,8 +22,10 @@ export default function PaymentCompleteStep(props: ICompleteStepProps) {
     successText,
     downloadText,
     passport_number,
+    onComplete,
+    visit_id,
   } = props;
-  const { userData } = useContext(StepperContext);
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col items-center mt-8">
@@ -63,20 +66,18 @@ export default function PaymentCompleteStep(props: ICompleteStepProps) {
           extension: "pdf",
           size: 2212,
         }}
-        errorText={""}
-        cancelText={""}
-        onComplete={() => {
-          closeModel();
-        }}
+        errorText={t("error")}
+        cancelText={t("cancel")}
+        onComplete={closeModel}
         apiUrl={"reciept/download"}
         params={{
           passport_number: passport_number,
-          payment_id: userData?.payment_id,
+          visit_id: visit_id,
         }}
       />
       <PrimaryButton
         className="rounded-md mt-14 min-w-[80px] shadow-md rtl:text-xl-rtl bg-red-500 hover:bg-red-500"
-        onClick={closeModel}
+        onClick={onComplete}
       >
         {closeText}
       </PrimaryButton>

@@ -57,6 +57,7 @@ export default function TakePayment(props: TakePaymentProps) {
     return true;
   };
   const closeModel = () => {
+    onComplete();
     modelOnRequestHide();
   };
 
@@ -109,10 +110,12 @@ export default function TakePayment(props: TakePaymentProps) {
               <PaymentCompleteStep
                 successText={t("congratulation")}
                 closeText={t("close")}
+                visit_id={visit_id}
                 closeModel={closeModel}
                 description={t("user_acc_crea")}
                 downloadText={t("download_reciept")}
                 passport_number={passport_number}
+                onComplete={closeModel}
               />
             ),
             validationRules: [],
