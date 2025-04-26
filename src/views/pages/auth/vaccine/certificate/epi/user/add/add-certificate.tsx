@@ -98,18 +98,18 @@ export default function AddCertificate() {
       const response = await axiosClient.post("epi/certificate/detail/store", {
         // vaccines: JSON.stringify(formatedVaccines),
         full_name: userData.full_name,
-        // father_name: userData.father_name,
+        father_name: userData.father_name,
         // date_of_birth: !isString(userData.date_of_birth)
         //   ? userData.date_of_birth?.toDate()?.toISOString()
         //   : userData.date_of_birth,
-        // contact: userData.contact,
-        // passport_number: userData.passport_number,
-        // gender_id: userData.gender?.id,
-        // province_id: userData.province?.id,
-        // district_id: userData.district?.id,
-        // nationality_id: userData.nationality?.id,
-        // travel_type_id: userData.travel_type?.id,
-        // destina_country_id: userData.destina_country?.id,
+        contact: userData.contact,
+        passport_number: userData.passport_number,
+        gender_id: userData.gender?.id,
+        province_id: userData.province?.id,
+        district_id: userData.district?.id,
+        nationality_id: userData.nationality?.id,
+        travel_type_id: userData.travel_type?.id,
+        destina_country_id: userData.destina_country?.id,
       });
       if (response.status == 200) {
         toast({
