@@ -61,41 +61,41 @@ export default function AddCertificate() {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      // const formatedVaccines: any[] = [];
-      // userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
-      //   const item: {
-      //     id: any;
-      //     vaccine_type_id: any;
-      //     registration_number: any;
-      //     volume: any;
-      //     page: any;
-      //     registration_date: any;
-      //     vaccine_center_id: any;
-      //     doses: any[];
-      //   } = {
-      //     id: vaccine.id,
-      //     vaccine_type_id: vaccine.vaccine_type?.id,
-      //     registration_number: vaccine.registration_number,
-      //     volume: vaccine.volume,
-      //     page: vaccine.page,
-      //     registration_date: vaccine.registration_date?.toDate()?.toISOString(),
-      //     vaccine_center_id: vaccine.vaccine_center?.id,
-      //     doses: [],
-      //   };
-      //   const doses: any[] = [];
+      const formatedVaccines: any[] = [];
+      userData?.vaccines_list?.forEach((vaccine: Vaccine) => {
+        const item: {
+          id: any;
+          vaccine_type_id: any;
+          registration_number: any;
+          volume: any;
+          page: any;
+          registration_date: any;
+          vaccine_center_id: any;
+          doses: any[];
+        } = {
+          id: vaccine.id,
+          vaccine_type_id: vaccine.vaccine_type?.id,
+          registration_number: vaccine.registration_number,
+          volume: vaccine.volume,
+          page: vaccine.page,
+          registration_date: vaccine.registration_date?.toDate()?.toISOString(),
+          vaccine_center_id: vaccine.vaccine_center?.id,
+          doses: [],
+        };
+        const doses: any[] = [];
 
-      //   vaccine.doses.forEach((dose: any) => {
-      //     doses.push({
-      //       id: dose.id,
-      //       dose: dose.dose,
-      //       batch_number: dose.batch_number,
-      //       vaccine_date: dose.vaccine_date?.toDate()?.toISOString(),
-      //       added_by: dose.added_by,
-      //     });
-      //   });
-      //   item.doses.push(doses);
-      //   formatedVaccines.push(item);
-      // });
+        vaccine.doses.forEach((dose: any) => {
+          doses.push({
+            id: dose.id,
+            dose: dose.dose,
+            batch_number: dose.batch_number,
+            vaccine_date: dose.vaccine_date?.toDate()?.toISOString(),
+            added_by: dose.added_by,
+          });
+        });
+        item.doses = doses;
+        formatedVaccines.push(item);
+      });
       const response = await axiosClient.post("epi/certificate/detail/store", {
         // vaccines: JSON.stringify(formatedVaccines),
         full_name: userData.full_name,
