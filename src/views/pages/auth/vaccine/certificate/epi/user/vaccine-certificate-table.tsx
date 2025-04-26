@@ -319,8 +319,8 @@ export function VaccineCertificateTable() {
                 </TableCell>
               </TableRowIcon>
               {hasAdd &&
-                personCertificate.payment_status_id ==
-                  PaymentStatusEnum.paid && (
+                personCertificate.payment_status_id == PaymentStatusEnum.paid &&
+                !personCertificate.vaccine_payment_id && (
                   <TableRow className="py-8">
                     <TableCell colSpan={8} className="text-center pt-8 pb-4">
                       <NastranModel

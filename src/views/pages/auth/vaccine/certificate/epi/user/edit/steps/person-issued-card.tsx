@@ -25,7 +25,7 @@ import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 export interface PersonVaccinesInformationProps {
   id: string | undefined;
 }
-export default function PersonVaccinesInformation(
+export default function PersonIssuedCard(
   props: PersonVaccinesInformationProps
 ) {
   const { id } = props;
@@ -36,7 +36,7 @@ export default function PersonVaccinesInformation(
   const initialize = async () => {
     try {
       // 2. Send data
-      const response = await axiosClient.get("epi/person/vaccines/" + id);
+      const response = await axiosClient.get("epi/person/issued/cards/" + id);
       if (response.status == 200) {
         setVaccinations(response.data.data);
       }
@@ -70,10 +70,7 @@ export default function PersonVaccinesInformation(
           <Table className="bg-card rounded-md">
             <TableHeader className="rtl:text-3xl-rtl ltr:text-xl-ltr bg-primary/5">
               <TableRow className="hover:bg-transparent border-none">
-                <TableHead className="text-start">
-                  {t("vaccine_type")}
-                </TableHead>
-                <TableHead className="text-start">{t("travel_type")}</TableHead>
+                <TableHead className="text-start">{t("#")}</TableHead>
                 <TableHead className="text-start">{t("visit_date")}</TableHead>
                 <TableHead className="text-start">
                   {t("destina_country")}
@@ -84,10 +81,7 @@ export default function PersonVaccinesInformation(
               {vaccinations.map((item: PersonVisit, index: number) => (
                 <TableRow key={index}>
                   <TableCell className="text-start truncate">
-                    {item.vaccine_type}
-                  </TableCell>
-                  <TableCell className="text-start truncate">
-                    {item.travel_type}
+                    {index + 1}
                   </TableCell>
                   <TableCell className="text-start truncate">
                     {toLocaleDate(new Date(item.visited_date), state)}

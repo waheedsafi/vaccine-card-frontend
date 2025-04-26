@@ -206,6 +206,7 @@ export type PersonCertificate = {
   last_visit_date: string;
   visit_id: string;
   payment_status_id: number;
+  vaccine_payment_id: number;
 };
 
 export type CertificatePayment = {

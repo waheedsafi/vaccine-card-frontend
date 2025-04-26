@@ -17,6 +17,7 @@ import {
 import PersonEditHeader from "./person-edit-header";
 import EditPersonInformation from "./steps/edit-person-information";
 import PersonVaccinesInformation from "./steps/person-vaccines-information";
+import PersonIssuedCard from "./steps/person-issued-card";
 
 export default function VaccineCertificateEditPage() {
   const { user } = useGeneralAuthState();
@@ -134,6 +135,12 @@ export default function VaccineCertificateEditPage() {
           value={PermissionEnum.vaccine_certificate.sub.vaccine_certificate_vaccination_info.toString()}
         >
           <PersonVaccinesInformation id={id} />
+        </TabsContent>
+        <TabsContent
+          className="flex-1 m-0"
+          value={PermissionEnum.vaccine_certificate.sub.vaccine_certificate_card_issuing.toString()}
+        >
+          <PersonIssuedCard id={id} />
         </TabsContent>
       </Tabs>
     </div>

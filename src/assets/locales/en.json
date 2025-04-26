@@ -245,5 +245,6 @@
   "card_success": "Information was validated successfully, Now you can download the card.",
   "payment_success": "Payment is completed successfully.",
   "payment_info": "Payment information.",
-  "payment_info_des": "All customer payment information are listed here."
+  "payment_info_des": "All customer payment information are listed here.",
+  "visit_date": "Visit date"
 }
