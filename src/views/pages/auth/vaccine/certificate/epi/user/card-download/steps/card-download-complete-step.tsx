@@ -10,7 +10,6 @@ export interface ICompleteStepProps {
   successText: string;
   downloadText: string;
   passport_number: string;
-  payment_number: string;
   visit_id: string;
   closeText: string;
   closeModel: () => void;
