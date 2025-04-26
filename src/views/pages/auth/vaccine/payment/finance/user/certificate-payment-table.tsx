@@ -154,7 +154,7 @@ export function CertificatePaymentTable() {
 
   const watchOnClick = async (personCertificate: CertificatePayment) => {
     const userId = personCertificate.id;
-    navigate(`/users/${userId}`);
+    navigate(`/certificate_payment/${userId}`);
   };
   return (
     <>

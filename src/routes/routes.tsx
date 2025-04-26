@@ -29,11 +29,11 @@ import FinanceCertificatePaymentUserPage from "@/views/pages/auth/vaccine/paymen
 import EpiUserVaccineCertificatePage from "@/views/pages/auth/vaccine/certificate/epi/user/epi-user-vaccine-certificate-page";
 import FinaceEpiProfilePage from "@/views/pages/auth/profile/finance-epi/finance-epi-profile-page";
 import VaccineCertificateEditPage from "@/views/pages/auth/vaccine/certificate/epi/user/edit/vaccine-certificate-edit-page";
-import CertificatePaymentEditPage from "@/views/pages/auth/vaccine/payment/finance/user/edit/certificate-payment-edit-page";
 import ConfigurationsPage from "@/views/pages/auth/configurations/configurations-page";
 import SettingsPage from "@/views/pages/auth/setting/settings-page";
 import FinanceUserDashboardPage from "@/views/pages/auth/dashboard/finance/user/finance-user-dashboard-page";
 import EpiUserDashboardPage from "@/views/pages/auth/dashboard/epi/user/epi-user-dashboard-page";
+import { CertificatePaymentEditPage } from "@/views/pages/auth/vaccine/payment/finance/user/edit/certificate-payment-edit-page";
 
 export const getEpiSuperRouter = (
   user: User | Epi | Finance,

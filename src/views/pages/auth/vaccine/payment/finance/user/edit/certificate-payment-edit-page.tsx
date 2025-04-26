@@ -11,13 +11,13 @@ import NastranSpinner from "@/components/custom-ui/spinner/NastranSpinner";
 import axiosClient from "@/lib/axois-client";
 import { toast } from "@/components/ui/use-toast";
 
-export function PaymentInfoActivity() {
+export function CertificatePaymentEditPage() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [payments, setPayments] = useState<{}>();
   const loadInformation = async () => {
     try {
-      const response = await axiosClient.get("");
+      const response = await axiosClient.get("finance/payment/info");
       if (response.status == 200) {
         const payment_list = response.data.payment_list;
         setPayments(payment_list);
