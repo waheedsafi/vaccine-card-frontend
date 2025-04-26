@@ -99,9 +99,9 @@ export default function AddCertificate() {
         // vaccines: JSON.stringify(formatedVaccines),
         full_name: userData.full_name,
         father_name: userData.father_name,
-        // date_of_birth: !isString(userData.date_of_birth)
-        //   ? userData.date_of_birth?.toDate()?.toISOString()
-        //   : userData.date_of_birth,
+        date_of_birth: !isString(userData.date_of_birth)
+          ? userData.date_of_birth?.toDate()?.toISOString()
+          : userData.date_of_birth,
         contact: userData.contact,
         passport_number: userData.passport_number,
         gender_id: userData.gender?.id,
