@@ -10,6 +10,7 @@ import { setServerError } from "@/validation/validation";
 import { Check, Database, User as UserIcon } from "lucide-react";
 import AddPersonalDetail from "./steps/add-personal-detail";
 import AddVaccineDetail from "./steps/add-vaccine-detail";
+import { isString } from "@/lib/utils";
 // import { Vaccine } from "@/database/tables";
 // import { isString } from "@/lib/utils";
 
