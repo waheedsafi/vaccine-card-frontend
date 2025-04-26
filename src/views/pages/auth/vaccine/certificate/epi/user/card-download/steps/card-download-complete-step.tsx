@@ -60,7 +60,7 @@ export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
         filetoDownload={{
           id: "",
           path: "",
-          name: "payment_reciept",
+          name: passport_number + "_card_download.pdf",
           extension: "pdf",
           size: 2212,
         }}
@@ -69,7 +69,7 @@ export default function CardDownloadCompleteStep(props: ICompleteStepProps) {
         onComplete={() => {
           closeModel();
         }}
-        apiUrl={"reciept/download"}
+        apiUrl={"epi/generate/certificate"}
         params={{
           passport_number: passport_number,
           visit_id: visit_id,

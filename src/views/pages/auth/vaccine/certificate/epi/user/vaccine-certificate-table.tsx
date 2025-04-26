@@ -22,13 +22,7 @@ import Pagination from "@/components/custom-ui/table/Pagination";
 import { toLocaleDate } from "@/lib/utils";
 import NastranModel from "@/components/custom-ui/model/NastranModel";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
-import {
-  CloudDownload,
-  ListFilter,
-  Printer,
-  Search,
-  TriangleAlert,
-} from "lucide-react";
+import { CloudDownload, ListFilter, Search, TriangleAlert } from "lucide-react";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import SecondaryButton from "@/components/custom-ui/button/SecondaryButton";
 import CustomSelect from "@/components/custom-ui/select/CustomSelect";
