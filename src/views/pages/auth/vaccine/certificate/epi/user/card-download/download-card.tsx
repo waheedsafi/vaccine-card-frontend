@@ -31,7 +31,7 @@ export default function DownloadCard(props: DownloadCardProps) {
     setError: Dispatch<SetStateAction<Map<string, string>>>
   ) => {
     try {
-      const response = await axiosClient.post("epi/generate/certificate", {
+      const response = await axiosClient.post("epi/store/reciept/document", {
         passport_number: passport_number,
         visit_id: visit_id,
         payment_number: userData.payment_number,
