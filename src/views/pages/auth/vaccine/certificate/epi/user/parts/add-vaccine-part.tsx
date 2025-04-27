@@ -194,6 +194,7 @@ export default function AddVaccinePart(props: AddVaccinePartProps) {
     }));
     removeDose(dose.id);
   };
+
   return (
     <>
       <APICombobox
