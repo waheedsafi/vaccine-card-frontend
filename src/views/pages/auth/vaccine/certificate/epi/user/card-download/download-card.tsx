@@ -94,11 +94,8 @@ export default function DownloadCard(props: DownloadCardProps) {
         ]}
         components={[
           {
-            component: <CardPaymentDetail passport_number={passport_number} />,
-            validationRules: [
-              { name: "payment_number", rules: ["required"] },
-              { name: "receipt", rules: ["required"] },
-            ],
+            component: <CardPaymentDetail />,
+            validationRules: [{ name: "payment_number", rules: ["required"] }],
           },
           {
             component: (
