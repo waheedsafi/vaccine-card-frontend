@@ -224,6 +224,9 @@ export type CertificatePayment = {
 export type VaccineType = {
   id: string;
   name: string;
+  description?: string;
+  doses?: string;
+  created_at?: string;
 };
 export type VaccineCenter = {
   id: string;

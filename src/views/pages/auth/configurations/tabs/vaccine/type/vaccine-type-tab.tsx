@@ -18,27 +18,27 @@ import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { Search } from "lucide-react";
 import Shimmer from "@/components/custom-ui/shimmer/Shimmer";
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
-import JobDialog from "./job-dialog";
-import { Job, UserPermission } from "@/database/tables";
+import { UserPermission, VaccineType } from "@/database/tables";
 import { PermissionEnum } from "@/lib/constants";
-interface JobTabProps {
+import VaccineTypeDialog from "./vaccine-type-dialog";
+interface VaccineTypeTabTabProps {
   permissions: UserPermission;
 }
-export default function VaccineTypeTab(props: JobTabProps) {
+export default function VaccineTypeTab(props: VaccineTypeTabTabProps) {
   const { permissions } = props;
   const { t } = useTranslation();
   const [state] = useGlobalState();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<{
     visible: boolean;
-    job: any;
+    vaccineType: any;
   }>({
     visible: false,
-    job: undefined,
+    vaccineType: undefined,
   });
-  const [jobs, setJobs] = useState<{
-    unFilterList: Job[];
-    filterList: Job[];
+  const [vaccineTypes, setVaccineTypes] = useState<{
+    unFilterList: VaccineType[];
+    filterList: VaccineType[];
   }>({
     unFilterList: [],
     filterList: [],
@@ -49,9 +49,9 @@ export default function VaccineTypeTab(props: JobTabProps) {
       setLoading(true);
 
       // 2. Send data
-      const response = await axiosClient.get(`jobs`);
-      const fetch = response.data as Job[];
-      setJobs({
+      const response = await axiosClient.get(`full/vaccine/types`);
+      const fetch = response.data as VaccineType[];
+      setVaccineTypes({
         unFilterList: fetch,
         filterList: fetch,
       });
@@ -71,24 +71,24 @@ export default function VaccineTypeTab(props: JobTabProps) {
   const searchOnChange = (e: any) => {
     const { value } = e.target;
     // 1. Filter
-    const filtered = jobs.unFilterList.filter((item: Job) =>
+    const filtered = vaccineTypes.unFilterList.filter((item: VaccineType) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
-    setJobs({
-      ...jobs,
+    setVaccineTypes({
+      ...vaccineTypes,
       filterList: filtered,
     });
   };
-  const add = (job: Job) => {
-    setJobs((prev) => ({
-      unFilterList: [job, ...prev.unFilterList],
-      filterList: [job, ...prev.filterList],
+  const add = (item: VaccineType) => {
+    setVaccineTypes((prev) => ({
+      unFilterList: [item, ...prev.unFilterList],
+      filterList: [item, ...prev.filterList],
     }));
   };
-  const update = (job: Job) => {
-    setJobs((prevState) => {
+  const update = (vaccineType: VaccineType) => {
+    setVaccineTypes((prevState) => {
       const updatedUnFiltered = prevState.unFilterList.map((item) =>
-        item.id === job.id ? { ...item, name: job.name } : item
+        item.id === vaccineType.id ? { ...item, name: vaccineType.name } : item
       );
 
       return {
@@ -97,27 +97,6 @@ export default function VaccineTypeTab(props: JobTabProps) {
         filterList: updatedUnFiltered,
       };
     });
-  };
-  const remove = async (job: Job) => {
-    try {
-      // 1. Remove from backend
-      const response = await axiosClient.delete(`job/${job.id}`);
-      if (response.status === 200) {
-        // 2. Remove from frontend
-        setJobs((prevJobs) => ({
-          unFilterList: prevJobs.unFilterList.filter(
-            (item) => item.id !== job.id
-          ),
-          filterList: prevJobs.filterList.filter((item) => item.id !== job.id),
-        }));
-        toast({
-          toastType: "SUCCESS",
-          description: response.data.message,
-        });
-      }
-    } catch (error: any) {
-      console.log(error);
-    }
   };
 
   const dailog = useMemo(
@@ -130,23 +109,25 @@ export default function VaccineTypeTab(props: JobTabProps) {
         showDialog={async () => {
           setSelected({
             visible: false,
-            job: undefined,
+            vaccineType: undefined,
           });
           return true;
         }}
       >
-        <JobDialog job={selected.job} onComplete={update} />
+        <VaccineTypeDialog
+          vaccineType={selected.vaccineType}
+          onComplete={update}
+        />
       </NastranModel>
     ),
     [selected.visible]
   );
-  const job = permissions.sub.get(
+  const vaccineType = permissions.sub.get(
     PermissionEnum.configurations.sub.configuration_vaccine_type
   );
-  const hasEdit = job?.edit;
-  const hasAdd = job?.add;
-  const hasDelete = job?.delete;
-  const hasView = job?.view;
+  const hasEdit = vaccineType?.edit;
+  const hasAdd = vaccineType?.add;
+  const hasView = vaccineType?.view;
   return (
     <div className="relative">
       <div className="rounded-md bg-card p-2 flex gap-x-4 items-baseline mt-4">
@@ -156,12 +137,12 @@ export default function VaccineTypeTab(props: JobTabProps) {
             isDismissable={false}
             button={
               <PrimaryButton className="text-primary-foreground">
-                {t("add_job")}
+                {t("add")}
               </PrimaryButton>
             }
             showDialog={async () => true}
           >
-            <JobDialog onComplete={add} />
+            <VaccineTypeDialog onComplete={add} />
           </NastranModel>
         )}
 
@@ -198,29 +179,38 @@ export default function VaccineTypeTab(props: JobTabProps) {
               </TableCell>
             </TableRow>
           ) : (
-            jobs.filterList.map((job: Job, index: number) => (
-              <TableRowIcon
-                read={hasView}
-                remove={hasDelete}
-                edit={hasEdit}
-                onEdit={async (job: Job) => {
-                  setSelected({
-                    visible: true,
-                    job: job,
-                  });
-                }}
-                key={index}
-                item={job}
-                onRemove={remove}
-                onRead={async () => {}}
-              >
-                <TableCell className="font-medium">{job.id}</TableCell>
-                <TableCell>{job.name}</TableCell>
-                <TableCell>
-                  {toLocaleDate(new Date(job.created_at), state)}
-                </TableCell>
-              </TableRowIcon>
-            ))
+            vaccineTypes.filterList.map(
+              (vaccineType: VaccineType, index: number) => (
+                <TableRowIcon
+                  read={hasView}
+                  remove={false}
+                  edit={hasEdit}
+                  onEdit={async (item: VaccineType) => {
+                    setSelected({
+                      visible: true,
+                      vaccineType: item,
+                    });
+                  }}
+                  key={index}
+                  item={vaccineType}
+                  onRemove={async () => {}}
+                  onRead={async () => {}}
+                >
+                  <TableCell className="font-medium">
+                    {vaccineType.id}
+                  </TableCell>
+                  <TableCell>{vaccineType.name}</TableCell>
+                  <TableCell>
+                    {toLocaleDate(
+                      new Date(
+                        vaccineType?.created_at ? vaccineType?.created_at : ""
+                      ),
+                      state
+                    )}
+                  </TableCell>
+                </TableRowIcon>
+              )
+            )
           )}
         </TableBody>
       </Table>

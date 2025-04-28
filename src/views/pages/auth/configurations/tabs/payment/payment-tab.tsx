@@ -8,7 +8,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
+import { useGlobalState } from "@/context/GlobalStateContext";
 import axiosClient from "@/lib/axois-client";
+import { toLocaleDate } from "@/lib/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
@@ -16,27 +18,27 @@ import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { Search } from "lucide-react";
 import Shimmer from "@/components/custom-ui/shimmer/Shimmer";
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
-import { UserPermission } from "@/database/tables";
+import { Destination, UserPermission } from "@/database/tables";
+import DestinationDialog from "./destination-dialog";
 import { PermissionEnum } from "@/lib/constants";
-import { VaccineCenterType } from "@/lib/types";
-import VaccineCenterDialog from "./vaccine-center-dialog";
-interface VaccineCenterProps {
+interface DestinationTabProps {
   permissions: UserPermission;
 }
-export default function VaccineCenterTab(props: VaccineCenterProps) {
+export default function PaymentTab(props: DestinationTabProps) {
   const { permissions } = props;
   const { t } = useTranslation();
+  const [state] = useGlobalState();
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<{
     visible: boolean;
-    vaccineCenter: any;
+    destination: any;
   }>({
     visible: false,
-    vaccineCenter: undefined,
+    destination: undefined,
   });
-  const [vaccineCenters, setVaccineCenters] = useState<{
-    unFilterList: VaccineCenterType[];
-    filterList: VaccineCenterType[];
+  const [destinations, setDestinations] = useState<{
+    unFilterList: Destination[];
+    filterList: Destination[];
   }>({
     unFilterList: [],
     filterList: [],
@@ -47,15 +49,16 @@ export default function VaccineCenterTab(props: VaccineCenterProps) {
       setLoading(true);
 
       // 2. Send data
-      const response = await axiosClient.get(`vaccine-centers`);
-      const fetch = response.data as VaccineCenterType[];
-      setVaccineCenters({
+      const response = await axiosClient.get(`complete-destinations`);
+      const fetch = response.data as Destination[];
+      setDestinations({
         unFilterList: fetch,
         filterList: fetch,
       });
     } catch (error: any) {
       toast({
         toastType: "ERROR",
+        title: "Error!",
         description: error.response.data.message,
       });
     } finally {
@@ -69,27 +72,24 @@ export default function VaccineCenterTab(props: VaccineCenterProps) {
   const searchOnChange = (e: any) => {
     const { value } = e.target;
     // 1. Filter
-    const filtered = vaccineCenters.unFilterList.filter(
-      (item: VaccineCenterType) =>
-        item.name.toLowerCase().includes(value.toLowerCase())
+    const filtered = destinations.unFilterList.filter((item: Destination) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
-    setVaccineCenters({
-      ...vaccineCenters,
+    setDestinations({
+      ...destinations,
       filterList: filtered,
     });
   };
-  const add = (vaccineCenter: VaccineCenterType) => {
-    setVaccineCenters((prev) => ({
-      unFilterList: [vaccineCenter, ...prev.unFilterList],
-      filterList: [vaccineCenter, ...prev.filterList],
+  const add = (destination: Destination) => {
+    setDestinations((prev) => ({
+      unFilterList: [destination, ...prev.unFilterList],
+      filterList: [destination, ...prev.filterList],
     }));
   };
-  const update = (vaccineCenter: VaccineCenterType) => {
-    setVaccineCenters((prevState) => {
+  const update = (destination: Destination) => {
+    setDestinations((prevState) => {
       const updatedUnFiltered = prevState.unFilterList.map((item) =>
-        item.id === vaccineCenter.id
-          ? { ...item, name: vaccineCenter.name }
-          : item
+        item.id === destination.id ? destination : item
       );
 
       return {
@@ -110,25 +110,25 @@ export default function VaccineCenterTab(props: VaccineCenterProps) {
         showDialog={async () => {
           setSelected({
             visible: false,
-            vaccineCenter: undefined,
+            destination: undefined,
           });
           return true;
         }}
       >
-        <VaccineCenterDialog
-          VaccineCenter={selected.vaccineCenter}
+        <DestinationDialog
+          destination={selected.destination}
           onComplete={update}
         />
       </NastranModel>
     ),
     [selected.visible]
   );
-  const vaccineCenter = permissions.sub.get(
-    PermissionEnum.configurations.sub.configuration_vaccine_center
+  const destination = permissions.sub.get(
+    PermissionEnum.configurations.sub.configuration_destination
   );
-  const hasEdit = vaccineCenter?.edit;
-  const hasAdd = vaccineCenter?.add;
-  const hasView = vaccineCenter?.view;
+  const hasEdit = destination?.edit;
+  const hasAdd = destination?.add;
+  const hasView = destination?.view;
   return (
     <div className="relative">
       <div className="rounded-md bg-card p-2 flex gap-x-4 items-baseline mt-4">
@@ -138,15 +138,14 @@ export default function VaccineCenterTab(props: VaccineCenterProps) {
             isDismissable={false}
             button={
               <PrimaryButton className="text-primary-foreground">
-                {t("new_center")}
+                {t("add_reference")}
               </PrimaryButton>
             }
             showDialog={async () => true}
           >
-            <VaccineCenterDialog onComplete={add} />
+            <DestinationDialog onComplete={add} />
           </NastranModel>
         )}
-
         <CustomInput
           size_="lg"
           placeholder={`${t("search")}...`}
@@ -163,6 +162,9 @@ export default function VaccineCenterTab(props: VaccineCenterProps) {
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-start">{t("id")}</TableHead>
             <TableHead className="text-start">{t("name")}</TableHead>
+            <TableHead className="text-start">{t("color")}</TableHead>
+            <TableHead className="text-start">{t("type")}</TableHead>
+            <TableHead className="text-start">{t("date")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="rtl:text-xl-rtl ltr:text-lg-ltr">
@@ -174,29 +176,48 @@ export default function VaccineCenterTab(props: VaccineCenterProps) {
               <TableCell>
                 <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
               </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
             </TableRow>
           ) : (
-            vaccineCenters.filterList.map(
-              (vaccineCenter: VaccineCenterType, index: number) => (
+            destinations.filterList.map(
+              (destination: Destination, index: number) => (
                 <TableRowIcon
                   read={hasView}
                   remove={false}
                   edit={hasEdit}
-                  onEdit={async (item: VaccineCenterType) => {
+                  onEdit={async (destination: Destination) => {
                     setSelected({
                       visible: true,
-                      vaccineCenter: item,
+                      destination: destination,
                     });
                   }}
                   key={index}
-                  item={vaccineCenter}
+                  item={destination}
                   onRemove={async () => {}}
                   onRead={async () => {}}
                 >
                   <TableCell className="font-medium">
-                    {vaccineCenter.id}
+                    {destination.id}
                   </TableCell>
-                  <TableCell>{vaccineCenter.name}</TableCell>
+                  <TableCell>{destination.name}</TableCell>
+                  <TableCell>
+                    <div
+                      className="h-5 w-8 rounded !bg-center !bg-cover transition-all"
+                      style={{ background: destination.color }}
+                    />
+                  </TableCell>
+                  <TableCell>{destination?.type?.name}</TableCell>
+                  <TableCell>
+                    {toLocaleDate(new Date(destination.created_at), state)}
+                  </TableCell>
                 </TableRowIcon>
               )
             )
