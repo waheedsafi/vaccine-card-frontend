@@ -11,34 +11,28 @@ import { toast } from "@/components/ui/use-toast";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import axiosClient from "@/lib/axois-client";
 import { toLocaleDate } from "@/lib/utils";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import PrimaryButton from "@/components/custom-ui/button/PrimaryButton";
 import CustomInput from "@/components/custom-ui/input/CustomInput";
 import { Search } from "lucide-react";
 import Shimmer from "@/components/custom-ui/shimmer/Shimmer";
 import TableRowIcon from "@/components/custom-ui/table/TableRowIcon";
-import { Destination, UserPermission } from "@/database/tables";
-import DestinationDialog from "./destination-dialog";
+import { SystemPayment, UserPermission } from "@/database/tables";
 import { PermissionEnum } from "@/lib/constants";
-interface DestinationTabProps {
+import PaymentDialog from "./payment-dialog";
+import TextStatusButton from "@/components/custom-ui/button/TextStatusButton";
+interface PaymentTabProps {
   permissions: UserPermission;
 }
-export default function PaymentTab(props: DestinationTabProps) {
+export default function PaymentTab(props: PaymentTabProps) {
   const { permissions } = props;
   const { t } = useTranslation();
   const [state] = useGlobalState();
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState<{
-    visible: boolean;
-    destination: any;
-  }>({
-    visible: false,
-    destination: undefined,
-  });
-  const [destinations, setDestinations] = useState<{
-    unFilterList: Destination[];
-    filterList: Destination[];
+  const [systemPayments, setSystemPayments] = useState<{
+    unFilterList: SystemPayment[];
+    filterList: SystemPayment[];
   }>({
     unFilterList: [],
     filterList: [],
@@ -49,9 +43,9 @@ export default function PaymentTab(props: DestinationTabProps) {
       setLoading(true);
 
       // 2. Send data
-      const response = await axiosClient.get(`complete-destinations`);
-      const fetch = response.data as Destination[];
-      setDestinations({
+      const response = await axiosClient.get(`finance/payments`);
+      const fetch = response.data as SystemPayment[];
+      setSystemPayments({
         unFilterList: fetch,
         filterList: fetch,
       });
@@ -72,63 +66,25 @@ export default function PaymentTab(props: DestinationTabProps) {
   const searchOnChange = (e: any) => {
     const { value } = e.target;
     // 1. Filter
-    const filtered = destinations.unFilterList.filter((item: Destination) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
+    const filtered = systemPayments.unFilterList.filter((item: SystemPayment) =>
+      item.finance_user.toLowerCase().includes(value.toLowerCase())
     );
-    setDestinations({
-      ...destinations,
+    setSystemPayments({
+      ...systemPayments,
       filterList: filtered,
     });
   };
-  const add = (destination: Destination) => {
-    setDestinations((prev) => ({
-      unFilterList: [destination, ...prev.unFilterList],
-      filterList: [destination, ...prev.filterList],
+  const add = (systemPayment: SystemPayment) => {
+    setSystemPayments((prev) => ({
+      unFilterList: [systemPayment, ...prev.unFilterList],
+      filterList: [systemPayment, ...prev.filterList],
     }));
   };
-  const update = (destination: Destination) => {
-    setDestinations((prevState) => {
-      const updatedUnFiltered = prevState.unFilterList.map((item) =>
-        item.id === destination.id ? destination : item
-      );
 
-      return {
-        ...prevState,
-        unFilterList: updatedUnFiltered,
-        filterList: updatedUnFiltered,
-      };
-    });
-  };
-
-  const dailog = useMemo(
-    () => (
-      <NastranModel
-        size="lg"
-        visible={selected.visible}
-        isDismissable={false}
-        button={<button></button>}
-        showDialog={async () => {
-          setSelected({
-            visible: false,
-            destination: undefined,
-          });
-          return true;
-        }}
-      >
-        <DestinationDialog
-          destination={selected.destination}
-          onComplete={update}
-        />
-      </NastranModel>
-    ),
-    [selected.visible]
-  );
   const destination = permissions.sub.get(
     PermissionEnum.configurations.sub.configuration_destination
   );
-  const hasEdit = destination?.edit;
   const hasAdd = destination?.add;
-  const hasView = destination?.view;
   return (
     <div className="relative">
       <div className="rounded-md bg-card p-2 flex gap-x-4 items-baseline mt-4">
@@ -138,12 +94,12 @@ export default function PaymentTab(props: DestinationTabProps) {
             isDismissable={false}
             button={
               <PrimaryButton className="text-primary-foreground">
-                {t("add_reference")}
+                {t("add")}
               </PrimaryButton>
             }
             showDialog={async () => true}
           >
-            <DestinationDialog onComplete={add} />
+            <PaymentDialog onComplete={add} />
           </NastranModel>
         )}
         <CustomInput
@@ -161,10 +117,12 @@ export default function PaymentTab(props: DestinationTabProps) {
         <TableHeader className="rtl:text-3xl-rtl ltr:text-xl-ltr">
           <TableRow className="hover:bg-transparent">
             <TableHead className="text-start">{t("id")}</TableHead>
-            <TableHead className="text-start">{t("name")}</TableHead>
-            <TableHead className="text-start">{t("color")}</TableHead>
-            <TableHead className="text-start">{t("type")}</TableHead>
-            <TableHead className="text-start">{t("date")}</TableHead>
+            <TableHead className="text-start">{t("status")}</TableHead>
+            <TableHead className="text-start">{t("amount")}</TableHead>
+            <TableHead className="text-start">{t("finance_user")}</TableHead>
+            <TableHead className="text-start">{t("payment_status")}</TableHead>
+            <TableHead className="text-start">{t("currency")}</TableHead>
+            <TableHead className="text-start">{t("created_at")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="rtl:text-xl-rtl ltr:text-lg-ltr">
@@ -185,38 +143,43 @@ export default function PaymentTab(props: DestinationTabProps) {
               <TableCell>
                 <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
               </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
+              <TableCell>
+                <Shimmer className="h-[24px] bg-primary/30 w-full rounded-sm" />
+              </TableCell>
             </TableRow>
           ) : (
-            destinations.filterList.map(
-              (destination: Destination, index: number) => (
+            systemPayments.filterList.map(
+              (systemPayment: SystemPayment, index: number) => (
                 <TableRowIcon
-                  read={hasView}
+                  read={false}
                   remove={false}
-                  edit={hasEdit}
-                  onEdit={async (destination: Destination) => {
-                    setSelected({
-                      visible: true,
-                      destination: destination,
-                    });
-                  }}
+                  edit={false}
+                  onEdit={async () => {}}
                   key={index}
-                  item={destination}
+                  item={systemPayment}
                   onRemove={async () => {}}
                   onRead={async () => {}}
                 >
                   <TableCell className="font-medium">
-                    {destination.id}
+                    {systemPayment.id}
                   </TableCell>
-                  <TableCell>{destination.name}</TableCell>
                   <TableCell>
-                    <div
-                      className="h-5 w-8 rounded !bg-center !bg-cover transition-all"
-                      style={{ background: destination.color }}
+                    <TextStatusButton
+                      id={systemPayment.active}
+                      value={
+                        systemPayment.active == 1 ? t("active") : t("in_active")
+                      }
                     />
                   </TableCell>
-                  <TableCell>{destination?.type?.name}</TableCell>
+                  <TableCell>{systemPayment.amount}</TableCell>
+                  <TableCell>{systemPayment.finance_user}</TableCell>
+                  <TableCell>{systemPayment.payment_status}</TableCell>
+                  <TableCell>{systemPayment.currency}</TableCell>
                   <TableCell>
-                    {toLocaleDate(new Date(destination.created_at), state)}
+                    {toLocaleDate(new Date(systemPayment.created_at), state)}
                   </TableCell>
                 </TableRowIcon>
               )
@@ -224,7 +187,6 @@ export default function PaymentTab(props: DestinationTabProps) {
           )}
         </TableBody>
       </Table>
-      {dailog}
     </div>
   );
 }

@@ -250,5 +250,6 @@
   "item_exist": "مورد از قبل در لیست وجود دارد.",
   "doses": "دوزها",
   "per_data_vac_saved": "اطلاعات شخص با موفقیت ذخیره شد.",
-  "center_name": "نام مرکز"
+  "center_name": "نام مرکز",
+  "payment_status": "حالت پرداخت"
 }
