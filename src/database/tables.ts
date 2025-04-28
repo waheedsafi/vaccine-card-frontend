@@ -292,7 +292,7 @@ export interface SystemPayment {
   created_at: string;
 }
 export interface Currency {
-  id: string;
+  id: number;
   name: string;
 }
 export interface PaymentStatus {

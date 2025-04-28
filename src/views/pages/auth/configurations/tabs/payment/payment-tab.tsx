@@ -75,9 +75,15 @@ export default function PaymentTab(props: PaymentTabProps) {
     });
   };
   const add = (systemPayment: SystemPayment) => {
-    setSystemPayments((prev) => ({
-      unFilterList: [systemPayment, ...prev.unFilterList],
-      filterList: [systemPayment, ...prev.filterList],
+    const updatedList = systemPayments.unFilterList.map((item) => ({
+      ...item, // Create a shallow copy of each item
+      active: 0, // Update the `active` property
+    }));
+
+    // Now update the state with the modified list
+    setSystemPayments((_prev) => ({
+      unFilterList: [systemPayment, ...updatedList], // Add the new systemPayment to the front
+      filterList: [systemPayment, ...updatedList], // Add the new systemPayment to the front
     }));
   };
 

@@ -18,6 +18,7 @@ import { setServerError, validate } from "@/validation/validation";
 import { Currency, PaymentStatus, SystemPayment } from "@/database/tables";
 import APICombobox from "@/components/custom-ui/combobox/APICombobox";
 import { PaymentStatusEnum } from "@/lib/constants";
+import { ValidateItem } from "@/validation/types";
 
 export interface PaymentDialogProps {
   onComplete: (systemPayment: SystemPayment) => void;
@@ -47,16 +48,19 @@ export default function PaymentDialog(props: PaymentDialogProps) {
       if (loading) return;
       setLoading(true);
       // 1. Validate form
+      const validateList: ValidateItem[] = [];
+      if (userData.currency?.id == PaymentStatusEnum.payment) {
+        validateList.push({
+          name: "amount",
+          rules: ["required"],
+        });
+        validateList.push({
+          name: "currency",
+          rules: ["required"],
+        });
+      }
       const passed = await validate(
         [
-          {
-            name: "amount",
-            rules: ["required"],
-          },
-          {
-            name: "currency",
-            rules: ["required"],
-          },
           {
             name: "payment_status",
             rules: ["required"],
@@ -69,13 +73,20 @@ export default function PaymentDialog(props: PaymentDialogProps) {
       // 2. Store
       let formData = new FormData();
       formData.append("amount", userData.amount.toString());
-      if (userData.currency)
-        formData.append("currency_id", userData.currency?.id);
-      if (userData.payment_status)
+      if (userData.currency) {
+        formData.append("currency_id", userData.currency?.id.toString());
+        formData.append("currency", userData.currency?.name);
+      }
+      if (userData.payment_status) {
         formData.append(
           "payment_status_id",
           userData.payment_status?.id.toString()
         );
+        formData.append(
+          "payment_status",
+          userData.payment_status?.name.toString()
+        );
+      }
       const response = await axiosClient.post(
         "finance/payment/store",
         formData
@@ -85,7 +96,7 @@ export default function PaymentDialog(props: PaymentDialogProps) {
           toastType: "SUCCESS",
           description: response.data.message,
         });
-        onComplete(response.data.job);
+        onComplete(response.data.system_payment);
         modelOnRequestHide();
       }
     } catch (error: any) {
